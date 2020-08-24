@@ -1,3 +1,3 @@
-// import './auth'
+import './auth'
 import './login'
 import './dashboard'
