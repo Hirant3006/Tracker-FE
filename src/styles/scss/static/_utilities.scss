@@ -1,0 +1,151 @@
+@import '../static/_prefix-cls.scss';
+@import '../static/_variables.scss';
+@import '../static/_mixins.scss';
+
+@for $i from 0 through 300{
+    .m-l-#{$i}{
+        margin-left:#{$i}px !important;
+    }
+    .m-t-#{$i}{
+        margin-top:#{$i}px !important;
+    }
+    .m-r-#{$i}{
+        margin-right:#{$i}px !important;
+    }
+    .m-b-#{$i}{
+        margin-bottom:#{$i}px !important;
+    }
+    .m-all-#{$i}{
+        margin:#{$i}px !important;
+    }
+    .p-l-#{$i}{
+        padding-left:#{$i}px !important;
+    }
+    .p-t-#{$i}{
+        padding-top:#{$i}px !important;
+    }
+    .p-r-#{$i}{
+        padding-right:#{$i}px !important;
+    }
+    .p-b-#{$i}{
+        padding-bottom:#{$i}px !important;
+    }
+    .p-all-#{$i}{
+        padding:#{$i}px !important;
+    }
+    .min-w-#{$i}{
+        min-width:#{$i}px !important;
+    }
+    .min-h-#{$i}{
+        min-height:#{$i}px !important;
+    }
+    .max-w-#{$i}{
+        max-width:#{$i}px !important;
+    }
+    .max-h-#{$i}{
+        max-height:#{$i}px !important;
+    }
+}
+
+@for $i from 1 through 50{
+    .fz-#{$i}{
+        font-size: #{$i}px !important;
+    }
+}
+
+$fweights: 100, 200, 300, 400, 500, 600, 700, 800, 900;
+@each $fweight in $fweights {
+  .fw-#{$fweight} {
+    font-weight: #{$fweight}!important;
+  }
+}
+
+@for $i from 1 through 10{
+    .text-overflow-#{$i} {
+        display: block;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: #{$i};
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.user-select{
+    &-none{
+        user-select: none;
+    }
+    &-auto{
+        user-select: auto;
+    }
+}
+.text{
+    &-overflow{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+.spacer {
+    flex-grow: 1 !important;
+}
+hr{
+	margin-top: 10px;
+    margin-bottom: 10px;
+    border: 0;
+    border-top: 1px solid $line-color;;
+}
+.img-responsive{
+	max-width:100%;
+	height: auto;
+}
+
+.disable-element{
+    position: relative;
+    opacity: 0.4;
+    user-select: none;
+    &:before {
+        content: " ";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 1;
+    }
+}
+
+.box{
+    border-radius: $border-radius;
+    border: solid 1px $line-color;
+    background-color: $white-color;
+}
+
+.wrapper-space{
+    max-width: 1170px;
+    margin: auto;
+}
+
+.close{
+    float: right;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=20);
+    opacity: .2;
+    -webkit-appearance: none;
+    padding: 0;
+    cursor: pointer;
+    background: 0 0;
+    border: 0;
+}
+.flex-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.color-secondary{
+    color: $text-color-secondary;
+}

@@ -1,0 +1,10 @@
+.slide-from-right-leave-active,
+.slide-from-right-enter-active {
+  transition: 1s;
+}
+.slide-from-right-enter {
+  transform: translate(100%, 0);
+}
+.slide-from-right-leave-to {
+  transform: translate(-100%, 0);
+}

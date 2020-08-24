@@ -1,0 +1,115 @@
+@mixin scroll-bar-custom($height : 5px, $width : 5px, $bg-track: $white-color, $bg-thumb: #c4c4c4, $bg-thumb-hover: #c4c4c4, $border: 5px){
+    scrollbar-width: thin;          /* "auto" or "thin"  */
+    scrollbar-color: #9fb3c8;   
+  
+    &::-webkit-scrollbar {
+      height: $height;
+      width: $width;
+  }
+  
+  /* Track */
+  &::-webkit-scrollbar-track {
+      background-color: $bg-track; 
+  }
+  
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+      border-radius: $border;
+      background-color: $bg-thumb
+  }
+  
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+      background-color: $bg-thumb-hover;
+  }
+}
+
+
+// @mixin img() {
+//     max-width: 100%;
+//     height: auto;
+// }
+// @mixin center(){
+//     margin-left: auto;
+//     margin-right: auto;
+// }
+// @mixin clear() {
+//     display: block;
+//     content: "";
+//     clear: both;
+// }
+// @mixin col(){
+//     flex-basis: 0;
+//     flex-grow: 1;
+//     max-width: 100%;
+// }
+// @mixin flex($width){
+// 	flex: 0 0 $width;
+//     max-width: $width;
+// }
+// @mixin page-title(){
+// 	font-weight: bold;
+// 	font-size: 24px;
+// 	color: $text-color;
+// 	font-style: normal;
+// }
+
+// @mixin background-opacity($color, $opacity: .3) {
+//     background-color: transparentize($color, $opacity) !important;
+// } 
+
+// @function asset($path) {
+// 	@return url("~@/assets/#{$path}");
+// }
+
+// @mixin scroll-bar($width : 5px, $bg-track: $white-color, $bg-thumb: #c4c4c4, $bg-thumb-hover: #c4c4c4, $border: 5px){
+//     &::-webkit-scrollbar {
+//         width: $width;
+//     }
+    
+//     /* Track */
+//     &::-webkit-scrollbar-track {
+//         background-color: $bg-track; 
+//     }
+    
+//     /* Handle */
+//     &::-webkit-scrollbar-thumb {
+//         border-radius: $border;
+//         background-color: $bg-thumb
+//     }
+    
+//     /* Handle on hover */
+//     &::-webkit-scrollbar-thumb:hover {
+//         background-color: $bg-thumb-hover;
+//     }
+// }
+
+// @mixin responsive($canvas) {
+//     @if $canvas == xs {
+//       @media only screen and (min-width: 320px) { @content; }
+//     }
+  
+//     @else if $canvas == sm {
+//       @media only screen and (min-width: 576px) { @content; }
+//     }
+  
+//     @else if $canvas == md {
+//       @media only screen and (min-width: 768px) { @content; }
+//     }
+  
+//     @else if $canvas == lg {
+//       @media only screen and (min-width: 992px) { @content; }
+//     }
+  
+//     @else if $canvas == xl {
+//       @media only screen and (min-width: 1200px) { @content; }
+//     }
+  
+//     @else if $canvas == xxl {
+//       @media only screen and (min-width: 1600px) { @content; }
+//     }
+//     // *** use
+//     // @include responsive(sm) {
+//     //     font-size: 14px;
+//     // }
+// }

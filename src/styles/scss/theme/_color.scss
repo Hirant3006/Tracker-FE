@@ -1,0 +1,95 @@
+@import '../static/_variables.scss';
+
+.primary-color {
+  color: $primary-color!important;
+}
+.bg-primary-color {
+  background-color: $primary-color!important;
+}
+.primary-color-dark {
+  color: $primary-color-dark!important;
+}
+.bg-primary-color-dark {
+  background-color: $primary-color-dark!important;
+}
+.primary-light {
+  color: $primary-light!important;
+}
+.bg-primary-light {
+  background-color: $primary-light!important;
+}
+.text-color {
+  color: $text-color!important;
+}
+.text-color-secondary {
+  color: $text-color-secondary!important;
+}
+.background {
+  background-color: $background-color!important;
+}
+.line {
+  border-color: $line-color!important;
+}
+.bg-line {
+  background-color: $line-color!important;
+}
+.line-dark {
+  border-color: $line-dark!important;
+}
+.bg-line-dark {
+  background-color: $line-dark!important;
+}
+.disabled-color-dark {
+  color: $disabled-color-dark!important;
+}
+.bg-disabled-color-dark {
+  background-color: $disabled-color-dark!important;
+}
+.disabled-color {
+  color: $disabled-color!important;
+}
+.bg-disabled-color {
+  background-color: $disabled-color!important;
+}
+.success-color {
+  color: $success-color!important;
+}
+.bg-success-color {
+  background-color: $success-color!important;
+}
+.info-color {
+  color: $info-color!important;
+}
+.bg-info-color {
+  background-color: $info-color!important;
+}
+.danger-color {
+  color: $danger-color!important;
+}
+.bg-danger-color {
+  background-color: $danger-color!important;
+}
+.danger-color-dark {
+  color: $danger-color-dark!important;
+}
+.bg-danger-color-dark {
+  background-color: $danger-color-dark!important;
+}
+.warning-color {
+  color: $warning-color!important;
+}
+.bg-warning-color {
+  background-color: $warning-color!important;
+}
+.warning-color-dark {
+  color: $warning-color-dark!important;
+}
+.bg-warning-color-dark {
+  background-color: $warning-color-dark!important;
+}
+.white {
+  color: #FFF!important;
+}
+.bg-white {
+  background-color: #FFF!important;
+}

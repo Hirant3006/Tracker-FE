@@ -1,0 +1,59 @@
+@import './prefix-cls';
+// Colors
+$primary-color: #2f43d7 !default;
+$primary-color-dark: #192bab !default;
+$primary-light: #dce5f4 !default;
+$primary-color-hover : rgba(86, 128, 233, 0.2) !default;
+$text-color: #102a43 !default;
+$text-color-secondary: #627d98 !default;
+$line-color        : #d9e2ec !default;
+$border-radius       : 8px !default;
+$box-shadow          : 0px 5px 10px rgba(0, 0, 0, 0.18) !default;
+$body-bg             : #FFFFFF !default;
+$body-font-family    : 'noto-sans' !default;
+$font-size-xsm       : 12px !default;
+$font-size-code      : 14px !default;
+$font-size-sm        : 14px !default;
+$font-size           : 16px !default;
+$font-size-base	     : 16px !default;
+$font-size-large     : 18px !default;
+$body-font-weight    : 400 !default;
+$font-weight-semibold: 600 !default;
+$white-color         : #FFFFFF !default;
+$background-color    : #f0f4f8 !default;
+$line-dark			 : #9fb3c8 !default;
+$disabled-color      : #bcccdc !default;
+$disabled-color-dark: #829ab1 !default;
+$rating-color        : #FFB303 !default;
+$background-field-color    : #F5F5F5 !default;
+
+$app-auth-bg : linear-gradient(180deg, #242539 0%, #293D6F 100%) !default;
+
+// Sidebar Menu
+$app-sidebar-bg : #FFFFFF !default;
+$app-sidebar-width : 230px !default;
+$app-menu-item-active-bg : #DDE5F4 !default;
+
+// Header
+$app-header-height : 64px !default;
+$app-header-bg : #F5F5F5 !default;
+
+// Footer
+$app-footer-height : 48px !default;
+$app-footer-bg : #F5F5F5 !default;
+
+// app
+$app-content-height : calc(100vh - #{$app-header-height + $app-footer-height}) !default;
+
+$header-height: 65px !default;
+$app-collapse-breakpoint: 1440px !default;
+$app-sidebar-collapse-width : 80px !default;
+$input-height: 40px !default;
+$input-border-radius: 8px !default;
+
+$warning-color: #faad14 !default;
+$warning-color-dark: #e6990a !default;
+$danger-color: #f5222d !default;
+$danger-color-dark: #e10e23 !default;
+$success-color: #39c16c !default;
+$info-color: #1890ff !default;
