@@ -1,3 +1,3 @@
 export const storeKeyNameSpace = {
-    LOGIN: 'Login'
+    LOGIN: 'login'
 }

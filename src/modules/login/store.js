@@ -1,5 +1,6 @@
 const state = {
-};
+	isLoading2 : false,
+}
 
 const getters = {
 };
