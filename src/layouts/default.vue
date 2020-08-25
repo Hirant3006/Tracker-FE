@@ -1,6 +1,6 @@
 <template>
     <a-layout class="app-layout" id="components-layout-demo-custom-trigger">
-        <sidebar :data="columnData"/>
+        <sidebar :data="columnData" />
         <a-layout>
             <a-layout-header
                 style="background: #fff; padding: 0; border-bottom: 1px solid rgb(232 232 232);"
@@ -62,9 +62,7 @@ export default {
 }
 
 #components-layout-demo-custom-trigger .logo {
-    height: 32px;
-    background: rgba(255, 255, 255, 0.2);
-    margin: 16px;
+ 
 }
 
 .app-layout {
