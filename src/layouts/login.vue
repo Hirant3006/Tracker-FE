@@ -14,7 +14,6 @@ export default {
 
 <style lang="scss">
 .app-auth-layout {
-    
     min-height: 100vh;
     width: 100%;
     background-color: white;

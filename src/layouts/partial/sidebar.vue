@@ -11,7 +11,7 @@
             >
                 <a-menu-item v-for="item in data" :key="item.title">
                     <router-link :to="item.path">
-                        <div>
+                        <div class="m-l-4" style="    margin-left: 4px;">
                             <i :class="item.icon"></i>
                             <span class="m-l-10">{{item.title}}</span>
                         </div>
@@ -45,15 +45,14 @@ export default {
 .sidebar-custom {
     .logo {
         height: 64px;
-        background: rgba(255, 255, 255, 0.2);
-        border-bottom: 1px solid rgb(232, 232, 232);
+        border-bottom: 1px solid $line-color;
     }
     .ant-layout-sider {
         flex: 0 0 230px !important;
         max-width: 230px !important;
         min-width: 230px !important;
         width: 230px !important;
-        background: #f0f4f8;
+        background: $background-color;
         height: 100vh;
     }
     .ant-menu-item {
@@ -67,12 +66,12 @@ export default {
             }
             font-weight: 600;
             border-radius: 8px;
-            background-color: #dce5f4;
+            background-color: $primary-light;
         }
         &-item {
             > a {
                 display: block;
-                color: #627d98;
+                color: $text-color_secondary;
             }
             i {
                 font-size: 17px !important;

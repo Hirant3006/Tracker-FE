@@ -61,10 +61,6 @@ export default {
     color: #1890ff;
 }
 
-#components-layout-demo-custom-trigger .logo {
- 
-}
-
 .app-layout {
     min-height: 100vh;
     height: 100vh;
