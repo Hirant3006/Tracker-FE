@@ -1,22 +1,6 @@
 <template>
     <a-layout class="app-layout" id="components-layout-demo-custom-trigger">
-        <a-layout-sider style="width:300px" v-model="collapsed" :trigger="null" collapsible>
-            <div class="logo" />
-            <a-menu class="m-t-40" theme="dark" mode="vertical" :default-selected-keys="['1']">
-                <a-menu-item key="1">
-                    <a-icon type="user" />
-                    <span>nav 1</span>
-                </a-menu-item>
-                <a-menu-item key="2">
-                    <a-icon type="video-camera" />
-                    <span>nav 2</span>
-                </a-menu-item>
-                <a-menu-item key="3">
-                    <a-icon type="upload" />
-                    <span>nav 3</span>
-                </a-menu-item>
-            </a-menu>
-        </a-layout-sider>
+        <sidebar :data="columnData"/>
         <a-layout>
             <a-layout-header
                 style="background: #fff; padding: 0; border-bottom: 1px solid rgb(232 232 232);"
@@ -31,11 +15,26 @@
 </template>
 
 <script>
+import Sidebar from "./partial/sidebar";
 export default {
     name: "Default",
+    components: {
+        Sidebar,
+    },
     data() {
         return {
-            collapsed: false,
+            columnData: [
+                {
+                    title: "Dashboard",
+                    path: "/",
+                    icon: "fas fa-bell",
+                },
+                {
+                    title: "Transactions",
+                    path: this.$routerName.TRANSACTIONS,
+                    icon: "fas fa-bell",
+                },
+            ],
         };
     },
     methods: {
@@ -69,15 +68,6 @@ export default {
 }
 
 .app-layout {
-    .ant-layout-sider {
-        flex: 0 0 230px !important;
-        max-width: 230px !important;
-        min-width: 230px !important;
-        width: 230px !important;
-    }
-    .ant-menu-item {
-        font-size: 16px;
-    }
     min-height: 100vh;
     height: 100vh;
     font-size: 16px;

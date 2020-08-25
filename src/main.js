@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import '@fortawesome/fontawesome-pro/css/all.css'
 import App from './layouts/App.vue'
 import router from './router'
 import store from './store'

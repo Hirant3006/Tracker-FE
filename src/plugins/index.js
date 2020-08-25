@@ -2,3 +2,4 @@
 // import './filter'
 // import './directives'
 import './components'
+import './global-variable'
