@@ -1,12 +1,14 @@
 // import noAuth from './middlewares/notAuth'
 import routerName from '@/constants/routers'
+import auth from '@/middlewares/auth'
 
 export default [
 	{
 		path: '/transactions',
 		name: routerName.TRANSACTIONS,
 		meta: {
-			layout : 'default'
+			layout : 'default',
+			middleware: [auth]
 		},
 		component: () => import( /* webpackChunkName: "install-app" */ './views/index.vue'),
 		// children : [

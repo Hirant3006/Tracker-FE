@@ -34,20 +34,20 @@ export default {
         return {
             selectedKeys: [],
             collapsed: false,
-            defaultSelectedKeys: [this.$route.name]
+            defaultSelectedKeys: [this.$route.name],
         };
     },
 };
 </script>
 
 <style lang="scss">
-
 .sidebar-custom {
     .logo {
         height: 64px;
         border-bottom: 1px solid $line-color;
     }
     .ant-layout-sider {
+        box-shadow: inset -8px 0px 40px $primary-light;
         flex: 0 0 230px !important;
         max-width: 230px !important;
         min-width: 230px !important;
@@ -58,7 +58,7 @@ export default {
     .ant-menu-item {
         font-size: 16px;
     }
-    .m-menu {
+    .#{$menu} {
         padding: 0 16px;
         &-item-selected {
             > a {

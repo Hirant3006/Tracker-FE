@@ -4,7 +4,7 @@ import api from '@/api'
 import { _types } from './constant'
 import routerName from '@/constants/routers'
 
-const token_name = process.env.VUE_APP_TOKEN_NAME ? process.env.VUE_APP_TOKEN_NAME : 'messent_token'
+const token_name = process.env.VUE_APP_TOKEN_NAME ? process.env.VUE_APP_TOKEN_NAME : 'app_token'
 const state = {
 	token: cookie.get(token_name),
 	store: null,

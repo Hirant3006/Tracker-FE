@@ -5,22 +5,22 @@ import cookie from 'js-cookie'
 Vue.use(Vuex)
 
 const state = {
-	isLoading : false,
+	isLoading: false,
 	isRouterLoading: false,
-	isError : false,
+	isError: false,
 }
 
 const getters = {
-    getLoading(state){
-        return state.isLoading
+	getLoading(state) {
+		return state.isLoading
 	},
-	getError(state){
+	getError(state) {
 		return state.isError
 	},
-	getRouterLoading(state){
+	getRouterLoading(state) {
 		return state.isRouterLoading
 	},
-	getLanguage(state){
+	getLanguage(state) {
 		return state.language
 	},
 };
@@ -29,22 +29,22 @@ const actions = {
 };
 
 const mutations = {
-  setLoading(state , payload ){
-        state.isLoading = payload
+	setLoading(state, payload) {
+		state.isLoading = payload
 	},
-	setError(state, payload){
+	setError(state, payload) {
 		state.isError = payload
 	},
-	setRouterLoading(state , payload ){
-        state.isRouterLoading = payload
+	setRouterLoading(state, payload) {
+		state.isRouterLoading = payload
 	},
-	setLanguage(state , payload){
+	setLanguage(state, payload) {
 		state.language = payload
 	}
 };
 export default new Vuex.Store({
-    state,
-    actions,
-    getters,
-    mutations,
+	state,
+	actions,
+	getters,
+	mutations,
 });
