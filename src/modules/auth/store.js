@@ -28,94 +28,17 @@ const getters = {
 };
 
 const actions = {
-	async [_types.actions.GET_STORE]({ commit }) {
-		try {
-			let res = await api.getStore();
-			let { status, data } = res.data
-			if (status) {
-				commit(_types.mutations.SET_STORE, data)
-			}
-			return res
-		} catch (error) {
-			throw error;
-		}
-	},
-	async [_types.actions.LOGIN]({ }, payload) {
+	async [_types.actions.LOGIN]({commit}, payload) {
 		try {
 			return await api.login(payload);
+
 		} catch (error) {
 			throw error;
-		}
-	},
-	async [_types.actions.SHOPIFY_LOGIN]({ }, payload) {
-		try {
-			return await api.handleUrlShopifyLogin(payload)
-		} catch (e) {
-			throw e;
 		}
 	},
 	async [_types.actions.LOGOUT]({ commit }) {
 		commit(_types.mutations.REMOVE_TOKEN)
 		router.push({ name: routerName.INSTALL_APP })
-	},
-	async [_types.actions.INIT_INTERCOM]({ commit, state }) {
-		let res = await api.getIntercom()
-		let { status, data } = res.data
-		if (status) {
-			data = { ...data, alignment: 'right' }
-			window.Intercom('update', data)
-		}
-	},
-	[_types.actions.DESTROY_INTERCOM]({ commit }) {
-		window.Intercom('shutdown')
-	},
-	[_types.actions.TOGGLE_SHOW_INTERCOM]({ }) {
-		var intercom_on_messager = document.querySelector('.intercom-messenger-frame');
-		if (intercom_on_messager == null) {
-			window.Intercom('show');
-		} else {
-			window.Intercom('hide');
-		}
-	},
-	[_types.actions.SHOW_INTERCOM]({ }, payload) {
-		if (payload == true) {
-			window.Intercom('show');
-		} else {
-			window.Intercom('hide');
-		}
-	},
-	async getNotification({ commit }, payload) {
-		try {
-			let res = await api.getNotification(payload);
-			let { status, data } = res.data
-			if (status) {
-			}
-			return res
-		} catch (error) {
-			throw error;
-		}
-	},
-	async markNotification({ }, payload) {
-		try {
-			let res = await api.markNotification(payload);
-			let { status, data } = res.data
-			if (status) {
-			}
-			return res
-		} catch (error) {
-			throw error;
-		}
-	},
-	async updateStore({ }, payload) {
-		try {
-			let res = await api.updateStore(payload);
-			let { status, data } = res.data
-			if (status) {
-			}
-			return res
-		} catch (error) {
-			throw error;
-		}
 	},
 };
 

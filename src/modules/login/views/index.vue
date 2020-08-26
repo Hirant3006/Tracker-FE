@@ -2,15 +2,21 @@
     <div class="auth">
         <div class="auth__container">
             <div class="auth__body">
-                <a-form class="auth__form" @submit.stop.prevent="onLogin()" novalidate>
+                <a-form class="auth__form" @submit.stop.prevent="onLogin()">
                     <a-form-item label="Tên">
                         <a-input
+                            v-model="form.username"
                             v-decorator="['Tên', { rules: [{ required: true, message: 'Please input your note!' }] }]"
                         />
                     </a-form-item>
                     <a-form-item label="Mật khẩu">
                         <a-input
+                            v-model="form.password"
+                            type="password"
+                            name="password"
+                            autocomplete="on"
                             v-decorator="['note', { rules: [{ required: true, message: 'Please input your note!' }] }]"
+                            @keydown.enter="onLogin"
                         />
                     </a-form-item>
                     <a-button
@@ -28,18 +34,35 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
+
 export default {
     name: "Login",
     data() {
         return {
             isLoading: false,
+            form: {
+                username: "",
+                password: "",
+            },
         };
     },
+    mounted() {
+    },
     methods: {
-        onLogin() {
-            this.isLoading = true
-        }
-    }
+        ...mapActions({
+            login: "auth/login",
+        }),
+        async onLogin() {
+            console.log('lốc in nè')
+            const {username,password} = this.form
+            if (username && password) {
+                this.isLoading = true;
+                const login = await this.login({username,password});
+                console.log('data ',login)
+            }
+        },
+    },
 };
 </script>
 

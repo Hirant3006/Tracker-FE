@@ -1,13 +1,11 @@
 import cookie from 'js-cookie'
 import router from '@/router'
 import { default as instance } from 'axios'
-import has from 'lodash/has'
-import { types as typesAuth } from '@/modules/auth/constant'
 import routerName from '@/constants/routers'
 const token_name = process.env.VUE_APP_TOKEN_NAME ? process.env.VUE_APP_TOKEN_NAME : 'app_token'
 
 let AxiosConfig = {
-	baseURL: process.env.VUE_APP_ROOT_API || "",
+	baseURL: process.env.VUE_APP_ROOT_API,
 	timeout: 60 * 1000,
 	validateStatus: function (status) {
 		return status >= 200 && status <= 500 ;
@@ -23,6 +21,7 @@ axios.interceptors.request.use(function (config) {
 	if( token ){
 		config.headers['Authorization'] = `Bearer ${token}`
 	} 
+	config.headers['Content-Type'] = 'application/json'
 	// let lang = cookie.get('origin_app_language') 
 	// config.headers['Language'] = lang ? lang : 'en'
     return config;
