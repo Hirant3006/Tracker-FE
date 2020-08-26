@@ -3,7 +3,7 @@ import routerName from '@/constants/routers'
 
 export default function ({ next, router , store }) {
 	if (store.getters[types.getters.GET_TOKEN]) {
-		next({ name : routerName.CAMPAIGNS})
+		next({ name : routerName.DASHBOARD})
 		return false
 	}
 	return true

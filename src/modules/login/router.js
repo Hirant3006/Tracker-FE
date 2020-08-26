@@ -1,4 +1,4 @@
-// import noAuth from './middlewares/notAuth'
+import noAuth from './middlewares/notAuth'
 import routerName from '@/constants/routers'
 
 export default [
@@ -6,19 +6,9 @@ export default [
 		path: '/login',
 		name: routerName.LOGIN,
 		meta: {
-			layout : 'login'
+			layout: 'login',
+			middleware: [noAuth]
 		},
 		component: () => import( /* webpackChunkName: "install-app" */ './views/index.vue'),
-		// children : [
-		// 	{
-		// 		path: '',
-		// 		name: 'InstallApp',
-		// 		meta: {
-		// 			layout : 'install-app',
-		// 			middleware : [ noAuth ]
-		// 		},
-		// 		component: () => import( /* webpackChunkName: "auth" */ './views/index.vue')
-		// 	},
-		// ]
 	},
 ]

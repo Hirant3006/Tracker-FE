@@ -28,10 +28,16 @@ const getters = {
 };
 
 const actions = {
-	async [_types.actions.LOGIN]({commit}, payload) {
+	async [_types.actions.LOGIN]({ commit }, payload) {
 		try {
-			return await api.login(payload);
-
+			const res = await api.login(payload);
+			console.log(res)
+			const { header, data } = res.data
+			if (header.isSuccessful) {
+				commit(_types.mutations.SET_TOKEN, data.token)
+				router.push({ name: routerName.DASHBOARD })
+			}
+			return res
 		} catch (error) {
 			throw error;
 		}

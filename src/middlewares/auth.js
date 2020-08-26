@@ -7,6 +7,6 @@ export default async function ({ next, from, to, router, store, app }) {
 
     console.log('Token', token)
     if (token) {
-
-    } else next({ name: routerName.LOGIN })
+        next()
+    } else  next({ name: routerName.LOGIN })
 }
