@@ -44,7 +44,7 @@ const actions = {
 	},
 	async [_types.actions.LOGOUT]({ commit }) {
 		commit(_types.mutations.REMOVE_TOKEN)
-		router.push({ name: routerName.INSTALL_APP })
+		router.push({ name: routerName.LOGIN })
 	},
 };
 

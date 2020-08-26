@@ -90,11 +90,7 @@ export default {
                 this.isLoading = true;
                 const login = await this.login({ username, password });
                 const { header } = login.data;
-                if (header.isSuccessful) {
-                    this.$router.push({
-                        name: this.$routerName.DASHBOARD,
-                    });
-                } else {
+                if (!header.isSuccessful) {
                     this.isError = true;
                     header.resultMessage === "Wrong username or password!" &&
                         (this.message =

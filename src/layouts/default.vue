@@ -4,7 +4,21 @@
         <a-layout>
             <a-layout-header
                 style="background: #fff; padding: 0; border-bottom: 1px solid rgb(232 232 232);"
-            ></a-layout-header>
+            >
+                <div class="app-layout__header">
+                    <div class>chọn sổ</div>
+                    <a-dropdown>
+                        <a class="ant-dropdown-link" @click="e => e.preventDefault()">User name</a>
+                        <a-menu slot="overlay">
+                            <a-menu-item key="0" @click="logout">
+                                <i class="far fa-sign-out-alt"></i>
+                                &nbsp; 
+                                <span>Log out</span>
+                            </a-menu-item>
+                        </a-menu>
+                    </a-dropdown>
+                </div>
+            </a-layout-header>
             <a-layout-content
                 :style="{ padding: '35px 8px', background: '#fff', minHeight: '280px' }"
             >
@@ -15,6 +29,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 import Sidebar from "./partial/sidebar";
 export default {
     name: "Default",
@@ -38,6 +53,9 @@ export default {
         };
     },
     methods: {
+        ...mapActions({
+            logout: 'auth/logout',
+        }),
         handleClick(e) {
             console.log("click", e);
         },
@@ -65,5 +83,10 @@ export default {
     min-height: 100vh;
     height: 100vh;
     font-size: 16px;
+    &__header {
+        padding: 0 24px;
+        display: flex;
+        justify-content: space-between;
+    }
 }
 </style>
