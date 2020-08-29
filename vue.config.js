@@ -8,15 +8,4 @@ module.exports = {
             }
         }
     },
-    devServer: {
-        proxy: {
-            '^/api': {
-                target: 'https://eloquent-region-287213.et.r.appspot.com:443',
-                changeOrigin: true,
-                secure: false,
-                pathRewrite: { '^/api': '/' },
-                logLevel: 'debug'
-            }
-        }
-    }
 }

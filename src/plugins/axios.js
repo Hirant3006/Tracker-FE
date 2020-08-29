@@ -11,7 +11,7 @@ let AxiosConfig = {
 		return status >= 200 && status <= 500 ;
 	},
 };
-
+console.log(AxiosConfig.baseURL)
 let axios = instance.create(AxiosConfig);
 axios.CancelToken = instance.CancelToken;
 axios.isCancel = instance.isCancel;
