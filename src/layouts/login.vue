@@ -16,7 +16,6 @@ export default {
 .app-auth-layout {
     min-height: 100vh;
     width: 100%;
-    background-color: white;
     display: flex;
     justify-content: center;
     background-image: url("../modules/login/assets/bg-auth.png");
