@@ -21,6 +21,7 @@ const actions = {
             const res = await api.get_list_book();
             const { header, data } = res.data
             if (header.isSuccessful) {
+                console.log(data)
                 commit(_types.mutations.SET_BOOKS, data)
             }
             return res
