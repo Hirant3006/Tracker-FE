@@ -55,70 +55,11 @@ axios.interceptors.response.use(
 			res = await axios.request(config);
 		}
 
-		// console.log()
-
-		// TokenStorage.getNewToken()
-		// 	.then((token) => {
-		// 		// New request with new token
-		// 		const config = error.config;
-		// 		config.headers["TOKEN"] = `${token}`;
-
-		// 		return new Promise((resolve, reject) => {
-		// 			axios
-		// 				.request(config)
-		// 				.then((response) => {
-		// 					resolve(response);
-		// 				})
-		// 				.catch((error) => {
-		// 					reject(error);
-		// 				});
-		// 		});
-		// 	})
-
 		return res;
 	},
 	function(error) {
 		console.log(error);
-		// if (error.response.status !== 401) {
-		// 	return new Promise((resolve, reject) => {
-		// 		reject(error);
-		// 	});
-		// }
-
-		// // Logout user if token refresh didn't work or user is disabled
-		// if (
-		// 	error.config.url == "/api/token/refresh" ||
-		// 	error.response.message == "Account is disabled."
-		// ) {
-		// 	TokenStorage.clear();
-		// 	router.push({ name: "root" });
-
-		// 	return new Promise((resolve, reject) => {
-		// 		reject(error);
-		// 	});
-		// }
-
-		// // Try request again with new token
-		// return TokenStorage.getNewToken()
-		// 	.then((token) => {
-		// 		// New request with new token
-		// 		const config = error.config;
-		// 		config.headers["TOKEN"] = `${token}`;
-
-		// 		return new Promise((resolve, reject) => {
-		// 			axios
-		// 				.request(config)
-		// 				.then((response) => {
-		// 					resolve(response);
-		// 				})
-		// 				.catch((error) => {
-		// 					reject(error);
-		// 				});
-		// 		});
-		// 	})
-		// 	.catch((error) => {
-		// 		Promise.reject(error);
-		// 	});
+		
 	}
 );
 
