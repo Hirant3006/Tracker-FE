@@ -3,7 +3,7 @@ import { router } from '@/main.js'
 import api from '@/api'
 import { _types } from './constant'
 import routerName from '@/constants/routers'
-
+import jwt_decode from 'jwt-decode'
 const token_name = process.env.VUE_APP_TOKEN_NAME ? process.env.VUE_APP_TOKEN_NAME : 'app_token'
 const state = {
 	token: cookie.get(token_name),
@@ -31,9 +31,9 @@ const actions = {
 	async [_types.actions.LOGIN]({ commit }, payload) {
 		try {
 			const res = await api.login(payload);
-			console.log(res)
 			const { header, data } = res.data
 			if (header.isSuccessful) {
+				console.log('login ',jwt_decode(data.token))
 				commit(_types.mutations.SET_TOKEN, data.token)
 				router.push({ name: routerName.DASHBOARD })
 			}

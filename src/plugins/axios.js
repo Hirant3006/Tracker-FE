@@ -24,7 +24,7 @@ axios.interceptors.request.use(function(config) {
 	// config.headers['AppID'] = 'origin_app'
 	let token = cookie.get(token_name);
 	if (token) {
-		config.headers["Authorization"] = `Bearer ${token}`;
+		config.headers["TOKEN"] = `${token}`;
 	}
 	config.headers["Content-Type"] = "application/json";
 	// let lang = cookie.get('origin_app_language')
@@ -53,7 +53,7 @@ axios.interceptors.response.use(
 					expires: 7,
 				});
 			}
-			config.headers["Authorization"] = `Bearer ${token}`;
+			config.headers["Authorization"] = `${token}`;
 			config.headers["Content-Type"] = "application/json";
 			res = await axios.request(config);
 		}
