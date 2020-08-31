@@ -46,14 +46,15 @@ axios.interceptors.response.use(
 			cookie.remove(`${token_name}`);
 			const refresh_token_data = await api.refresh_token();
 			const { header, data } = refresh_token_data.data;
+			console.log('data ',refresh_token_data)
 			if (header.isSuccessful) {
 				cookie.set(`${token_name}`, data.token, {
 					expires: 7,
 				});
+				config.headers["TOKEN"] = `${data.token}`;
+				config.headers["Content-Type"] = "application/json";
+				res = await axios.request(config);
 			}
-			config.headers["TOKEN"] = `${token}`;
-			config.headers["Content-Type"] = "application/json";
-			res = await axios.request(config);
 		}
 
 		return res;
