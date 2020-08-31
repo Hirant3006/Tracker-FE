@@ -8,15 +8,11 @@ const token_name = process.env.VUE_APP_TOKEN_NAME ? process.env.VUE_APP_TOKEN_NA
 const refresh_token = 'refresh_token'
 const state = {
 	token: cookie.get(token_name),
-	store: null,
 	profile: null,
 	refresh_token: null,
 };
 
 const getters = {
-	[_types.getters.GET_STORE](state) {
-		return state.store
-	},
 	[_types.getters.GET_TOKEN](state) {
 		return state.token
 	},
@@ -86,14 +82,8 @@ const mutations = {
 		cookie.remove(`${token_name}`)
 		cookie.remove(`${refresh_token}`)
 	},
-	[_types.mutations.SET_STORE](state, payload = null) {
-		state.store = payload
-	},
 	[_types.mutations.SET_USER_PROFILE](state, payload = '') {
 		state.profile = payload
-	},
-	[_types.mutations.IS_ADMIN](state, payload = false) {
-		state.admin = payload
 	},
 };
 export default {

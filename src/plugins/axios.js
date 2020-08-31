@@ -33,14 +33,15 @@ axios.interceptors.request.use(function(config) {
 
 axios.interceptors.response.use(
 	async function(res) {
-		let { header, data, config } = res.data;
-
-		handleHttpError(header.resultCode, data);
+		let { header, data } = res.data;
+		let {config} = res
+		// handleHttpError(header.resultCode, data);
 
 		// Check đã refresh token hay chưa?
+		console.log(config.url,header.resultCode)
 		if (
-			res.config.url !== "/authentication/refresh-token" &&
-			header.resultCode == 1043
+			config.url !== "/authentication/refresh-token" &&
+			header.resultCode == 10413
 		) {
 			cookie.remove(`${token_name}`);
 			const refresh_token_data = await api.refresh_token();

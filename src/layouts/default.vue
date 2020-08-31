@@ -47,7 +47,12 @@ export default {
                 {
                     title: "Transactions",
                     path: this.$routerName.TRANSACTIONS,
-                    icon: "fas fa-bell",
+                    icon: "fas fa-cash-register",
+                },
+                {
+                    title: "Book",
+                    path: this.$routerName.BOOK,
+                    icon: "fas fa-book",
                 },
             ],
         };
