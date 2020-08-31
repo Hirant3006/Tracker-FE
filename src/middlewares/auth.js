@@ -1,6 +1,6 @@
 import routerName from '@/constants/routers'
 import { types as typesAuth } from '@/modules/auth/constant'
-import { types as typesBook } from '@/modules/onboarding/constant'
+import { types as typesBook } from '@/modules/book/constant'
 
 export default async function ({ next, from, to, router, store, app }) {
     /* check token from store */
