@@ -15,7 +15,6 @@ let AxiosConfig = {
 	},
 };
 
-console.log(AxiosConfig.baseURL);
 
 let axios = instance.create(AxiosConfig);
 axios.CancelToken = instance.CancelToken;
@@ -36,8 +35,6 @@ axios.interceptors.response.use(
 	async function(res) {
 		let { header, data, config } = res.data;
 
-		console.log(res, api);
-
 		handleHttpError(header.resultCode, data);
 
 		// Check đã refresh token hay chưa?
@@ -53,7 +50,7 @@ axios.interceptors.response.use(
 					expires: 7,
 				});
 			}
-			config.headers["Authorization"] = `${token}`;
+			config.headers["TOKEN"] = `${token}`;
 			config.headers["Content-Type"] = "application/json";
 			res = await axios.request(config);
 		}
@@ -64,7 +61,7 @@ axios.interceptors.response.use(
 		// 	.then((token) => {
 		// 		// New request with new token
 		// 		const config = error.config;
-		// 		config.headers["Authorization"] = `Bearer ${token}`;
+		// 		config.headers["TOKEN"] = `${token}`;
 
 		// 		return new Promise((resolve, reject) => {
 		// 			axios
@@ -106,7 +103,7 @@ axios.interceptors.response.use(
 		// 	.then((token) => {
 		// 		// New request with new token
 		// 		const config = error.config;
-		// 		config.headers["Authorization"] = `Bearer ${token}`;
+		// 		config.headers["TOKEN"] = `${token}`;
 
 		// 		return new Promise((resolve, reject) => {
 		// 			axios

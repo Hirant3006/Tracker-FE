@@ -5,11 +5,12 @@ import { _types } from './constant'
 import routerName from '@/constants/routers'
 import jwt_decode from 'jwt-decode'
 const token_name = process.env.VUE_APP_TOKEN_NAME ? process.env.VUE_APP_TOKEN_NAME : 'app_token'
+const refresh_token = 'refresh_token'
 const state = {
 	token: cookie.get(token_name),
 	store: null,
-	userType: '',
-	admin: false
+	profile: null,
+	refresh_token: null,
 };
 
 const getters = {
@@ -19,8 +20,8 @@ const getters = {
 	[_types.getters.GET_TOKEN](state) {
 		return state.token
 	},
-	[_types.getters.GET_USER_TYPE](state) {
-		return state.userType
+	[_types.getters.GET_USER_PROFILE](state) {
+		return state.profile
 	},
 	[_types.getters.IS_ADMIN](state) {
 		return state.admin
@@ -28,13 +29,14 @@ const getters = {
 };
 
 const actions = {
-	async [_types.actions.LOGIN]({ commit }, payload) {
+	async [_types.actions.LOGIN]({ dispatch,commit }, payload) {
 		try {
 			const res = await api.login(payload);
 			const { header, data } = res.data
 			if (header.isSuccessful) {
-				console.log('login ',jwt_decode(data.token))
 				commit(_types.mutations.SET_TOKEN, data.token)
+				commit(_types.mutations.SET_REFRESH_TOKEN, data.refreshToken)
+				await dispatch(_types.actions.GET_USER_PROFILE)
 				router.push({ name: routerName.DASHBOARD })
 			}
 			return res
@@ -46,6 +48,19 @@ const actions = {
 		commit(_types.mutations.REMOVE_TOKEN)
 		router.push({ name: routerName.LOGIN })
 	},
+	async [_types.actions.GET_USER_PROFILE]({ commit }) {
+		try {
+			const res = await api.get_user_profile();
+			const { header, data } = res.data
+			if (header.isSuccessful) {
+				commit(_types.mutations.SET_USER_PROFILE, data)
+			}
+			return res
+		} catch (error) {
+			throw error;
+		}
+	},
+
 };
 
 const mutations = {
@@ -57,18 +72,25 @@ const mutations = {
 	[_types.mutations.SET_TOKEN](state, payload = '') {
 		state.token = payload
 		cookie.set(`${token_name}`, payload, {
-			expires: 7
+			expires: 1
+		})
+	},
+	[_types.mutations.SET_REFRESH_TOKEN](state, payload = '') {
+		state.refresh_token = payload
+		cookie.set(`${refresh_token}`, payload, {
+			expires: 1
 		})
 	},
 	[_types.mutations.REMOVE_TOKEN](state) {
 		state.token = ''
 		cookie.remove(`${token_name}`)
+		cookie.remove(`${refresh_token}`)
 	},
 	[_types.mutations.SET_STORE](state, payload = null) {
 		state.store = payload
 	},
-	[_types.mutations.SET_USER_TYPE](state, payload = '') {
-		state.userType = payload
+	[_types.mutations.SET_USER_PROFILE](state, payload = '') {
+		state.profile = payload
 	},
 	[_types.mutations.IS_ADMIN](state, payload = false) {
 		state.admin = payload

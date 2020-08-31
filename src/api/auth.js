@@ -14,4 +14,10 @@ export default {
 			method: "get",
 		});
 	},
+	get_user_profile() {
+		return axios({
+			url: "/profile",
+			method: "get",
+		})
+	}
 };
