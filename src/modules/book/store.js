@@ -2,7 +2,7 @@ import { _types } from './constant'
 import api from '@/api'
 
 const state = {
-    books: null,
+    books: [],
     selected: null,
 };
 

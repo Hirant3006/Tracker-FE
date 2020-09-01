@@ -5,6 +5,7 @@ export const _types = {
     getters: {
         GET_TOKEN: 'getToken',
         GET_USER_PROFILE: 'getUserProfile',
+        GET_USER_ROLE: 'getUserRole',
     },
     actions: {
         LOGIN: 'login',
