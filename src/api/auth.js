@@ -15,8 +15,8 @@ export default {
 			url: "/authentication/refresh-token",
 			method: "get",
 			headers: {
-				'TOKEN': refresh_token
-			}
+				'REFRESH_TOKEN': refresh_token,
+			},
 		});
 	},
 	get_user_profile() {
