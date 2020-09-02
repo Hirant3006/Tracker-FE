@@ -10,9 +10,9 @@ const getters = {
     [_types.getters.GET_BOOK_BY_ID]: (state) => (id) => {
         return state.books.filter(item => item.id === id)
     },
-    // [_types.getters.GET_SELECTED_BOOK](state) {
-    // 	return state.selected
-    // },
+    [_types.getters.GET_SELECTED_BOOK](state) {
+    	return state.selected
+    },
 };
 
 const actions = {

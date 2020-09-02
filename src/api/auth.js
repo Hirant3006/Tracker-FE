@@ -1,4 +1,5 @@
 import axios from "@/plugins/axios";
+import cookie from 'js-cookie'
 
 export default {
 	login(data) {
@@ -9,9 +10,13 @@ export default {
 		});
 	},
 	refresh_token() {
+		const refresh_token = cookie.get('refresh_token')
 		return axios({
 			url: "/authentication/refresh-token",
 			method: "get",
+			headers: {
+				'TOKEN': refresh_token
+			}
 		});
 	},
 	get_user_profile() {

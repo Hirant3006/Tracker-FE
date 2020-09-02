@@ -41,15 +41,15 @@ const actions = {
 			if (header.isSuccessful) {
 				commit(_types.mutations.SET_TOKEN, data.token)
 				commit(_types.mutations.SET_REFRESH_TOKEN, data.refreshToken)
-				await dispatch(_types.actions.GET_USER_PROFILE)
-				await dispatch('book/getBooks', null, { root: true })
-				const profileRole = getters[_types.getters.GET_USER_ROLE]
-				const books = rootState.book.books
-				if (books.length === 0 || profileRole === role.mod) {
-					router.push({ name: routerName.ONBOARDING })
-					return res
-				}
-				router.push({ name: routerName.DASHBOARD })
+				// await dispatch(_types.actions.GET_USER_PROFILE)
+				// await dispatch('book/getBooks', null, { root: true })
+				// const profileRole = getters[_types.getters.GET_USER_ROLE]
+				// const books = rootState.book.books
+				// if (books.length === 0 || profileRole === role.mod) {
+				// 	router.push({ name: routerName.ONBOARDING })
+				// 	return res
+				// }
+				router.go()
 			}
 			return res
 		} catch (error) {
@@ -58,7 +58,7 @@ const actions = {
 	},
 	async [_types.actions.LOGOUT]({ commit }) {
 		commit(_types.mutations.REMOVE_TOKEN)
-		router.push({ name: routerName.LOGIN })
+		router.go({ name: routerName.LOGIN })
 	},
 	async [_types.actions.GET_USER_PROFILE]({ commit }) {
 		try {
