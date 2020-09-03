@@ -5,6 +5,7 @@ export const _types = {
     getters: {
         GET_BOOK_BY_ID: 'getBookById',
         GET_SELECTED_BOOK: 'getSelectedBook',
+        GET_BOOKS: 'getBooks',
     },
     actions: {
         GET_BOOKS: 'getBooks',

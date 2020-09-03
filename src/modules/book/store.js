@@ -13,6 +13,9 @@ const getters = {
     [_types.getters.GET_SELECTED_BOOK](state) {
     	return state.selected
     },
+    [_types.getters.GET_BOOKS](state) {
+    	return state.books
+    },
 };
 
 const actions = {
