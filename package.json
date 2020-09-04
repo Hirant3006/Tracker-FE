@@ -13,6 +13,7 @@
     "core-js": "^3.6.5",
     "js-cookie": "^2.2.1",
     "jwt-decode": "^2.2.0",
+    "moment-timezone": "^0.5.31",
     "sass": "^1.26.10",
     "sass-loader": "7.3.1",
     "vue": "^2.6.11",

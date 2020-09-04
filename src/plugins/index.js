@@ -1,5 +1,6 @@
 // import './mixins'   
-// import './filter'
+import './filter'
+import './helper'
 // import './directives'
 import './components'
 import './global-variable'

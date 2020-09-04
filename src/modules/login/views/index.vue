@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters,  } from "vuex";
 import { required } from "vuelidate/lib/validators";
 
 export default {
