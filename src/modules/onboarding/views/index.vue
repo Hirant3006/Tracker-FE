@@ -94,7 +94,7 @@
       >Chọn sổ để tiếp tục</div>
       <div class="onboarding__list-card">
         <book-card @click="onSelectBook" v-for="(book,index) in books" :key="index" :data="book" />
-        <book-card @click="onCreateNewBook" type="blank" />
+        <book-card v-if="profile && profile.role==='ADMIN'" @click="onCreateNewBook" type="blank" />
       </div>
     </div>
   </div>
