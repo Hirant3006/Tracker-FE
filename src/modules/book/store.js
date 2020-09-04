@@ -22,10 +22,12 @@ const actions = {
 	async [_types.actions.GET_BOOKS]({ commit }) {
 		try {
 			const res = await api.get_list_book();
-			const { header, data } = res.data;
+			let { header, data } = res.data;
 			if (header.isSuccessful) {
 				console.log(data);
-				commit(_types.mutations.SET_BOOKS, data);
+				data = data.filter(item => !item.isDelete)
+				console.log('book ',data)
+				if (data.length!==0) commit(_types.mutations.SET_BOOKS, data);
 			}
 			return res;
 		} catch (error) {
