@@ -7,4 +7,11 @@ export default {
 			method: "get",
 		});
 	},
+	insert_book(data) {
+		return axios({
+			url: "/book" ,
+			method: "post",
+			data
+		});
+	}
 };
