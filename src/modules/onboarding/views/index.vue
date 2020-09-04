@@ -1,6 +1,6 @@
 <template>
   <div class="onboarding">
-    <div v-if="(books && books.length===0) || onCreatedNewBook==true">
+    <div v-if="!books">
       <transition name="fade-in" mode="out-in">
         <div class="onboarding__no-data" v-if="onCreatedNewBook==false">
           <img class="m-b-24" src="@/assets/images/not-found.png" alt="not found" />
@@ -94,7 +94,7 @@
       >Chọn sổ để tiếp tục</div>
       <div class="onboarding__list-card">
         <book-card @click="onSelectBook" v-for="(book,index) in books" :key="index" :data="book" />
-        <book-card v-if="profile && profile.role==='ADMIN'" @click="onCreateNewBook" type="blank" />
+        <!-- <book-card v-if="profile && profile.role==='ADMIN'" @click="onCreateNewBook" type="blank" /> -->
       </div>
     </div>
   </div>
@@ -145,7 +145,6 @@ export default {
   methods: {
     ...mapActions({
       insertBook: "book/insertBook",
-      getBooks: "book/getBooks",
       getBooks: "book/getBooks",
     }),
     ...mapMutations({
