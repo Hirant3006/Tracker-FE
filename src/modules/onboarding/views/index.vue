@@ -93,8 +93,8 @@
         style="text-align:center"
       >Chọn sổ để tiếp tục</div>
       <div class="onboarding__list-card">
-        <book-card @click="onSelectBook" v-for="(book,index) in books" :key="index" :data="book" />
-        <!-- <book-card v-if="profile && profile.role==='ADMIN'" @click="onCreateNewBook" type="blank" /> -->
+        <book-card @click="onSelectBook" v-if="profile && profile.role==='ADMIN'" type="blank" icon="globe" name="Tất cả"/>
+        <book-card @click="onSelectBook(book)" v-for="(book,index) in books" :key="index" :data="book" />
       </div>
     </div>
   </div>
@@ -159,11 +159,8 @@ export default {
       else return Math.trunc(number);
     },
     onSelectBook(data) {
-      console.log("data ", data);
-      if (data) {
-        this.selectBook(data);
+        this.selectBook(data ? data : 'all');
         this.$router.push("/");
-      }
     },
     async onInsertBook() {
       const {
