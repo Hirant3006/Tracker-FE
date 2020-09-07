@@ -12,8 +12,8 @@
     </template>
     <template v-if="type=='blank' ">
       <div class="book-card__blank">
-        <i :class="`fad fa-plus-circle`"></i>
-        <span>Thêm sổ</span>
+        <i :class="`fad fa-${icon}`"></i>
+        <span>{{name}}</span>
       </div>
     </template>
   </a-card>
@@ -29,6 +29,12 @@ export default {
     type: {
       default: "default",
     },
+    icon: {
+      default: "plus"
+    },
+    name: {
+      default: "Thêm sổ"
+    }
   },
   methods: {
     onClickCard() {
@@ -51,11 +57,10 @@ export default {
     text-align: center;
     i {
       margin-top: 50px;
-      color: $success-color;
       font-size: 60px;
     }
     span {
-      margin-top:20px;
+      margin-top:30px;
       font-weight: 600;
     }
   }
