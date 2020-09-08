@@ -12,7 +12,7 @@
                 class="app-layout__selected-book app-layout__selected-book--card"
                 v-if="typeof(selectedBook)==='object'"
               >
-                <i :class="`far fa-${selectedBook.icon ? selectedBook.icon : 'book'}`"></i>
+                <i :class="`far fa-${selectedBook.iconName ? selectedBook.iconName : 'book'}`"></i>
                 <div>
                   <span>{{selectedBook.name}}</span>
                   <span
@@ -31,7 +31,7 @@
               </div>
             </span>
             <a-menu slot="overlay">
-              <a-menu-item key="-1" @click="logout">
+              <a-menu-item key="-1" @click="onSelectBook('all')">
                 <div class="app-layout__selected-book">
                   <i :class="`far fa-globe`"></i>
                   <div>
@@ -42,9 +42,9 @@
                   </div>
                 </div>
               </a-menu-item>
-              <a-menu-item v-for="(item,index) in books" :key="index" @click="logout">
+              <a-menu-item v-for="(item,index) in books" :key="index" @click="onSelectBook(item)">
                 <div class="app-layout__selected-book">
-                  <i :class="`far fa-${item.icon ? item.icon : 'book'}`"></i>
+                  <i :class="`far fa-${item.iconName ? item.iconName : 'book'}`"></i>
                   <div>
                     <span>{{item.name}}</span>
                     <span
@@ -68,14 +68,14 @@
         </div>
       </a-layout-header>
       <a-layout-content :style="{ padding: '35px 8px', background: '#fff', minHeight: '280px' }">
-        <router-view></router-view>
+          <router-view></router-view>
       </a-layout-content>
     </a-layout>
   </a-layout>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 import { types as typesAuth } from "@/modules/auth/constant";
 import { types as typesBook } from "@/modules/book/constant";
 import Sidebar from "./partial/sidebar";
@@ -86,6 +86,7 @@ export default {
   },
   data() {
     return {
+      spinning: true,
       columnData: [
         {
           title: "Dashboard",
@@ -108,12 +109,19 @@ export default {
   methods: {
     ...mapActions({
       logout: "auth/logout",
+      selectBook: "book/setSelectedBook",
+    }),
+    ...mapMutations({
     }),
     handleClick(e) {
       console.log("click", e);
     },
     titleClick(e) {
       console.log("titleClick", e);
+    },
+    onSelectBook(data) {
+      this.selectBook(data !== "all" ? data : "all");
+      // this.$router.go();
     },
   },
   computed: {
@@ -143,6 +151,9 @@ export default {
 }
 
 .app-layout {
+  .ant-spin {
+    height:500px;
+  }
   min-height: 100vh;
   height: 100vh;
   font-size: 16px;

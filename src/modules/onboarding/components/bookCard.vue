@@ -2,7 +2,7 @@
   <a-card @click="onClickCard" hoverable class="book-card">
     <template v-if="type=='default' && data">
       <div class="book-card__icon">
-        <i :class="`fad fa-book`"></i>
+        <i :class="`fad fa-${data.iconName}`"></i>
       </div>
       <div class="book-card__name">{{data.name}}</div>
       <hr />

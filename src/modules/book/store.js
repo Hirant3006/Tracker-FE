@@ -1,5 +1,7 @@
 import { _types } from "./constant";
 import api from "@/api";
+import cookie from 'js-cookie'
+const selected_book = 'selected_book'
 
 const state = {
 	books: null,
@@ -46,6 +48,12 @@ const actions = {
 		} catch (error) {
 			throw error;
 		}
+	},
+	[_types.actions.SET_SELECTED_BOOK]({ commit,state }, payload) {
+		cookie.set(`${selected_book}`, payload, {
+			expires: 1
+		})
+		state.selected = payload;
 	},
 };
 
