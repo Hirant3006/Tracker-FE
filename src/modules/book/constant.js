@@ -10,6 +10,7 @@ export const _types = {
     actions: {
         GET_BOOKS: 'getBooks',
         INSERT_BOOK: 'insertBook',
+        SET_SELECTED_BOOK: 'setSelectedBook',
     },
     mutations: {
         SET_SELECTED_BOOK: 'setSelectedBook',

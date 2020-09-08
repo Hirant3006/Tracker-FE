@@ -4,7 +4,6 @@ import api from '@/api'
 import { _types } from './constant'
 import { types as typesBook } from '@/modules/book/constant'
 import routerName from '@/constants/routers'
-import jwt_decode from 'jwt-decode'
 const token_name = process.env.VUE_APP_TOKEN_NAME ? process.env.VUE_APP_TOKEN_NAME : 'app_token'
 const refresh_token = 'refresh_token'
 const state = {
@@ -79,6 +78,7 @@ const mutations = {
 	[_types.mutations.LOGOUT](state) {
 		state.token = ''
 		cookie.remove(`${token_name}`)
+		cookie.remove(`selected_book`)
 		state.store = null
 	},
 	[_types.mutations.SET_TOKEN](state, payload = '') {
@@ -97,6 +97,8 @@ const mutations = {
 		state.token = ''
 		cookie.remove(`${token_name}`)
 		cookie.remove(`${refresh_token}`)
+		cookie.remove(`selected_book`)
+	
 	},
 	[_types.mutations.SET_USER_PROFILE](state, payload = '') {
 		state.profile = payload

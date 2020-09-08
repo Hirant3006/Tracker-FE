@@ -34,7 +34,7 @@
               @submit.stop.prevent="onInsertBook()"
             >
               <div class="onboarding__create-first-book-card-icon m-b-16">
-                <div>
+                <div @click="() => isVisibleModal=true">
                   <i :class="`fad fa-${form.icon}`"></i>
                 </div>
               </div>
@@ -93,14 +93,31 @@
         style="text-align:center"
       >Chọn sổ để tiếp tục</div>
       <div class="onboarding__list-card">
-        <book-card @click="onSelectBook" v-if="profile && profile.role==='ADMIN'" type="blank" icon="globe" name="Tất cả"/>
-        <book-card @click="onSelectBook(book)" v-for="(book,index) in books" :key="index" :data="book" />
+        <book-card
+          @click="onSelectBook"
+          v-if="profile && profile.role==='ADMIN'"
+          type="blank"
+          icon="globe"
+          name="Tất cả"
+        />
+        <book-card
+          @click="onSelectBook(book)"
+          v-for="(book,index) in books"
+          :key="index"
+          :data="book"
+        />
       </div>
     </div>
+    <a-modal v-model="isVisibleModal" title="Chọn biểu tượng" :footer="null">
+      <div class="onboarding__list-icon">
+        <i v-for="(item,index) in iconList" @click="onSelectIcon(item)" :key="index" :class="`fad fa-${item}`"></i>
+      </div>
+    </a-modal>
   </div>
 </template>
 
 <script>
+import iconList from "@/utils/icon-list.js";
 import bookCard from "../components/bookCard";
 import { required } from "vuelidate/lib/validators";
 import { mapGetters, mapActions, mapMutations } from "vuex";
@@ -133,6 +150,7 @@ export default {
         description: "",
       },
       isError: false,
+      iconList: iconList,
     };
   },
   created() {},
@@ -146,10 +164,14 @@ export default {
     ...mapActions({
       insertBook: "book/insertBook",
       getBooks: "book/getBooks",
-    }),
-    ...mapMutations({
       selectBook: "book/setSelectedBook",
     }),
+    ...mapMutations({
+    }),
+    onSelectIcon(iconName) {
+      this.form.icon=iconName;
+      this.isVisibleModal = false;
+    },
     onCreateNewBook() {
       console.log("hello");
       this.onCreatedNewBook = true;
@@ -159,8 +181,8 @@ export default {
       else return Math.trunc(number);
     },
     onSelectBook(data) {
-        this.selectBook(data ? data : 'all');
-        this.$router.push("/");
+      this.selectBook(data ? data : "all");
+      this.$router.push("/");
     },
     async onInsertBook() {
       const {
@@ -218,7 +240,24 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+.ant-modal-body {
+  padding: 0;
+}
 .onboarding {
+  &__list-icon {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 8px 16px;
+    font-size: 50px;
+    height:500px;
+    overflow: hidden;
+    overflow-y: scroll;
+    overflow-wrap: break-word;
+    i {
+      padding: 10px 20px; 
+      cursor: pointer;
+    }
+  }
   .error-text {
     color: $danger-color;
   }
@@ -275,7 +314,7 @@ input[type="number"] {
         align-self: center;
         > div {
           cursor: pointer;
-          height: 60px;
+          height: 80px;
           font-size: 45px;
           text-align: center;
           > i:first-child {
