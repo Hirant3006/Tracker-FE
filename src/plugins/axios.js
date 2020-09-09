@@ -44,6 +44,7 @@ axios.interceptors.response.use(
 			header.resultCode == 10413
 		) {
 			cookie.remove(`${token_name}`);
+			cookie.remove(`selected_book`);
 			router.push({ name: routerName.LOGIN });
 			// const refresh_token_data = await api.refresh_token();
 			// const { header, data } = refresh_token_data.data;
