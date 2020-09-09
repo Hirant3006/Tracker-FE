@@ -17,8 +17,6 @@ export default async function ({ next, from, to, router, store, app, }) {
         }
         !store.state.book.books && await store.dispatch(typesBook.actions.GET_BOOKS)
         !store.state.auth.profile && await store.dispatch(typesAuth.actions.GET_USER_PROFILE)
-        let books = store.state.book.books
-        let profile = store.state.auth.profile   
         if (to.name == routerName.ONBOARDING && store.state.book.selected) {
             next({name: routerName.DASHBOARD})
         }
