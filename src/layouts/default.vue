@@ -151,6 +151,9 @@ export default {
 }
 
 .app-layout {
+  .ant-layout-content {
+    padding: 36px 24px !important;
+  }
   .ant-spin {
     height:500px;
   }
