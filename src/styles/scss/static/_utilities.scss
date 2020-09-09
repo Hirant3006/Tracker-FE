@@ -149,3 +149,15 @@ hr{
 .color-secondary{
     color: $text-color-secondary;
 }
+
+.d-flex {
+    display: flex;
+}
+
+.justify-content-between {
+    justify-content: space-between;
+}
+
+.flex-column {
+    flex-direction: column;
+}
