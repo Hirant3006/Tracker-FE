@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import helper from './helper'
-
+import moment from 'moment'
 Vue.filter('money', function (value, { rounded = 5, currency }) {
     if (isNaN(value)) {
         return 0
@@ -18,7 +18,7 @@ Vue.filter('money', function (value, { rounded = 5, currency }) {
 
 Vue.filter('formatDate', function (value) {
     if (value) {
-        return moment(value).format('MMM D,YYYY')
+        return moment(value).format('DD/MM/YYYY')
     }
     return ''
 })

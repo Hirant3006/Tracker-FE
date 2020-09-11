@@ -11,6 +11,7 @@ export const _types = {
         LOGIN: 'login',
         LOGOUT: 'logout',
         GET_USER_PROFILE: 'getUserProfile',
+        REMOVE_TOKEN: 'removeToken',
     },
     mutations: {
         LOGOUT: 'logout',

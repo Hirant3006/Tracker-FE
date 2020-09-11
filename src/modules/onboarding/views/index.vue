@@ -173,7 +173,6 @@ export default {
       this.isVisibleModal = false;
     },
     onCreateNewBook() {
-      console.log("hello");
       this.onCreatedNewBook = true;
     },
     truncNum(number, type) {
@@ -191,7 +190,6 @@ export default {
         icon: iconName,
         description,
       } = this.form;
-      console.log({ name, initialBalance });
       try {
         if (initialBalance && name) {
           this.isLoading = true;

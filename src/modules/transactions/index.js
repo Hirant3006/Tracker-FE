@@ -5,7 +5,7 @@ import moduleRouter from './router'
 // import './i18n'
 import { storeKeyNameSpace } from '@/constants/stores'
 
-const STORE_KEY = storeKeyNameSpace.DASHBOARD
+const STORE_KEY = storeKeyNameSpace.TRANSACTIONS
 
 /* register module store */
 if (!(STORE_KEY in store._modules.root._children)) {

@@ -3,15 +3,14 @@ import { types as typesAuth } from '@/modules/auth/constant'
 import { types as typesBook } from '@/modules/book/constant'
 import cookie from 'js-cookie'
 const selected_book = 'selected_book'
+const token_name = process.env.VUE_APP_TOKEN_NAME ? process.env.VUE_APP_TOKEN_NAME : 'app_token'
 
 export default async function ({ next, from, to, router, store, app, }) {
     /* check token from store */
-    let token = store.getters[typesAuth.getters.GET_TOKEN]
+    let token = cookie.get(token_name)
     
-    console.log(store)
     if (token) {
         let selected_book = cookie.get('selected_book')
-        console.log(selected_book)
         if (selected_book) {
             await store.dispatch(typesBook.actions.SET_SELECTED_BOOK,selected_book)
         }
