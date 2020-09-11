@@ -9,7 +9,6 @@ import { types as typesAuth } from "@/modules/auth/constant";
 export default {
     name: "DashBoard",
     mounted() {
-        console.log('dashboard ',this.profile)
     },
     computed: {
         ...mapGetters({

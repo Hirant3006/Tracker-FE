@@ -71,7 +71,12 @@ const actions = {
 			throw error;
 		}
 	},
-
+	async [_types.actions.REMOVE_TOKEN](state) {
+		state.token = ''
+		cookie.remove(`${token_name}`)
+		cookie.remove(`${refresh_token}`)
+		cookie.remove(`selected_book`)
+	},
 };
 
 const mutations = {

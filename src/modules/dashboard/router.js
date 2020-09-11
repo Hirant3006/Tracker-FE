@@ -4,7 +4,7 @@ import auth from '@/middlewares/auth'
 
 export default [
 	{
-		path: '/',
+		path: '/dashboard',
 		name: routerName.DASHBOARD,
 		meta: {
 			layout: 'default',

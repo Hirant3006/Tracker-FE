@@ -13,7 +13,8 @@ const getters = {
 		return state.books.filter((item) => item.id === id);
 	},
 	[_types.getters.GET_SELECTED_BOOK](state) {
-		return state.selected;
+		console.log(state)
+		return state.selected!=='all' && typeof(state.selected)=='string' ? JSON.parse(state.selected) : state.selected;
 	},
 	[_types.getters.GET_BOOKS](state) {
 		return state.books;
@@ -26,9 +27,7 @@ const actions = {
 			const res = await api.get_list_book();
 			let { header, data } = res.data;
 			if (header.isSuccessful) {
-				console.log(data);
 				data = data.filter(item => !item.isDelete)
-				console.log('book ',data)
 				if (data.length!==0) commit(_types.mutations.SET_BOOKS, data);
 			}
 			return res;
@@ -41,7 +40,6 @@ const actions = {
 			const res = await api.insert_book(payload);
 			const { header, data } = res.data;
 			if (header.isSuccessful) {
-				console.log(data);
 				// commit(_types.mutations.INSERT_BOOK, data);
 			}
 			return res;
