@@ -19,7 +19,7 @@ export default async function ({ next, from, to, router, store, app, }) {
         if (to.name == routerName.ONBOARDING && store.state.book.selected) {
             next({name: routerName.DASHBOARD})
         }
-        else if (!store.state.book.selected && to.name!==routerName.ONBOARDING) {
+        else if ((!store.state.book.selected || store.state.book.books ==null) && to.name!==routerName.ONBOARDING) {
 
             next({name: routerName.ONBOARDING})
         }
