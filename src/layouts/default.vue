@@ -90,12 +90,12 @@ export default {
       columnData: [
         {
           title: "Dashboard",
-          path: "/",
+          path: this.$routerName.DASHBOARD,
           icon: "fas fa-bell",
         },
         {
           title: "Transactions",
-          path: this.$routerName.TRANSACTIONS,
+          path: '/',
           icon: "fas fa-cash-register",
         },
         {

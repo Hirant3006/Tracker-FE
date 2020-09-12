@@ -5,49 +5,61 @@
       <a-button @click="() => $router.push($routerName.CREATE_CAMPAIGN)" type="primary">Tạo mới</a-button>
     </div>
 
-    <a-table
-      :loading="isLoading"
-      :scroll="{ y: 400 }"
-      :columns="columns"
-      :data-source="data"
-      @change="onChange"
-      rowKey="id"
-    >
-      <template slot="CustomType" slot-scope="text,record">
-        <div
-          :class="[`manage-transactions__type-tag`,`manage-transactions__type-tag--${text.toLowerCase()}`]"
-        >
-          <span>•</span>
-          &nbsp;{{text==='EXPENSE' ? 'Chi' : 'Thu' }}
-        </div>
-      </template>
-      <template slot="CustomeRegDt" slot-scope="text,record">
-        <div>{{text | formatDate}}</div>
-      </template>
-      <template slot="CustomStatus" slot-scope="text,record">
-        <div
-          :class="[`manage-transactions__type-tag`,`manage-transactions__type-tag--${record.isDelete==true ? 'deleted' : record.modiDt == record.regDt ? 'origin' :'modified' }`]"
-        ><span>•</span> &nbsp;{{record.isDelete==true ? 'Đã xóa' : record.modiDt == record.regDt ? 'Nguyên bản' :'Đã sửa' }}</div>
-      </template>
-      <template slot="CustomAmount" slot-scope="text,record">
-        <div
-          :class="[`manage-transactions__money`,`manage-transactions__money--${record.type.toLowerCase()}`]"
-        >{{`${text >0 ? '+' : '-'}`}}{{text | money({currency:'vnd'})}}</div>
-      </template>
-    </a-table>
+      <TableCustom
+        :isLoading="isLoading"
+        :columns="columns"
+        :data-source="data"
+        :scrollToBottom="onLoadMore"
+        @change="onChange"
+        rowKey="id"
+      >
+        <!-- <template slot="CustomType" slot-scope="{itemRow}">
+          <div
+            :class="[`manage-transactions__type-tag`,`manage-transactions__type-tag--${itemRow.text.toLowerCase()}`]"
+          >
+            <span>•</span>
+            &nbsp;{{itemRow.text==='EXPENSE' ? 'Chi' : 'Thu' }}
+          </div>
+        </template> -->
+        <template slot="CustomeRegDt" slot-scope="{itemRow}">
+          <div>{{itemRow.text | formatDate}}</div>
+        </template>
+        <template slot="CustomStatus" slot-scope="{itemRow}">
+          <div
+            :class="[`manage-transactions__type-tag`,`manage-transactions__type-tag--${itemRow.record.isDelete==true ? 'deleted' : itemRow.record.modiDt == itemRow.record.regDt ? 'origin' :'modified' }`]"
+          >
+            <span>•</span>
+            &nbsp;{{itemRow.record.isDelete==true ? 'Đã xóa' : itemRow.record.modiDt == itemRow.record.regDt ? 'Nguyên bản' :'Đã sửa' }}
+          </div>
+        </template>
+        <template slot="CustomAmount" slot-scope="{itemRow}">
+          <div
+            :class="[`manage-transactions__money`,`manage-transactions__money--${itemRow.record.type.toLowerCase()}`]"
+          >{{`${itemRow.text >0 ? '+' : '-'}`}}{{itemRow.text | money({currency:'vnd'})}}</div>
+        </template>
+        <template slot="CustomDescription" slot-scope="{itemRow}">
+          <a-popover trigger="hover">
+            <template slot="content">{{itemRow.text}}</template>
+            <div class="wrap-text">{{itemRow.text}}</div>
+          </a-popover>
+        </template>
+      </TableCustom>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 import { types as typesBook } from "@/modules/book/constant";
-
+import TableCustom from '@/components/TableCustom'
 function onChange(pagination, filters, sorter) {
   console.log("params", pagination, filters, sorter);
 }
 
 export default {
   name: "Transactions",
+  components: {
+    TableCustom
+  },
   data() {
     return {
       data: [],
@@ -99,15 +111,21 @@ export default {
         {
           title: "Ghi chú",
           dataIndex: "description",
+          scopedSlots: {
+            customRender: "CustomDescription",
+          },
         },
         {
           title: "Thao tác",
           dataIndex: "action",
         },
       ],
+      offset: 0,
+      total: null,
     };
   },
   mounted() {
+    this.handleScroll(()=> console.log('hello'));
     this.onGetTransactions();
   },
   methods: {
@@ -115,17 +133,38 @@ export default {
       getTransactions: "transactions/getTransactions",
       getTransactionsByBook: "transactions/getTransactionsByBook",
     }),
+    handleScroll(func) {
+      const table = document.querySelector(".m-table-body");
+      table.addEventListener("scroll", async (event) => {
+        let maxScroll = event.target.scrollHeight - event.target.clientHeight;
+        let currentScroll = event.target.scrollTop;
+        if (currentScroll > maxScroll - 1) {
+          func();
+        }
+      });
+    },
+    onLoadMore() {
+      console.log("on load more");
+      if (this.data.length < this.total) {
+        this.offset += 10;
+        this.onGetTransactions();
+      }
+    },
     async onGetTransactions() {
       try {
         this.isLoading = true;
         const { id } = this.selectedBook;
+        const { offset } = this;
         const res =
           this.selectedBook === "all"
-            ? await this.getTransactions()
-            : await this.getTransactionsByBook({ id });
+            ? await this.getTransactions({ offset })
+            : await this.getTransactionsByBook({ id, offset });
         const { header, data } = res.data;
+        console.log("data ", data);
         if (header.isSuccessful) {
-          this.data = data.content;
+          this.total = data.total;
+          if (offset == 0) this.data = data.content;
+          else this.data = [...this.data, ...data.content];
         }
         this.isLoading = false;
       } catch (e) {}
