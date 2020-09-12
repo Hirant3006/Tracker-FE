@@ -71,6 +71,12 @@ $fweights: 100, 200, 300, 400, 500, 600, 700, 800, 900;
     }
 }
 
+.wrap-text {
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+}
+
 .user-select{
     &-none{
         user-select: none;
