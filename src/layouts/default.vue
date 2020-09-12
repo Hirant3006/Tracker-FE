@@ -131,7 +131,7 @@ export default {
       selectedBook: typesBook.getters.GET_SELECTED_BOOK,
     }),
     totalBalance() {
-      return this.books.reduce((prev, cur) => prev + cur.currentBalance, 0);
+      this.books!==null ? this.books.reduce((prev, cur) => prev + cur.currentBalance, 0) : 0;
     },
   },
 };
