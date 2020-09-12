@@ -2,55 +2,62 @@
   <div class="manage-transactions">
     <div class="d-flex justify-content-between m-b-20">
       <h3>Quản lí giao dịch</h3>
-      <a-button @click="() => $router.push($routerName.CREATE_CAMPAIGN)" type="primary">Tạo mới</a-button>
+      <a-button @click="() => $router.push({name:$routerName.CREATE_TRANSACTION})" type="primary">Tạo mới</a-button>
     </div>
-
-      <TableCustom
-        :isLoading="isLoading"
-        :columns="columns"
-        :data-source="data"
-        :scrollToBottom="onLoadMore"
-        @change="onChange"
-        rowKey="id"
-      >
-        <!-- <template slot="CustomType" slot-scope="{itemRow}">
+    <div class="manage-transactions__no-data" v-if="this.total==0">
+      <img class="m-b-24" src="@/assets/images/not-found.png" alt="not found" />
+      <span class="manage-transactions__title m-b-16">Chưa có giao dịch nào được tạo</span>
+    </div>
+    <TableCustom
+      :isLoading="isLoading"
+      :columns="columns"
+      :data-source="data"
+      :scrollToBottom="onLoadMore"
+      @change="onChange"
+      rowKey="id"
+      v-else
+    >
+      <!-- <template slot="CustomType" slot-scope="{itemRow}">
           <div
             :class="[`manage-transactions__type-tag`,`manage-transactions__type-tag--${itemRow.text.toLowerCase()}`]"
           >
             <span>•</span>
             &nbsp;{{itemRow.text==='EXPENSE' ? 'Chi' : 'Thu' }}
           </div>
-        </template> -->
-        <template slot="CustomeRegDt" slot-scope="{itemRow}">
-          <div>{{itemRow.text | formatDate}}</div>
-        </template>
-        <template slot="CustomStatus" slot-scope="{itemRow}">
-          <div
-            :class="[`manage-transactions__type-tag`,`manage-transactions__type-tag--${itemRow.record.isDelete==true ? 'deleted' : itemRow.record.modiDt == itemRow.record.regDt ? 'origin' :'modified' }`]"
-          >
-            <span>•</span>
-            &nbsp;{{itemRow.record.isDelete==true ? 'Đã xóa' : itemRow.record.modiDt == itemRow.record.regDt ? 'Nguyên bản' :'Đã sửa' }}
-          </div>
-        </template>
-        <template slot="CustomAmount" slot-scope="{itemRow}">
-          <div
-            :class="[`manage-transactions__money`,`manage-transactions__money--${itemRow.record.type.toLowerCase()}`]"
-          >{{`${itemRow.text >0 ? '+' : '-'}`}}{{itemRow.text | money({currency:'vnd'})}}</div>
-        </template>
-        <template slot="CustomDescription" slot-scope="{itemRow}">
-          <a-popover trigger="hover">
-            <template slot="content">{{itemRow.text}}</template>
-            <div class="wrap-text">{{itemRow.text}}</div>
-          </a-popover>
-        </template>
-      </TableCustom>
+      </template>-->
+      <template slot="CustomeRegDt" slot-scope="{itemRow}">
+        <div>{{itemRow.text | formatDate}}</div>
+      </template>
+      <template slot="CustomStatus" slot-scope="{itemRow}">
+        <div
+          :class="[`manage-transactions__type-tag`,`manage-transactions__type-tag--${itemRow.record.isDelete==true ? 'deleted' : itemRow.record.modiDt == itemRow.record.regDt ? 'origin' :'modified' }`]"
+        >
+          <span>•</span>
+          &nbsp;{{itemRow.record.isDelete==true ? 'Đã xóa' : itemRow.record.modiDt == itemRow.record.regDt ? 'Nguyên bản' :'Đã sửa' }}
+        </div>
+      </template>
+      <template slot="CustomAmount" slot-scope="{itemRow}">
+        <div
+          :class="[`manage-transactions__money`,`manage-transactions__money--${itemRow.record.type.toLowerCase()}`]"
+        >{{`${itemRow.text >0 ? '+' : '-'}`}}{{itemRow.text | money({currency:'vnd'})}}</div>
+      </template>
+      <template slot="CustomDescription" slot-scope="{itemRow}">
+        <a-popover trigger="hover">
+          <template slot="content">{{itemRow.text}}</template>
+          <div class="wrap-text">{{itemRow.text}}</div>
+        </a-popover>
+      </template>
+      <template slot="CustomAction" slot-scope="{itemRow}">
+        <a-button type="danger">Xóa</a-button>
+      </template>
+    </TableCustom>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 import { types as typesBook } from "@/modules/book/constant";
-import TableCustom from '@/components/TableCustom'
+import TableCustom from "@/components/TableCustom";
 function onChange(pagination, filters, sorter) {
   console.log("params", pagination, filters, sorter);
 }
@@ -58,7 +65,7 @@ function onChange(pagination, filters, sorter) {
 export default {
   name: "Transactions",
   components: {
-    TableCustom
+    TableCustom,
   },
   data() {
     return {
@@ -118,6 +125,9 @@ export default {
         {
           title: "Thao tác",
           dataIndex: "action",
+          scopedSlots: {
+            customRender: "CustomAction",
+          },
         },
       ],
       offset: 0,
@@ -125,7 +135,7 @@ export default {
     };
   },
   mounted() {
-    this.handleScroll(()=> console.log('hello'));
+    this.handleScroll(() => console.log("hello"));
     this.onGetTransactions();
   },
   methods: {
@@ -160,7 +170,6 @@ export default {
             ? await this.getTransactions({ offset })
             : await this.getTransactionsByBook({ id, offset });
         const { header, data } = res.data;
-        console.log("data ", data);
         if (header.isSuccessful) {
           this.total = data.total;
           if (offset == 0) this.data = data.content;
@@ -178,6 +187,8 @@ export default {
   },
   watch: {
     selectedBook() {
+      this.offset = 0;
+      this.total = null;
       this.onGetTransactions();
     },
   },
@@ -207,6 +218,23 @@ export default {
   background: #555;
 }
 .manage-transactions {
+  &__title {
+    font-weight: 600;
+    font-size: 24px;
+  }
+  &__sub-title {
+    color: $text-color-secondary;
+    font-size: 16px;
+  }
+  &__no-data {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    img {
+      width: 200px;
+      align-self: center;
+    }
+  }
   &__money {
     font-size: 14px;
     font-weight: 600;

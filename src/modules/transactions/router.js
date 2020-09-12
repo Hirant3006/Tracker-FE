@@ -1,26 +1,33 @@
 // import noAuth from './middlewares/notAuth'
-import routerName from '@/constants/routers'
-import auth from '@/middlewares/auth'
+import routerName from "@/constants/routers";
+import auth from "@/middlewares/auth";
 
 export default [
 	{
-		path: '/',
-		name: routerName.TRANSACTIONS,
-		meta: {
-			layout : 'default',
-			middleware: [auth]
-		},
-		component: () => import( /* webpackChunkName: "install-app" */ './views/index.vue'),
-		// children : [
-		// 	{
-		// 		path: '',
-		// 		name: 'InstallApp',
-		// 		meta: {
-		// 			layout : 'install-app',
-		// 			middleware : [ noAuth ]
-		// 		},
-		// 		component: () => import( /* webpackChunkName: "auth" */ './views/index.vue')
-		// 	},
-		// ]
+		path: "/",
+		component: () =>
+		import(/* webpackChunkName: "install-app" */ "./views/layout.vue"),
+		children: [
+			{
+				path: "",
+				name: routerName.TRANSACTIONS,
+				meta: {
+					middleware: [auth],
+				},
+				component: () =>
+					import(
+						/* webpackChunkName: "install-app" */ "./views/index.vue"
+					),
+			},
+			{
+				path: "create",
+				name: routerName.CREATE_TRANSACTION,
+				meta: {
+					middleware: [auth],
+				},
+				component: () =>
+					import(/* webpackChunkName: "auth" */ "./views/create.vue"),
+			},
+		],
 	},
-]
+];
