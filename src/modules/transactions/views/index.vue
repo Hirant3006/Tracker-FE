@@ -48,7 +48,7 @@
         </a-popover>
       </template>
       <template slot="CustomAction" slot-scope="{itemRow}">
-        <a-button type="danger">Xóa</a-button>
+        <a-button :disabled="itemRow.record.isDelete==true" type="danger">Xóa</a-button>
       </template>
     </TableCustom>
   </div>
