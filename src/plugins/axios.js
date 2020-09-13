@@ -44,7 +44,7 @@ axios.interceptors.response.use(
 			cookie.remove(`${token_name}`)
 			// cookie.remove(`${refresh_token}`)
 			cookie.remove(`selected_book`)	
-			router.push({ name: routerName.LOGIN });
+			router.go();
 			// const refresh_token_data = await api.refresh_token();
 			// const { header, data } = refresh_token_data.data;
 			// console.log('token  ',refresh_token_data)
@@ -56,6 +56,7 @@ axios.interceptors.response.use(
 			// config.headers["TOKEN"] = `${data.token}`;
 			// config.headers["Content-Type"] = "application/json";
 			// res = await axios.request(config);
+			return res
 		}
 
 		return res;
