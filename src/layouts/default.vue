@@ -152,6 +152,16 @@ export default {
         top: "80px",
         duration: 5,
       });
+      return this.books !== null
+        ? this.books.reduce((prev, cur) => prev + cur.currentBalance, 0)
+        : 0;
+    },
+    selectedBook() {
+      const selected_book = this.$store.state.book.selected;
+      console.log(selected_book);
+      return typeof selected_book === "string" && selected_book !== "all"
+        ? JSON.parse(selected_book)
+        : selected_book;
     },
   },
 };
