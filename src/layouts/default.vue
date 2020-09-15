@@ -26,7 +26,7 @@
                   <span>Tất cả</span>
                   <span
                     :class="[,'app-layout__selected-book-balance',`app-layout__selected-book-balance--${totalBalance >0 ? 'plus' : 'minus'}`]"
-                  >{{`${totalBalance >0 ? '+' : '-'}`}}{{totalBalance | money({currency:'vnd'})}}</span>
+                  >{{`${totalBalance >= 0 ? '+' : '-'}`}}{{totalBalance | money({currency:'vnd'})}}</span>
                 </div>
               </div>
             </span>
@@ -67,8 +67,11 @@
           </a-dropdown>
         </div>
       </a-layout-header>
-      <a-layout-content :style="{ padding: '35px 8px', background: '#fff', minHeight: '280px' }">
-          <router-view></router-view>
+      <a-layout-content
+        :key="compKey"
+        :style="{ padding: '35px 8px', background: '#fff', minHeight: '280px' }"
+      >
+        <router-view></router-view>
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -87,19 +90,20 @@ export default {
   data() {
     return {
       spinning: true,
+      compKey: 0,
       columnData: [
         {
-          title: "Dashboard",
+          title: "Trang chủ",
           path: this.$routerName.DASHBOARD,
           icon: "fas fa-bell",
         },
         {
-          title: "Transactions",
-          path: '/',
+          title: "Giao dịch",
+          path: "/",
           icon: "fas fa-cash-register",
         },
         {
-          title: "Book",
+          title: "Sổ",
           path: this.$routerName.BOOK,
           icon: "fas fa-book",
         },
@@ -111,8 +115,7 @@ export default {
       logout: "auth/logout",
       selectBook: "book/setSelectedBook",
     }),
-    ...mapMutations({
-    }),
+    ...mapMutations({}),
     handleClick(e) {
       console.log("click", e);
     },
@@ -128,16 +131,38 @@ export default {
     ...mapGetters({
       profile: typesAuth.getters.GET_USER_PROFILE,
       books: typesBook.getters.GET_BOOKS,
-      // selectedBook: typesBook.getters.GET_SELECTED_BOOK,
+      selectedBook: typesBook.getters.GET_SELECTED_BOOK,
     }),
     totalBalance() {
-     return this.books!==null ? this.books.reduce((prev, cur) => prev + cur.currentBalance, 0) : 0;
+      return this.books !== null
+        ? this.books.reduce((prev, cur) => {
+            console.log("cur ", cur.currentBalance + prev);
+            return prev + cur.currentBalance;
+          }, 0)
+        : 0;
+    },
+  },
+  watch: {
+    selectedBook() {
+      this.compKey += 1;
+      this.$notification["info"]({
+        message: `Chuyển sổ`,
+        description: "Bạn vừa chuyển sang sổ khác.",
+        placement: "topRight",
+        top: "80px",
+        duration: 5,
+      });
+      return this.books !== null
+        ? this.books.reduce((prev, cur) => prev + cur.currentBalance, 0)
+        : 0;
     },
     selectedBook() {
-      const selected_book = this.$store.state.book.selected
-      console.log(selected_book)
-      return (typeof(selected_book)==='string' && selected_book!=='all') ? JSON.parse(selected_book) : selected_book
-    }
+      const selected_book = this.$store.state.book.selected;
+      console.log(selected_book);
+      return typeof selected_book === "string" && selected_book !== "all"
+        ? JSON.parse(selected_book)
+        : selected_book;
+    },
   },
 };
 </script>
@@ -160,7 +185,7 @@ export default {
     padding: 36px 24px !important;
   }
   .ant-spin {
-    height:500px;
+    height: 500px;
   }
   min-height: 100vh;
   height: 100vh;
