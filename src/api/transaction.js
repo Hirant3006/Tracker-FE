@@ -21,4 +21,11 @@ export default {
 			}
 		});
 	},
+	insert_transaction(data) {
+		return axios({
+			url: "/transaction" ,
+			method: "post",
+			data
+		});
+	}
 };

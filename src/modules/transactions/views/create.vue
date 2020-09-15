@@ -16,26 +16,81 @@
         class="create-transaction__create-card-form"
         @submit.stop.prevent="onInsertTransaction()"
       >
-        <a-form-item
-          label="Số dư ban đầu"
-          :validate-status="isError && !$v.form.amount.required ? 'error' : ''"
-        >
+        <a-form-item label="Sổ">
+          <a-dropdown :disabled="profile.role!=='ADMIN'">
+            <span class="ant-dropdown-link" style="cursor:pointer" @click="e => e.preventDefault()">
+              <div
+                style="justify-content:space-between"
+                class="d-flex justify-space-between create-transaction__selected-book create-transaction__selected-book--card"
+                v-if="!form.book"
+              >
+                <span class="create-transaction__selected-book-title m-r-10">Chọn sổ</span>
+                <i v-if="profile.role=='ADMIN'" :class="`far fa-angle-down`"></i>
+              </div>
+              <div
+                v-else
+                class="create-transaction__selected-book create-transaction__selected-book--card"
+              >
+                <i :class="`far fa-${form.book.iconName ? form.book.iconName : 'book'}`"></i>
+                <div>
+                  <span>{{form.book.name}}</span>
+                  <span
+                    :class="['create-transaction__selected-book-balance',`create-transaction__selected-book-balance--${form.book.currentBalance >0 ? 'plus' : 'minus'}`]"
+                  >{{`${form.book.currentBalance >0 ? '+' : '-'}`}}{{form.book.currentBalance | money({currency:'vnd'})}}</span>
+                </div>
+                <i style="margin-left:30px" :class="`far fa-angle-down`"></i>
+              </div>
+            </span>
+            <a-menu slot="overlay">
+              <a-menu-item v-for="(item,index) in books" :key="index" @click="onSelectBook(item)">
+                <div class="create-transaction__selected-book">
+                  <i :class="`far fa-${item.iconName ? item.iconName : 'book'}`"></i>
+                  <div>
+                    <span>{{item.name}}</span>
+                    <span
+                      :class="[,'create-transaction__selected-book-balance',`create-transaction__selected-book-balance--${item.currentBalance >0 ? 'plus' : 'minus'}`]"
+                    >{{`${item.currentBalance >0 ? '+' : '-'}`}}{{item.currentBalance | money({currency:'vnd'})}}</span>
+                  </div>
+                </div>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
+        </a-form-item>
+        <div class="create-transaction__error-text" v-if="isError">
+          <span v-if="!form.book">*Sổ không được bỏ trống</span>
+        </div>
+        <a-form-item label="Loại">
+          <a-radio-group :options="options" :default-value="'INCOME'" @change="onChangeType" />
+        </a-form-item>
+        <a-form-item label="Số tiền">
           <!--  -->
           <!-- <a-input suffix="VND" type="number" /> -->
           <a-input-number
             :default-value="form.amount"
-            :formatter="value => ` ${truncNum(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+            :formatter="value => `${truncNum(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
             :parser="value => value.replace(/\$\s?|(,*)/g, '')"
             @change="value => value!==null ? form.amount=value : form.amount=0"
             :min="0"
           ></a-input-number>
           <span class="m-l-10">VNĐ</span>
-          <div class="error-text" v-if="isError && !$v.form.amount.required">
-            <span>*Số dư không được bỏ trống</span>
-          </div>
         </a-form-item>
+        <div class="create-transaction__error-text" v-if="isError">
+          <span
+            v-if="form.book!==null && form.amount>form.book.currentBalance && form.type==='EXPENSE'"
+          >*Số tiền vượt quá hạn mức</span>
+        </div>
+        <a-form-item label="Tên khách">
+          <a-input placeholder="Nhập tên khách" v-model="form.clientName" />
+        </a-form-item>
+        <div class="create-transaction__error-text" v-if="isError">
+          <span v-if="!form.clientName">*Tên khách không được bỏ trống</span>
+        </div>
         <a-form-item label="Ghi chú">
-          <a-textarea v-model="form.description" :auto-size="{ minRows: 3, maxRows: 5 }" />
+          <a-textarea
+            placeholder="Nhập ghi chú"
+            v-model="form.description"
+            :auto-size="{ minRows: 3, maxRows: 5 }"
+          />
         </a-form-item>
         <!-- <div class="auth__error-text" v-if="isError">
                 <span v-if="!$v.form.username.required">*Tên không được bỏ trống</span>
@@ -56,6 +111,13 @@
 
 <script>
 import { required } from "vuelidate/lib/validators";
+import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
+import { types as typesAuth } from "@/modules/auth/constant";
+import { types as typesBook } from "@/modules/book/constant";
+const options = [
+  { label: "Thu", value: "INCOME" },
+  { label: "Chi", value: "EXPENSE" },
+];
 
 export default {
   name: "CreateTransaction",
@@ -63,7 +125,13 @@ export default {
     return {
       form: {
         amount: 0,
+        book: null,
+        type: "INCOME",
+        description: null,
+        clientName: null,
       },
+      options,
+      value: "INCOME",
       isError: false,
       isLoading: false,
     };
@@ -76,9 +144,101 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      insertTransaction: "transactions/insertTransaction",
+    }),
     truncNum(number, type) {
       if (isNaN(Math.trunc(number))) return 0;
       else return Math.trunc(number);
+    },
+    onSelectBook(item) {
+      this.form.book = item;
+    },
+    onChangeType(e) {
+      this.form.type = e.target.value;
+    },
+    async onInsertTransaction() {
+      this.isLoading = true;
+      const { book, type, clientName, description, amount } = this.form;
+      const bookId = book == null ? null : book.id;
+      if (
+        !bookId ||
+        !clientName 
+      ) {
+        this.isError = true;
+        this.$notification["error"]({
+          message: `Lỗi tạo giao dịch`,
+          description: "Có lỗi xảy ra trong quá trình tạo",
+          placement: "bottomRight",
+        });
+      } 
+      else if (
+        this.form.book &&
+        this.form.amount > this.form.book.currentBalance &&
+        this.form.type === "EXPENSE"
+      ) {
+        this.isError = true;
+        this.$notification["error"]({
+          message: `Lỗi tạo giao dịch`,
+          description: "Có lỗi xảy ra trong quá trình tạo",
+          placement: "bottomRight",
+        });
+      }
+       else {
+        try {
+          const insertTransactiondata = await this.insertTransaction({
+            bookId,
+            type,
+            clientName,
+            description,
+            amount,
+          });
+          const { header, data } = insertTransactiondata.data;
+          this.isLoading = false;
+          console.log(header, data);
+          if (header.isSuccessful) {
+            console.log("hello");
+            this.$notification["success"]({
+              message: `Tạo giao dịch thành công`,
+              description: `Đã tạo giao dịch mới cho sổ ${this.form.book.name}`,
+              placement: "topRight",
+              top: "80px",
+              duration: 5,
+            });
+            this.$router.push({ name: this.$routerName.TRANSACTIONS });
+          } else {
+            this.$notification["error"]({
+              message: `Tạo giao dịch`,
+              description: "Có lỗi xảy ra trong quá trình tạo",
+              placement: "topRight",
+              duration: 5,
+            });
+          }
+        } catch (e) {
+          this.isError = true;
+        }
+      }
+      this.isLoading = false;
+    },
+  },
+  created() {
+    if (this.selectedBook !== "all") {
+      this.form.book = this.selectedBook;
+    }
+  },
+  computed: {
+    ...mapGetters({
+      profile: typesAuth.getters.GET_USER_PROFILE,
+      books: typesBook.getters.GET_BOOKS,
+      selectedBook: typesBook.getters.GET_SELECTED_BOOK,
+    }),
+    totalBalance() {
+      return this.books !== null
+        ? this.books.reduce((prev, cur) => {
+            console.log("cur ", cur.currentBalance + prev);
+            return prev + cur.currentBalance;
+          }, 0)
+        : 0;
     },
   },
 };
@@ -86,8 +246,50 @@ export default {
 
 <style lang="scss">
 .create-transaction {
-  margin: 0 120px;
+  margin: 0 200px;
   align-self: center;
+  &__error-text {
+    color: $danger-color;
+  }
+  &__selected-book {
+    display: flex;
+    line-height: 24px;
+    margin-top: 2px;
+    &--card {
+      padding: 5px;
+      border: 1px solid $line-color;
+      border-radius: 8px;
+      width: fit-content;
+      height: 60px;
+      padding-left: 10px;
+    }
+    &-title {
+      font-size: 16px;
+      line-height: 45px;
+      margin-left: 10px;
+    }
+
+    &-balance {
+      &--minus {
+        color: $danger-color;
+      }
+      &--plus {
+        color: $success-color;
+      }
+    }
+    > i {
+      align-self: center;
+      margin-right: 16px;
+      font-size: 24px;
+    }
+    div {
+      align-self: center;
+      display: flex;
+      flex-direction: column;
+      span {
+      }
+    }
+  }
   &__create-transaction {
     display: flex;
     flex-direction: column;

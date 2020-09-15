@@ -2,7 +2,10 @@
   <div class="manage-transactions">
     <div class="d-flex justify-content-between m-b-20">
       <h3>Quản lí giao dịch</h3>
-      <a-button @click="() => $router.push({name:$routerName.CREATE_TRANSACTION})" type="primary">Tạo mới</a-button>
+      <a-button
+        @click="() => $router.push({name:$routerName.CREATE_TRANSACTION})"
+        type="primary"
+      >Tạo mới</a-button>
     </div>
     <div class="manage-transactions__no-data" v-if="this.total==0">
       <img class="m-b-24" src="@/assets/images/not-found.png" alt="not found" />
@@ -17,14 +20,6 @@
       rowKey="id"
       v-else
     >
-      <!-- <template slot="CustomType" slot-scope="{itemRow}">
-          <div
-            :class="[`manage-transactions__type-tag`,`manage-transactions__type-tag--${itemRow.text.toLowerCase()}`]"
-          >
-            <span>•</span>
-            &nbsp;{{itemRow.text==='EXPENSE' ? 'Chi' : 'Thu' }}
-          </div>
-      </template>-->
       <template slot="CustomeRegDt" slot-scope="{itemRow}">
         <div>{{itemRow.text | formatDate}}</div>
       </template>
@@ -37,9 +32,12 @@
         </div>
       </template>
       <template slot="CustomAmount" slot-scope="{itemRow}">
-        <div
-          :class="[`manage-transactions__money`,`manage-transactions__money--${itemRow.record.type.toLowerCase()}`]"
-        >{{`${itemRow.text >0 ? '+' : '-'}`}}{{itemRow.text | money({currency:'vnd'})}}</div>
+        <a-popover trigger="hover">
+          <template slot="content">{{itemRow.record.type==='INCOME' ? 'Thu' : 'Chi'}}</template>
+          <div
+            :class="[`manage-transactions__money`,`manage-transactions__money--${itemRow.record.type.toLowerCase()}`]"
+          >{{`${itemRow.text >0 ? '+' : '-'}`}}{{itemRow.text | money({currency:'vnd'})}}</div>
+        </a-popover>
       </template>
       <template slot="CustomDescription" slot-scope="{itemRow}">
         <a-popover trigger="hover">
