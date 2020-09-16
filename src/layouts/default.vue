@@ -136,7 +136,6 @@ export default {
     totalBalance() {
       return this.books !== null
         ? this.books.reduce((prev, cur) => {
-            console.log("cur ", cur.currentBalance + prev);
             return prev + cur.currentBalance;
           }, 0)
         : 0;
@@ -152,7 +151,7 @@ export default {
         top: "80px",
         duration: 5,
       });
-      return this.books !== null
+      this.books !== null
         ? this.books.reduce((prev, cur) => prev + cur.currentBalance, 0)
         : 0;
     },
