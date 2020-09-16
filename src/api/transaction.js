@@ -27,5 +27,11 @@ export default {
 			method: "post",
 			data
 		});
+	},
+	delete_transaction({id}) {
+		return axios({
+			url: "/transaction/"+id ,
+			method: "DELETE",
+		})
 	}
 };

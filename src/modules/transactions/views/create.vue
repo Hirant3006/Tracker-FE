@@ -146,6 +146,8 @@ export default {
   methods: {
     ...mapActions({
       insertTransaction: "transactions/insertTransaction",
+      getBooks: "book/getBooks",
+      selectBook: "book/setSelectedBook",
     }),
     truncNum(number, type) {
       if (isNaN(Math.trunc(number))) return 0;
@@ -161,18 +163,14 @@ export default {
       this.isLoading = true;
       const { book, type, clientName, description, amount } = this.form;
       const bookId = book == null ? null : book.id;
-      if (
-        !bookId ||
-        !clientName 
-      ) {
+      if (!bookId || !clientName) {
         this.isError = true;
         this.$notification["error"]({
           message: `Lỗi tạo giao dịch`,
           description: "Có lỗi xảy ra trong quá trình tạo",
           placement: "bottomRight",
         });
-      } 
-      else if (
+      } else if (
         this.form.book &&
         this.form.amount > this.form.book.currentBalance &&
         this.form.type === "EXPENSE"
@@ -183,8 +181,7 @@ export default {
           description: "Có lỗi xảy ra trong quá trình tạo",
           placement: "bottomRight",
         });
-      }
-       else {
+      } else {
         try {
           const insertTransactiondata = await this.insertTransaction({
             bookId,
@@ -197,7 +194,14 @@ export default {
           this.isLoading = false;
           console.log(header, data);
           if (header.isSuccessful) {
-            console.log("hello");
+            await this.getBooks();
+            if (typeof(this.selectedBook) === "object") {
+              if (this.selectedBook.id === bookId) {
+                const newDataSelectedBook = this.selectedBook;
+                newDataSelectedBook.currentBalance = type==='INCOME' ? newDataSelectedBook.currentBalance + amount : newDataSelectedBook.currentBalance - amount;
+                this.selectBook(newDataSelectedBook)
+              }
+            }
             this.$notification["success"]({
               message: `Tạo giao dịch thành công`,
               description: `Đã tạo giao dịch mới cho sổ ${this.form.book.name}`,
@@ -211,6 +215,7 @@ export default {
               message: `Tạo giao dịch`,
               description: "Có lỗi xảy ra trong quá trình tạo",
               placement: "topRight",
+              top: "80px",
               duration: 5,
             });
           }

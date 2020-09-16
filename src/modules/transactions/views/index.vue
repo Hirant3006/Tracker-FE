@@ -46,7 +46,18 @@
         </a-popover>
       </template>
       <template slot="CustomAction" slot-scope="{itemRow}">
-        <a-button :disabled="itemRow.record.isDelete==true" type="danger">Xóa</a-button>
+        <a-popconfirm
+          title="Bạn có muốn xóa giao dịch này?"
+          ok-text="Yes"
+          cancel-text="No"
+          @confirm="onConfirmDelete(itemRow.record.id)"
+        >
+          <a-button
+            :disabled="itemRow.record.isDelete==true && isLoadingDelete===itemRow.record.id"
+            :loading="isLoadingDelete===itemRow.record.id"
+            type="danger"
+          >Xóa</a-button>
+        </a-popconfirm>
       </template>
     </TableCustom>
   </div>
@@ -130,6 +141,7 @@ export default {
       ],
       offset: 0,
       total: null,
+      isLoadingDelete: false,
     };
   },
   mounted() {
@@ -140,7 +152,42 @@ export default {
     ...mapActions({
       getTransactions: "transactions/getTransactions",
       getTransactionsByBook: "transactions/getTransactionsByBook",
+      deleteTransaction: "transactions/deleteTransaction",
     }),
+    async onConfirmDelete(id) {
+      this.isLoadingDelete = id;
+      try {
+        const deleteTransactiondata = await this.deleteTransaction({ id });
+        const { header } = deleteTransactiondata.data;
+        if (header.isSuccessful) {
+           this.onGetTransactions();
+          this.$notification["success"]({
+            message: `Xóa giao dịch`,
+            description: "Xóa giao dịch thành công",
+            placement: "topRight",
+            top: "80px",
+            duration: 5,
+          });
+        } else {
+          this.$notification["error"]({
+            message: `Xóa giao dịch`,
+            description: "Có lỗi xảy ra trong quá trình xóa",
+            placement: "topRight",
+            top: "80px",
+            duration: 5,
+          });
+        }
+      } catch (e) {
+        this.$notification["error"]({
+          message: `Xóa giao dịch`,
+          description: e.message,
+          placement: "topRight",
+          top: "80px",
+          duration: 5,
+        });
+      }
+      this.isLoadingDelete = false;
+    },
     handleScroll(func) {
       const table = document.querySelector(".m-table-body");
       table.addEventListener("scroll", async (event) => {
