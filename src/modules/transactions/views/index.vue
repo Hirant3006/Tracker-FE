@@ -37,7 +37,7 @@
           <template slot="content">{{itemRow.record.type==='INCOME' ? 'Thu' : 'Chi'}}</template>
           <div
             :class="[`manage-transactions__money`,`manage-transactions__money--${itemRow.record.type.toLowerCase()}`]"
-          >{{`${itemRow.text >0 ? '+' : '-'}`}}{{itemRow.text | money({currency:'vnd'})}}</div>
+          >{{`${itemRow.record.type==='INCOME' ? '+' : '-'}`}}{{itemRow.text | money({currency:'vnd'})}}</div>
         </a-popover>
       </template>
       <template slot="CustomDescription" slot-scope="{itemRow}">

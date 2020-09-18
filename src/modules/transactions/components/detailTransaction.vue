@@ -2,41 +2,47 @@
   <div class="detail-trans">
     <a-form class="detail-trans__create-card-form" @submit.stop.prevent="onInsertTransaction()">
       <a-form-item label="Sổ">
-        <a-dropdown :disabled="profile.role!=='ADMIN'">
-          <span class="ant-dropdown-link" style="cursor:pointer" @click="e => e.preventDefault()">
-            <div
-              style="justify-content:space-between"
-              class="d-flex justify-space-between detail-trans__selected-book detail-trans__selected-book--card"
-              v-if="!form.book"
+        <div style="width: fit-content;">
+          <a-dropdown :disabled="profile.role!=='ADMIN'">
+            <span
+              class="ant-dropdown-link"
+              style="cursor:pointer;"
+              @click="e => e.preventDefault()"
             >
-              <span class="detail-trans__selected-book-title m-r-10">Chọn sổ</span>
-              <i v-if="profile.role=='ADMIN'" :class="`far fa-angle-down`"></i>
-            </div>
-            <div v-else class="detail-trans__selected-book detail-trans__selected-book--card">
-              <i :class="`far fa-${form.book.iconName ? form.book.iconName : 'book'}`"></i>
-              <div>
-                <span>{{form.book.name}}</span>
-                <span
-                  :class="['detail-trans__selected-book-balance',`detail-trans__selected-book-balance--${form.book.currentBalance >0 ? 'plus' : 'minus'}`]"
-                >{{`${form.book.currentBalance >0 ? '+' : '-'}`}}{{form.book.currentBalance | money({currency:'vnd'})}}</span>
+              <div
+                style="justify-content:space-between"
+                class="d-flex justify-space-between detail-trans__selected-book detail-trans__selected-book--card"
+                v-if="!form.book"
+              >
+                <span class="detail-trans__selected-book-title m-r-10">Chọn sổ</span>
+                <i v-if="profile.role=='ADMIN'" :class="`far fa-angle-down`"></i>
               </div>
-              <i style="margin-left:30px" :class="`far fa-angle-down`"></i>
-            </div>
-          </span>
-          <a-menu slot="overlay">
-            <a-menu-item v-for="(item,index) in books" :key="index" @click="onSelectBook(item)">
-              <div class="detail-trans__selected-book">
-                <i :class="`far fa-${item.iconName ? item.iconName : 'book'}`"></i>
+              <div v-else class="detail-trans__selected-book detail-trans__selected-book--card">
+                <i :class="`far fa-${form.book.iconName ? form.book.iconName : 'book'}`"></i>
                 <div>
-                  <span>{{item.name}}</span>
+                  <span>{{form.book.name}}</span>
                   <span
-                    :class="[,'detail-trans__selected-book-balance',`detail-trans__selected-book-balance--${item.currentBalance >0 ? 'plus' : 'minus'}`]"
-                  >{{`${item.currentBalance >0 ? '+' : '-'}`}}{{item.currentBalance | money({currency:'vnd'})}}</span>
+                    :class="['detail-trans__selected-book-balance',`detail-trans__selected-book-balance--${form.book.currentBalance >0 ? 'plus' : 'minus'}`]"
+                  >{{`${form.book.currentBalance >0 ? '+' : '-'}`}}{{form.book.currentBalance | money({currency:'vnd'})}}</span>
                 </div>
+                <i style="margin-left:30px" :class="`far fa-angle-down`"></i>
               </div>
-            </a-menu-item>
-          </a-menu>
-        </a-dropdown>
+            </span>
+            <a-menu slot="overlay">
+              <a-menu-item v-for="(item,index) in books" :key="index" @click="onSelectBook(item)">
+                <div class="detail-trans__selected-book">
+                  <i :class="`far fa-${item.iconName ? item.iconName : 'book'}`"></i>
+                  <div>
+                    <span>{{item.name}}</span>
+                    <span
+                      :class="[,'detail-trans__selected-book-balance',`detail-trans__selected-book-balance--${item.currentBalance >0 ? 'plus' : 'minus'}`]"
+                    >{{`${item.currentBalance >0 ? '+' : '-'}`}}{{item.currentBalance | money({currency:'vnd'})}}</span>
+                  </div>
+                </div>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
+        </div>
       </a-form-item>
       <div class="detail-trans__error-text" v-if="isError">
         <span v-if="!form.book">*Sổ không được bỏ trống</span>
@@ -78,15 +84,24 @@
                 <span v-if="!$v.form.username.required">*Tên không được bỏ trống</span>
       </div>-->
 
-      <a-button
-        class="m-b-25 m-t-16"
-        type="primary"
-        size="large"
-        block
-        html-type="submit"
-        :loading="isLoading"
-      >Xác nhận</a-button>
+      <div class="detail-trans__button-group">
+        <a-button
+          class="m-b-25 m-t-16"
+          type="primary"
+          block
+          html-type="submit"
+          :loading="isLoading"
+        >Lưu</a-button>
+        <a-button
+          class="m-b-25 m-t-16"
+          type="default"
+          block
+          html-type="submit"
+          :loading="isLoading"
+        >Bỏ qua</a-button>
+      </div>
     </a-form>
+
   </div>
 </template>
 
@@ -99,13 +114,15 @@ import { types as typesAuth } from "@/modules/auth/constant";
 import { types as typesBook } from "@/modules/book/constant";
 import { mapActions, mapGetters } from "vuex";
 export default {
-  name: "DetailTransaction",
+  name: "DetailTab",
   data() {
     return {
       form: {},
       isError: false,
       options,
       isLoading: false,
+      defaultData: null,
+      isModify: false,
     };
   },
   props: {
@@ -116,6 +133,8 @@ export default {
   },
   created() {
     this.form = this.data;
+    this.form.book = this.books.find((item) => item.id === this.data.bookId);
+    this.defaultData = this.form;
   },
   computed: {
     ...mapGetters({
@@ -132,8 +151,17 @@ export default {
       if (isNaN(Math.trunc(number))) return 0;
       else return Math.trunc(number);
     },
-     onSelectBook(item) {
+    onSelectBook(item) {
       this.form.book = item;
+    },
+  },
+  watch: {
+    form: {
+      deep: true,
+      handler(val) {
+        this.isModify = this.defaultData !== val;
+        // this.$emit("modify", this.defaultData !== val);
+      },
     },
   },
 };
@@ -141,7 +169,18 @@ export default {
 
 <style lang="scss">
 .detail-trans {
+  .ant-col .ant-form-item-control-wrapper {
+    width: fit-content;
+  }
   padding: 0 64px;
+  &__button-group {
+    display: flex;
+    justify-content: flex-end;
+    button {
+      width: 120px;
+      margin-left: 20px;
+    }
+  }
   &__selected-book {
     display: flex;
     line-height: 24px;

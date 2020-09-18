@@ -9,18 +9,30 @@
     </i>
     <h2 class="m-l-8">
       <b>ID:</b>
-      {{data.id}}
+      {{$route.params.id}}
     </h2>
     <div v-if="id!==null && data!==null">
-      <a-tabs default-active-key="detail" @change="onChangeTab">
+      <a-tabs default-active-key="activity" @change="onChangeTab">
         <a-tab-pane key="detail" tab="Chi tiết">
-          <detail-transaction :data="data" />
+          <detail-transaction :data="data" @modify="onModifyData" />
         </a-tab-pane>
         <a-tab-pane key="activity" tab="Hoạt động" force-render>
-          <div class="detail-transaction__activity"></div>
+          <activityTransaction />
         </a-tab-pane>
       </a-tabs>
     </div>
+    <a-modal
+      v-model="isVisibleModalConfirm"
+      title="Chưa lưu nội dung mới"
+      okText="Có"
+      cancelText="Không"
+      @ok="onOkConfirmModal"
+      @cancel="onCancelConfirmModal"
+    >
+      <p
+        class="modal__content"
+      >Thông tin chỉnh sửa vẫn chưa được lưu, bạn có muốn lưu lại nội dung mới?</p>
+    </a-modal>
   </div>
 </template>
 
@@ -41,6 +53,7 @@ const dummyData = {
   modiNm: "Nhat Tinh Anh",
 };
 import detailTransaction from "../components/detailTransaction";
+import activityTransaction from "../components/activityTransaction";
 import { types as typesAuth } from "@/modules/auth/constant";
 import { types as typesBook } from "@/modules/book/constant";
 import { mapActions, mapGetters } from "vuex";
@@ -49,12 +62,15 @@ export default {
   name: "DetailTransaction",
   components: {
     detailTransaction,
+    activityTransaction,
   },
   data() {
     return {
       id: null,
-      data: dummyData,
-      form: dummyData,
+      data: null,
+      form: null,
+      isModifyData: false,
+      isVisibleModalConfirm: false,
     };
   },
   created() {
@@ -62,31 +78,44 @@ export default {
     this.id = id;
     this.handleGetTransaction(id);
   },
-  mounted() {
-    console.log(this.$route);
-  },
+  mounted() {},
   methods: {
     ...mapActions({
       getTransactions: "transactions/getTransaction",
     }),
+    onModifyData(bool) {
+      this.isModifyData = bool;
+    },
     async handleGetTransaction(id) {
       try {
         const res = await this.getTransactions({ id });
         const { header, data } = res.data;
         if (header.isSuccessful) {
-          console.log(data);
+          this.data = data;
         }
       } catch (e) {}
     },
     onChangeTab(key) {
-      console.log("key");
+      if (key == "activity" && this.isModifyData) {
+        this.isVisibleModalConfirm = true;
+      }
     },
+    onOkConfirmModal() {},
+    onCancelConfirmModal() {},
   },
 };
 </script>
 
 <style lang="scss">
+.modal {
+  &__content {
+    padding: 10px 22px;
+    font-size: 16px;
+  }
+}
 .detail-transaction {
-  
+  .ant-input-number {
+    width: 150px;
+  }
 }
 </style>

@@ -24,7 +24,13 @@ export default {
 	get_transaction({id}) {
 		return axios({
 			url: "/transaction/"+id ,
-			method: "DELETE",
+			method: "GET",
+		})
+	},
+	get_log_transaction({id}) {
+		return axios({
+			url: "/logging/transaction/"+id ,
+			method: "GET",
 		})
 	},
 	insert_transaction(data) {

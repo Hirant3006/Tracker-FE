@@ -29,6 +29,14 @@ const actions = {
 			throw error;
 		}
 	},
+	async [_types.actions.GET_LOG_TRANSACTION]({ commit },payload) {
+		try {
+			const res = await api.get_log_transaction(payload);
+			return res;
+		} catch (error) {
+			throw error;
+		}
+	},
 	async [_types.actions.DELETE_TRANSACTIONS]({ commit },payload) {
 		try {
 			const res = await api.delete_transaction(payload);
