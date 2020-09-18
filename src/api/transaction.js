@@ -21,6 +21,18 @@ export default {
 			}
 		});
 	},
+	get_transaction({id}) {
+		return axios({
+			url: "/transaction/"+id ,
+			method: "GET",
+		})
+	},
+	get_log_transaction({id}) {
+		return axios({
+			url: "/logging/transaction/"+id ,
+			method: "GET",
+		})
+	},
 	insert_transaction(data) {
 		return axios({
 			url: "/transaction" ,
@@ -33,5 +45,12 @@ export default {
 			url: "/transaction/"+id ,
 			method: "DELETE",
 		})
+	},
+	edit_transaction(data) {
+		return axios({
+			url: "/transaction" ,
+			method: "put",
+			data
+		});
 	}
 };

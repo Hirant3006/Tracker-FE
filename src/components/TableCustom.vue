@@ -100,6 +100,7 @@
             <tr
               :class="['custom-table__row',checkedList.includes(item.id) && 'custom-table__row--select','m-table-row-cell-break-word' ]"
               v-for="(item,index) in data"
+              v-on:click.self="onClickRow(item)"
               :key="index"
             >
               <td
@@ -258,8 +259,10 @@ export default {
     this.scrollToBottom && this.handleScroll(this.scrollToBottom);
     // Calculate Body width and watch
   },
-
   methods: {
+    onClickRow(data) {
+      this.$emit("click-row", data);
+    },
     handleScroll(func) {
       const table = document.querySelector(".m-table-body");
       table.addEventListener("scroll", async (event) => {
@@ -298,7 +301,6 @@ export default {
         // this.checkedList = this.dataSource.map(item => item.id);
         let arr = this.dataSource.filter((item) => !item.disabled_at);
         this.checkedList = arr.map((item) => item.id);
-        console.log("this.checkedList", this.checkedList);
       } else this.checkedList = [];
     },
     onCheckChange(item, index) {

@@ -181,6 +181,7 @@ export default {
 
 .app-layout {
   .ant-layout-content {
+    overflow-y: scroll;
     padding: 36px 24px !important;
   }
   .ant-spin {

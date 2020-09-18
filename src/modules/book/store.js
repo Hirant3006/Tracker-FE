@@ -13,7 +13,6 @@ const getters = {
 		return state.books.filter((item) => item.id === id);
 	},
 	[_types.getters.GET_SELECTED_BOOK](state) {
-		console.log(state)
 		return state.selected!=='all' && typeof(state.selected)=='string' ? JSON.parse(state.selected) : state.selected;
 	},
 	[_types.getters.GET_BOOKS](state) {

@@ -8,7 +8,9 @@ export const _types = {
         GET_TRANSACTIONS: 'getTransactions',
         GET_TRANSACTIONS_BY_BOOK: 'getTransactionsByBook',
         INSERT_TRANSACTION: 'insertTransaction',
-        DELETE_TRANSACTIONS: 'deleteTransaction'
+        GET_TRANSACTION: 'getTransaction',
+        GET_LOG_TRANSACTION: 'getLogTransaction',
+        DELETE_TRANSACTIONS: 'deleteTransaction',
     },
     mutations: {
     }
