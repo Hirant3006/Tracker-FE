@@ -21,6 +21,12 @@ export default {
 			}
 		});
 	},
+	get_transaction({id}) {
+		return axios({
+			url: "/transaction/"+id ,
+			method: "DELETE",
+		})
+	},
 	insert_transaction(data) {
 		return axios({
 			url: "/transaction" ,

@@ -17,12 +17,9 @@ export default async function({ next, from, to, router, store, app }) {
 			(await store.dispatch(typesBook.actions.GET_BOOKS));
 		!store.state.auth.profile &&
             (await store.dispatch(typesAuth.actions.GET_USER_PROFILE));
-        console.log(store.state.book)
 		if ((store.state.book.selected === null || store.state.book.books.length===0) && to.name !== routerName.ONBOARDING) {
-            console.log('hello')
 			next({ name: routerName.ONBOARDING });
 		} else {
-            console.log('hello2')
             next({ name: routerName.TRANSACTION });
         }
 		// if (selected_book) {
