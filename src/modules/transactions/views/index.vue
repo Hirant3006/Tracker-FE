@@ -17,6 +17,7 @@
       :data-source="data"
       :scrollToBottom="onLoadMore"
       @change="onChange"
+      @click-row="onClickRow"
       rowKey="id"
       v-else
     >
@@ -46,18 +47,32 @@
         </a-popover>
       </template>
       <template slot="CustomAction" slot-scope="{itemRow}">
-        <a-popconfirm
-          title="Bạn có muốn xóa giao dịch này?"
-          ok-text="Yes"
-          cancel-text="No"
-          @confirm="onConfirmDelete(itemRow.record.id)"
-        >
-          <a-button
-            :disabled="itemRow.record.isDelete==true && isLoadingDelete===itemRow.record.id"
-            :loading="isLoadingDelete===itemRow.record.id"
-            type="danger"
-          >Xóa</a-button>
-        </a-popconfirm>
+        <div class="manage-transactions__action">
+          <a-tooltip>
+            <template slot="title">Chi tiết</template>
+            <a-button @click="onClickRow(itemRow.record)" type="default">
+              <i :class="`far fa-info`"></i>
+            </a-button>
+          </a-tooltip>
+
+          <a-popconfirm
+            title="Bạn có muốn xóa giao dịch này?"
+            ok-text="Yes"
+            cancel-text="No"
+            @confirm="onConfirmDelete(itemRow.record.id)"
+          >
+            <a-tooltip>
+              <template slot="title">Xóa</template>
+              <a-button
+                :disabled="itemRow.record.isDelete==true && isLoadingDelete===itemRow.record.id"
+                :loading="isLoadingDelete===itemRow.record.id"
+                type="danger"
+              >
+                <i :class="`far fa-trash-alt`"></i>
+              </a-button>
+            </a-tooltip>
+          </a-popconfirm>
+        </div>
       </template>
     </TableCustom>
   </div>
@@ -154,13 +169,22 @@ export default {
       getTransactionsByBook: "transactions/getTransactionsByBook",
       deleteTransaction: "transactions/deleteTransaction",
     }),
+    onClickRow(data) {
+      console.log("click row", data);
+      this.$router.push({
+        name: this.$routerName.DETAIL_TRANSACTION,
+        params: {
+          id: data.id,
+        },
+      });
+    },
     async onConfirmDelete(id) {
       this.isLoadingDelete = id;
       try {
         const deleteTransactiondata = await this.deleteTransaction({ id });
         const { header } = deleteTransactiondata.data;
         if (header.isSuccessful) {
-           this.onGetTransactions();
+          this.onGetTransactions();
           this.$notification["success"]({
             message: `Xóa giao dịch`,
             description: "Xóa giao dịch thành công",
@@ -263,6 +287,17 @@ export default {
   background: #555;
 }
 .manage-transactions {
+  &__action {
+    display: flex;
+    button:nth-child(2) {
+      margin-left: 8px;
+    }
+    button:nth-child(1) {
+      padding: 0 14px;
+    }
+    button {
+    }
+  }
   &__title {
     font-weight: 600;
     font-size: 24px;

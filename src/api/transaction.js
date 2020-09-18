@@ -33,5 +33,12 @@ export default {
 			url: "/transaction/"+id ,
 			method: "DELETE",
 		})
+	},
+	edit_transaction(data) {
+		return axios({
+			url: "/transaction" ,
+			method: "put",
+			data
+		});
 	}
 };

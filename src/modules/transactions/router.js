@@ -28,6 +28,16 @@ export default [
 				component: () =>
 					import(/* webpackChunkName: "auth" */ "./views/create.vue"),
 			},
+			{
+				path: "/detail/:id",
+				name: routerName.DETAIL_TRANSACTION,
+				meta: {
+					middleware: [auth],
+				},
+				component: () =>
+					import(/* webpackChunkName: "auth" */ "./views/detail.vue"),
+			},
+			
 		],
 	},
 ];
