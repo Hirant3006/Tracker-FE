@@ -8,13 +8,13 @@
       <span class="m-l-5">Trở về</span>
     </i>
     <h2 class="m-l-8">
-      <b>ID:</b>
+      <b>Mã giao dịch: &nbsp;</b>
       {{$route.params.id}}
     </h2>
     <div v-if="id!==null && data!==null">
-      <a-tabs default-active-key="activity" @change="onChangeTab">
+      <a-tabs :activeKey="activeTab" @tabClick="onChangeTab">
         <a-tab-pane key="detail" tab="Chi tiết">
-          <detail-transaction :data="data" @modify="onModifyData" />
+          <detail-transaction :data="data" :key="compKey" @modify="onModifyData" />
         </a-tab-pane>
         <a-tab-pane key="activity" tab="Hoạt động" force-render>
           <activityTransaction />
@@ -29,9 +29,8 @@
       @ok="onOkConfirmModal"
       @cancel="onCancelConfirmModal"
     >
-      <p
-        class="modal__content"
-      >Thông tin chỉnh sửa vẫn chưa được lưu, bạn có muốn lưu lại nội dung mới?</p>
+      <p class="modal__content">Thông tin chỉnh sửa vẫn chưa được lưu.</p>
+      <p class="modal__content">Bạn có muốn chuyển sang thẻ khác?</p>
     </a-modal>
   </div>
 </template>
@@ -71,6 +70,8 @@ export default {
       form: null,
       isModifyData: false,
       isVisibleModalConfirm: false,
+      activeTab: "detail",
+      compKey:0
     };
   },
   created() {
@@ -96,12 +97,22 @@ export default {
       } catch (e) {}
     },
     onChangeTab(key) {
+      console.log(key)
       if (key == "activity" && this.isModifyData) {
         this.isVisibleModalConfirm = true;
-      }
+      } else this.activeTab=key
     },
-    onOkConfirmModal() {},
-    onCancelConfirmModal() {},
+    onOkConfirmModal() {
+      const { id } = this.$route.params;
+      this.id = id;
+      this.handleGetTransaction(id);
+      this.activeTab = "activity";
+      this.isVisibleModalConfirm = false;
+      this.compKey++;
+    },
+    onCancelConfirmModal() {
+      this.activeTab = "detail";
+    },
   },
 };
 </script>

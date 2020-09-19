@@ -68,6 +68,18 @@ const actions = {
 			throw error;
 		}
 	},
+	async [_types.actions.EDIT_TRANSACTION]({ commit }, payload) {
+		try {
+			const res = await api.edit_transaction(payload);
+			const { header, data } = res.data;
+			if (header.isSuccessful) {
+				// commit(_types.mutations.INSERT_BOOK, data);
+			}
+			return res;
+		} catch (error) {
+			throw error;
+		}
+	},
 };
 
 const mutations = {

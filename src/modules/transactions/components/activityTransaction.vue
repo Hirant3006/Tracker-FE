@@ -112,6 +112,7 @@ export default {
   methods: {
     ...mapActions({
       getLogTransaction: "transactions/getLogTransaction",
+      editTransaction: "transactions/editTransaction",
     }),
     async handleGetLogTransaction(id) {
       const res = await this.getLogTransaction({ id });

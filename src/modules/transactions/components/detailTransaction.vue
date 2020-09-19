@@ -1,9 +1,9 @@
 <template>
-  <div class="detail-trans">
-    <a-form class="detail-trans__create-card-form" @submit.stop.prevent="onInsertTransaction()">
+  <div :key="compKey" class="detail-trans">
+    <a-form class="detail-trans__create-card-form" @submit.stop.prevent="onEditTrans()">
       <a-form-item label="Sổ">
         <div style="width: fit-content;">
-          <a-dropdown :disabled="profile.role!=='ADMIN'">
+          <a-dropdown :disabled="true">
             <span
               class="ant-dropdown-link"
               style="cursor:pointer;"
@@ -12,18 +12,18 @@
               <div
                 style="justify-content:space-between"
                 class="d-flex justify-space-between detail-trans__selected-book detail-trans__selected-book--card"
-                v-if="!form.book"
+                v-if="!book"
               >
                 <span class="detail-trans__selected-book-title m-r-10">Chọn sổ</span>
                 <i v-if="profile.role=='ADMIN'" :class="`far fa-angle-down`"></i>
               </div>
               <div v-else class="detail-trans__selected-book detail-trans__selected-book--card">
-                <i :class="`far fa-${form.book.iconName ? form.book.iconName : 'book'}`"></i>
+                <i :class="`far fa-${book.iconName ? book.iconName : 'book'}`"></i>
                 <div>
-                  <span>{{form.book.name}}</span>
+                  <span>{{book.name}}</span>
                   <span
-                    :class="['detail-trans__selected-book-balance',`detail-trans__selected-book-balance--${form.book.currentBalance >0 ? 'plus' : 'minus'}`]"
-                  >{{`${form.book.currentBalance >0 ? '+' : '-'}`}}{{form.book.currentBalance | money({currency:'vnd'})}}</span>
+                    :class="['detail-trans__selected-book-balance',`detail-trans__selected-book-balance--${book.currentBalance >0 ? 'plus' : 'minus'}`]"
+                  >{{`${book.currentBalance >0 ? '+' : '-'}`}}{{book.currentBalance | money({currency:'vnd'})}}</span>
                 </div>
                 <i style="margin-left:30px" :class="`far fa-angle-down`"></i>
               </div>
@@ -84,7 +84,7 @@
                 <span v-if="!$v.form.username.required">*Tên không được bỏ trống</span>
       </div>-->
 
-      <div class="detail-trans__button-group">
+      <div v-if="isModify" class="detail-trans__button-group">
         <a-button
           class="m-b-25 m-t-16"
           type="primary"
@@ -96,12 +96,11 @@
           class="m-b-25 m-t-16"
           type="default"
           block
-          html-type="submit"
+          @click="onCancelModify"
           :loading="isLoading"
         >Bỏ qua</a-button>
       </div>
     </a-form>
-
   </div>
 </template>
 
@@ -117,12 +116,24 @@ export default {
   name: "DetailTab",
   data() {
     return {
-      form: {},
+      form: {
+        type: "",
+        clientName: "",
+        amount: "",
+        description: "",
+      },
       isError: false,
       options,
       isLoading: false,
-      defaultData: null,
+      defaultData: {
+        type: "",
+        clientName: "",
+        amount: "",
+        description: "",
+        book: "",
+      },
       isModify: false,
+      compKey:0
     };
   },
   props: {
@@ -132,9 +143,9 @@ export default {
     },
   },
   created() {
-    this.form = this.data;
-    this.form.book = this.books.find((item) => item.id === this.data.bookId);
-    this.defaultData = this.form;
+    this.book = this.books.find((item) => item.id === this.data.bookId);
+    this.form = this.$clone(this.data);
+    this.defaultData = this.$clone(this.form);
   },
   computed: {
     ...mapGetters({
@@ -144,8 +155,84 @@ export default {
     }),
   },
   methods: {
+    ...mapActions({
+      editTransaction: "transactions/editTransaction",
+    }),
     onChangeType(e) {
       this.form.type = e.target.value;
+    },
+    onCancelModify() {
+      this.form = this.$clone(this.defaultData);
+      this.compKey+=1;
+    },
+    async onEditTrans() {
+      this.isLoading = true;
+      const { id } = this.$route.params;
+      const { bookId, type, clientName, description, amount } = this.form;
+      if (!bookId || !clientName) {
+        this.isError = true;
+        this.$notification["error"]({
+          message: `Lỗi sửa giao dịch`,
+          description: "Có lỗi xảy ra trong quá trình sửa",
+          placement: "bottomRight",
+        });
+      } else if (
+        this.form.book &&
+        this.form.amount > this.form.book.currentBalance &&
+        this.form.type === "EXPENSE"
+      ) {
+        this.isError = true;
+        this.$notification["error"]({
+          message: `Lỗi sửa giao dịch`,
+          description: "Có lỗi xảy ra trong quá trình sửa",
+          placement: "bottomRight",
+        });
+      } else {
+        try {
+          const insertTransactiondata = await this.editTransaction({
+            bookId,
+            type,
+            clientName,
+            description,
+            amount,
+          });
+          const { header, data } = insertTransactiondata.data;
+          this.isLoading = false;
+          if (header.isSuccessful) {
+            await this.getBooks();
+            if (typeof this.selectedBook === "object") {
+              if (this.selectedBook.id === bookId) {
+                const newDataSelectedBook = this.selectedBook;
+                newDataSelectedBook.currentBalance =
+                  type === "INCOME"
+                    ? newDataSelectedBook.currentBalance + amount
+                    : newDataSelectedBook.currentBalance - amount;
+                this.selectBook(newDataSelectedBook);
+              }
+            }
+            this.$notification["success"]({
+              message: `sửa giao dịch thành công`,
+              description: `Đã sửa giao dịch mới cho sổ ${this.form.book.name}`,
+              placement: "topRight",
+              top: "80px",
+              duration: 5,
+            });
+            this.$router.push({ name: this.$routerName.TRANSACTIONS });
+          } else {
+            this.$notification["error"]({
+              message: `sửa giao dịch`,
+              description: "Có lỗi xảy ra trong quá trình sửa",
+              placement: "topRight",
+              top: "80px",
+              duration: 5,
+            });
+          }
+        } catch (e) {
+          this.isError = true;
+          this.isLoading = false;
+        }
+      }
+      this.isLoading = false;
     },
     truncNum(number, type) {
       if (isNaN(Math.trunc(number))) return 0;
@@ -159,8 +246,8 @@ export default {
     form: {
       deep: true,
       handler(val) {
-        this.isModify = this.defaultData !== val;
-        // this.$emit("modify", this.defaultData !== val);
+        this.isModify = JSON.stringify(this.data) !== JSON.stringify(val);
+        this.$emit("modify", this.isModify);
       },
     },
   },
@@ -169,6 +256,8 @@ export default {
 
 <style lang="scss">
 .detail-trans {
+  width: 600px;
+  margin: 0 auto;
   .ant-col .ant-form-item-control-wrapper {
     width: fit-content;
   }
