@@ -2,84 +2,98 @@
   <div class="manage-transactions">
     <div class="d-flex justify-content-between m-b-20">
       <h3>Quản lí giao dịch</h3>
+    </div>
+    <div class="manage-transactions__date-picker">
+      <a-range-picker class="m-b-10" :locale="locale" @change="onChangeDate" />
       <a-button
+        class="m-l-10"
         @click="() => $router.push({name:$routerName.CREATE_TRANSACTION})"
         type="primary"
       >Tạo mới</a-button>
     </div>
-    <div class="manage-transactions__no-data" v-if="this.total==0">
+    <div class="manage-transactions__no-data m-t-50" v-if="this.total==0 ">
       <img class="m-b-24" src="@/assets/images/not-found.png" alt="not found" />
-      <span class="manage-transactions__title m-b-16">Chưa có giao dịch nào được tạo</span>
+      <span
+        v-if="this.status=='first_time'"
+        class="manage-transactions__title m-b-16"
+      >Chưa có giao dịch nào được tạo</span>
+      <span
+        v-else-if="this.status=='not_first_time'"
+        class="manage-transactions__title m-b-16"
+      >Không có dữ liệu</span>
     </div>
-    <TableCustom
-      :isLoading="isLoading"
-      :columns="columns"
-      :data-source="data"
-      :scrollToBottom="onLoadMore"
-      @change="onChange"
-      @click-row="onClickRow"
-      rowKey="id"
-      v-else
-    >
-      <template slot="CustomeRegDt" slot-scope="{itemRow}">
-        <div>{{itemRow.text | formatDate}}</div>
-      </template>
-      <template slot="CustomStatus" slot-scope="{itemRow}">
-        <div
-          :class="[`manage-transactions__type-tag`,`manage-transactions__type-tag--${itemRow.record.isDelete==true ? 'deleted' : itemRow.record.modiDt == itemRow.record.regDt ? 'origin' :'modified' }`]"
-        >
-          <span>•</span>
-          &nbsp;{{itemRow.record.isDelete==true ? 'Đã xóa' : itemRow.record.modiDt == itemRow.record.regDt ? 'Nguyên bản' :'Đã sửa' }}
-        </div>
-      </template>
-      <template slot="CustomAmount" slot-scope="{itemRow}">
-        <a-popover trigger="hover">
-          <template slot="content">{{itemRow.record.type==='INCOME' ? 'Thu' : 'Chi'}}</template>
+    <template v-else>
+      <TableCustom
+        :isLoading="isLoading"
+        :columns="columns"
+        :data-source="data"
+        :scrollToBottom="onLoadMore"
+        @change="onChange"
+        @click-row="onClickRow"
+        rowKey="id"
+      >
+        <template slot="CustomeRegDt" slot-scope="{itemRow}">
+          <div>{{itemRow.text | formatDate}}</div>
+        </template>
+        <template slot="CustomStatus" slot-scope="{itemRow}">
           <div
-            :class="[`manage-transactions__money`,`manage-transactions__money--${itemRow.record.type.toLowerCase()}`]"
-          >{{`${itemRow.record.type==='INCOME' ? '+' : '-'}`}}{{itemRow.text | money({currency:'vnd'})}}</div>
-        </a-popover>
-      </template>
-      <template slot="CustomDescription" slot-scope="{itemRow}">
-        <a-popover trigger="hover">
-          <template slot="content">{{itemRow.text}}</template>
-          <div class="wrap-text">{{itemRow.text}}</div>
-        </a-popover>
-      </template>
-      <template slot="CustomAction" slot-scope="{itemRow}">
-        <div class="manage-transactions__action">
-          <a-tooltip>
-            <template slot="title">Chi tiết</template>
-            <a-button @click="onClickRow(itemRow.record)" type="default">
-              <i :class="`far fa-info`"></i>
-            </a-button>
-          </a-tooltip>
-
-          <a-popconfirm
-            title="Bạn có muốn xóa giao dịch này?"
-            ok-text="Yes"
-            cancel-text="No"
-            @confirm="onConfirmDelete(itemRow.record.id)"
+            :class="[`manage-transactions__type-tag`,`manage-transactions__type-tag--${itemRow.record.isDelete==true ? 'deleted' : itemRow.record.modiDt == itemRow.record.regDt ? 'origin' :'modified' }`]"
           >
+            <span>•</span>
+            &nbsp;{{itemRow.record.isDelete==true ? 'Đã xóa' : itemRow.record.modiDt == itemRow.record.regDt ? 'Nguyên bản' :'Đã sửa' }}
+          </div>
+        </template>
+        <template slot="CustomAmount" slot-scope="{itemRow}">
+          <a-popover trigger="hover">
+            <template slot="content">{{itemRow.record.type==='INCOME' ? 'Thu' : 'Chi'}}</template>
+            <div
+              :class="[`manage-transactions__money`,`manage-transactions__money--${itemRow.record.type.toLowerCase()}`]"
+            >{{`${itemRow.record.type==='INCOME' ? '+' : '-'}`}}{{itemRow.text | money({currency:'vnd'})}}</div>
+          </a-popover>
+        </template>
+        <template slot="CustomDescription" slot-scope="{itemRow}">
+          <a-popover trigger="hover">
+            <template slot="content">{{itemRow.text}}</template>
+            <div class="wrap-text">{{itemRow.text}}</div>
+          </a-popover>
+        </template>
+        <template slot="CustomAction" slot-scope="{itemRow}">
+          <div class="manage-transactions__action">
             <a-tooltip>
-              <template slot="title">Xóa</template>
-              <a-button
-                :disabled="itemRow.record.isDelete==true && isLoadingDelete===itemRow.record.id"
-                :loading="isLoadingDelete===itemRow.record.id"
-                type="danger"
-                style="padding:0 12px"
-              >
-                <i :class="`far fa-trash`"></i>
+              <template slot="title">Chi tiết</template>
+              <a-button @click="onClickRow(itemRow.record)" type="default">
+                <i :class="`far fa-info`"></i>
               </a-button>
             </a-tooltip>
-          </a-popconfirm>
-        </div>
-      </template>
-    </TableCustom>
+
+            <a-popconfirm
+              title="Bạn có muốn xóa giao dịch này?"
+              ok-text="Yes"
+              cancel-text="No"
+              @confirm="onConfirmDelete(itemRow.record.id)"
+            >
+              <a-tooltip>
+                <template slot="title">Xóa</template>
+                <a-button
+                  :disabled="itemRow.record.isDelete==true && isLoadingDelete===itemRow.record.id"
+                  :loading="isLoadingDelete===itemRow.record.id"
+                  type="danger"
+                  style="padding:0 12px"
+                >
+                  <i :class="`far fa-trash`"></i>
+                </a-button>
+              </a-tooltip>
+            </a-popconfirm>
+          </div>
+        </template>
+      </TableCustom>
+    </template>
   </div>
 </template>
 
 <script>
+import moment from "moment";
+import locale from "ant-design-vue/es/date-picker/locale/vi_VN";
 import { mapActions, mapGetters } from "vuex";
 import { types as typesBook } from "@/modules/book/constant";
 import TableCustom from "@/components/TableCustom";
@@ -94,8 +108,14 @@ export default {
   },
   data() {
     return {
+      locale,
       data: [],
       isLoading: false,
+      status: "first_time",
+      form: {
+        dateStart: "",
+        dateEnd: "",
+      },
       columns: [
         {
           title: "MGD",
@@ -170,6 +190,16 @@ export default {
       getTransactionsByBook: "transactions/getTransactionsByBook",
       deleteTransaction: "transactions/deleteTransaction",
     }),
+    onChangeDate(dates) {
+      if (dates.length !== 0) {
+        this.form.dateStart = moment(dates[0]).format("YYYY-MM-DD");
+        this.form.dateEnd = moment(dates[1]).format("YYYY-MM-DD");
+      }
+      else {
+        this.form.dateStart=''
+        this.form.dateEnd=''
+      }
+    },
     onClickRow(data) {
       console.log("click row", data);
       this.$router.push({
@@ -233,12 +263,18 @@ export default {
     async onGetTransactions() {
       try {
         this.isLoading = true;
+        const { dateStart, dateEnd } = this.form;
         const { id } = this.selectedBook;
         const { offset } = this;
         const res =
           this.selectedBook === "all"
             ? await this.getTransactions({ offset })
-            : await this.getTransactionsByBook({ id, offset });
+            : await this.getTransactionsByBook({
+                id,
+                dateStart,
+                dateEnd,
+                offset,
+              });
         const { header, data } = res.data;
         if (header.isSuccessful) {
           this.total = data.total;
@@ -260,6 +296,14 @@ export default {
       this.offset = 0;
       this.total = null;
       this.onGetTransactions();
+    },
+    form: {
+      deep: true,
+      handler(val) {
+        this.offset = 0;
+        this.onGetTransactions();
+        this.status = "not_first_time";
+      },
     },
   },
 };
@@ -288,6 +332,10 @@ export default {
   background: #555;
 }
 .manage-transactions {
+  &__date-picker {
+    display: flex;
+    justify-content: space-between;
+  }
   &__action {
     display: flex;
     button:nth-child(2) {

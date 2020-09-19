@@ -11,13 +11,15 @@ export default {
 			}
 		});
 	},
-	get_list_transaction_by_book({id,offset=null}) {
+	get_list_transaction_by_book({id,dateStart,dateEnd,offset=null}) {
 		return axios({
 			url: "/transaction/book/" + id,
 			method: "get",
 			params :{
 				size:10,
-				offset
+				offset,
+				dateStart,
+				dateEnd
 			}
 		});
 	},

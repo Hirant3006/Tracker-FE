@@ -5,7 +5,7 @@
     </div>
     <div :class="[$prefixClass.card + (type && `-${type}`)]" :style="isLoading && 'opacity:0.6'">
       <div v-if="$slots.title" class="custom-table__title">
-        <slot name="title"></slot>
+        <slot name="header"></slot>
       </div>
       <div
         class="m-table-content"
