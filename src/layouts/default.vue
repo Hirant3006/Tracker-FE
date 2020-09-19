@@ -17,7 +17,7 @@
                   <span>{{selectedBook.name}}</span>
                   <span
                     :class="[,'app-layout__selected-book-balance',`app-layout__selected-book-balance--${selectedBook.currentBalance >0 ? 'plus' : 'minus'}`]"
-                  >{{`${selectedBook.currentBalance >0 ? '+' : '-'}`}}{{selectedBook.currentBalance | money({currency:'vnd'})}}</span>
+                  >{{`${selectedBook.currentBalance >0 ? '+' : ''}`}}{{selectedBook.currentBalance | money({currency:'vnd'})}}</span>
                 </div>
               </div>
               <div class="app-layout__selected-book app-layout__selected-book--card" v-else>
@@ -26,7 +26,7 @@
                   <span>Tất cả</span>
                   <span
                     :class="[,'app-layout__selected-book-balance',`app-layout__selected-book-balance--${totalBalance >0 ? 'plus' : 'minus'}`]"
-                  >{{`${totalBalance >= 0 ? '+' : '-'}`}}{{totalBalance | money({currency:'vnd'})}}</span>
+                  >{{`${totalBalance >= 0 ? '+' : ''}`}}{{totalBalance | money({currency:'vnd'})}}</span>
                 </div>
               </div>
             </span>
@@ -38,7 +38,7 @@
                     <span>Tất cả</span>
                     <span
                       :class="[,'app-layout__selected-book-balance',`app-layout__selected-book-balance--${totalBalance >0 ? 'plus' : 'minus'}`]"
-                    >{{`${totalBalance >0 ? '+' : '-'}`}}{{totalBalance | money({currency:'vnd'})}}</span>
+                    >{{`${totalBalance >0 ? '+' : ''}`}}{{totalBalance | money({currency:'vnd'})}}</span>
                   </div>
                 </div>
               </a-menu-item>
@@ -49,7 +49,7 @@
                     <span>{{item.name}}</span>
                     <span
                       :class="[,'app-layout__selected-book-balance',`app-layout__selected-book-balance--${item.currentBalance >0 ? 'plus' : 'minus'}`]"
-                    >{{`${item.currentBalance >0 ? '+' : '-'}`}}{{item.currentBalance | money({currency:'vnd'})}}</span>
+                    >{{`${item.currentBalance >0 ? '+' : ''}`}}{{item.currentBalance | money({currency:'vnd'})}}</span>
                   </div>
                 </div>
               </a-menu-item>

@@ -67,8 +67,9 @@
                 :disabled="itemRow.record.isDelete==true && isLoadingDelete===itemRow.record.id"
                 :loading="isLoadingDelete===itemRow.record.id"
                 type="danger"
+                style="padding:0 12px"
               >
-                <i :class="`far fa-trash-alt`"></i>
+                <i :class="`far fa-trash`"></i>
               </a-button>
             </a-tooltip>
           </a-popconfirm>
