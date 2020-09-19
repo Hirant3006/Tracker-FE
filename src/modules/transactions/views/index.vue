@@ -310,6 +310,10 @@ export default {
 </script>
 
 <style lang="scss">
+.app-layout .ant-spin {
+  transform: translateY(150px);
+  height: unset !important  ;
+}
 .ant-table-pagination {
   display: none;
 }
