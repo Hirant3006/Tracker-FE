@@ -97,7 +97,6 @@
           type="default"
           block
           @click="onCancelModify"
-          :loading="isLoading"
         >Bỏ qua</a-button>
       </div>
     </a-form>
