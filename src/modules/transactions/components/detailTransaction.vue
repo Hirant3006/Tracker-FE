@@ -23,7 +23,7 @@
                   <span>{{book.name}}</span>
                   <span
                     :class="['detail-trans__selected-book-balance',`detail-trans__selected-book-balance--${book.currentBalance >0 ? 'plus' : 'minus'}`]"
-                  >{{`${book.currentBalance >0 ? '+' : '-'}`}}{{book.currentBalance | money({currency:'vnd'})}}</span>
+                  >{{book.currentBalance | money({currency:'vnd'})}}</span>
                 </div>
                 <i style="margin-left:30px" :class="`far fa-angle-down`"></i>
               </div>
@@ -190,6 +190,7 @@ export default {
       } else {
         try {
           const insertTransactiondata = await this.editTransaction({
+            id,
             bookId,
             type,
             clientName,

@@ -49,7 +49,7 @@ export default {
 	edit_transaction(data) {
 		return axios({
 			url: "/transaction" ,
-			method: "put",
+			method: "PUT",
 			data
 		});
 	}
