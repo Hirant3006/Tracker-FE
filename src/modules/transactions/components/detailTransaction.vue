@@ -48,7 +48,7 @@
         <span v-if="!form.book">*Sổ không được bỏ trống</span>
       </div>
       <a-form-item label="Loại">
-        <a-radio-group :options="options" :default-value="'INCOME'" @change="onChangeType" />
+        <a-radio-group :options="options" :default-value="form.type" @change="onChangeType" />
       </a-form-item>
       <a-form-item label="Số tiền">
         <!--  -->
@@ -92,12 +92,7 @@
           html-type="submit"
           :loading="isLoading"
         >Lưu</a-button>
-        <a-button
-          class="m-b-25 m-t-16"
-          type="default"
-          block
-          @click="onCancelModify"
-        >Bỏ qua</a-button>
+        <a-button class="m-b-25 m-t-16" type="default" block @click="onCancelModify">Bỏ qua</a-button>
       </div>
     </a-form>
   </div>
@@ -132,7 +127,8 @@ export default {
         book: "",
       },
       isModify: false,
-      compKey:0
+      compKey: 0,
+      book: null,
     };
   },
   props: {
@@ -155,6 +151,8 @@ export default {
   },
   methods: {
     ...mapActions({
+      getBooks: "book/getBooks",
+      selectBook: "book/setSelectedBook",
       editTransaction: "transactions/editTransaction",
     }),
     onChangeType(e) {
@@ -162,7 +160,7 @@ export default {
     },
     onCancelModify() {
       this.form = this.$clone(this.defaultData);
-      this.compKey+=1;
+      this.compKey += 1;
     },
     async onEditTrans() {
       this.isLoading = true;
@@ -177,7 +175,7 @@ export default {
         });
       } else if (
         this.form.book &&
-        this.form.amount > this.form.book.currentBalance &&
+        this.form.amount > this.book.currentBalance &&
         this.form.type === "EXPENSE"
       ) {
         this.isError = true;
@@ -187,47 +185,36 @@ export default {
           placement: "bottomRight",
         });
       } else {
-        try {
-          const insertTransactiondata = await this.editTransaction({
-            id,
-            bookId,
-            type,
-            clientName,
-            description,
-            amount,
+        const insertTransactiondata = await this.editTransaction({
+          id,
+          bookId,
+          type,
+          clientName,
+          description,
+          amount,
+        });
+        const { header, data } = insertTransactiondata.data;
+        this.isLoading = false;
+        if (header.isSuccessful) {
+          await this.getBooks();
+          const newDataBook = this.books.find((item) => item.id === bookId);
+          this.selectBook(newDataBook);
+          this.$notification["success"]({
+            message: `sửa giao dịch thành công`,
+            description: `Đã sửa giao dịch có mã GD là ${this.$route.params.id}`,
+            placement: "topRight",
+            top: "80px",
+            duration: 5,
           });
-          const { header, data } = insertTransactiondata.data;
-          this.isLoading = false;
-          if (header.isSuccessful) {
-            await this.getBooks();
-            if (typeof this.selectedBook === "object") {
-              if (this.selectedBook.id === bookId) {
-                const newDataSelectedBook = this.selectedBook;
-                newDataSelectedBook.currentBalance =
-                  type === "INCOME"
-                    ? newDataSelectedBook.currentBalance + amount
-                    : newDataSelectedBook.currentBalance - amount;
-                this.selectBook(newDataSelectedBook);
-              }
-            }
-            this.$notification["success"]({
-              message: `sửa giao dịch thành công`,
-              description: `Đã sửa giao dịch mới cho sổ ${this.form.book.name}`,
-              placement: "topRight",
-              top: "80px",
-              duration: 5,
-            });
-            this.$router.push({ name: this.$routerName.TRANSACTIONS });
-          } else {
-            this.$notification["error"]({
-              message: `sửa giao dịch`,
-              description: "Có lỗi xảy ra trong quá trình sửa",
-              placement: "topRight",
-              top: "80px",
-              duration: 5,
-            });
-          }
-        } catch (e) {
+          this.$router.push({ name: this.$routerName.TRANSACTIONS });
+        } else {
+          this.$notification["error"]({
+            message: `sửa giao dịch`,
+            description: "Có lỗi xảy ra trong quá trình sửa",
+            placement: "topRight",
+            top: "80px",
+            duration: 5,
+          });
           this.isError = true;
           this.isLoading = false;
         }
