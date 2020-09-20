@@ -10,7 +10,7 @@ export default {
 		status,
 		clientName,
 		type,
-		id
+		id,
 	}) {
 		return axios({
 			url: "/transaction/",
@@ -38,10 +38,11 @@ export default {
 		status,
 		clientName,
 		type,
+		bookId,
 		offset = null,
 	}) {
 		return axios({
-			url: "/transaction/book/" + id,
+			url: "/transaction/book/" + bookId,
 			method: "get",
 			params: {
 				size: 10,
@@ -53,6 +54,7 @@ export default {
 				status,
 				clientName,
 				type,
+				id
 			},
 		});
 	},
