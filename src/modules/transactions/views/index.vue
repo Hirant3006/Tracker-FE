@@ -309,7 +309,7 @@ export default {
                 id: idFilter,
               })
             : await this.getTransactionsByBook({
-                id,
+                id:idFilter,
                 dateStart,
                 dateEnd,
                 amountStart,
@@ -318,6 +318,7 @@ export default {
                 clientName,
                 type,
                 offset,
+                bookId: id
               });
         const { header, data } = res.data;
         if (header.isSuccessful) {
