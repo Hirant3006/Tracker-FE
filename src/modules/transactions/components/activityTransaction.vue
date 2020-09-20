@@ -60,7 +60,6 @@
         <span>Nội dung:</span>
         <template v-for="(dataType,index) in dataTypeList">
           <div :key="'qwdwq'+index">
-            {{dataType.type}}
             <span>
               -
               <span>{{dataType.name}}: &nbsp;</span>
