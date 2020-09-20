@@ -81,7 +81,6 @@
                 block
                 html-type="submit"
                 :loading="isLoading"
-                @click="onInsertBook"
               >Xác nhận</a-button>
             </a-form>
           </a-card>
