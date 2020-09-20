@@ -11,6 +11,7 @@
         type="primary"
       >Tạo mới</a-button>
     </div>
+    <filter-handler @clear-all="onClearAllFilter" @change="onChangeFilter" class="m-t-10 m-b-10" />
     <div class="manage-transactions__no-data m-t-50" v-if="this.total==0 ">
       <img class="m-b-24" src="@/assets/images/not-found.png" alt="not found" />
       <span
@@ -93,6 +94,7 @@
 
 <script>
 import moment from "moment";
+import FilterHandler from "../components/filter/FilterHandler";
 import locale from "ant-design-vue/es/date-picker/locale/vi_VN";
 import { mapActions, mapGetters } from "vuex";
 import { types as typesBook } from "@/modules/book/constant";
@@ -105,6 +107,7 @@ export default {
   name: "Transactions",
   components: {
     TableCustom,
+    FilterHandler,
   },
   data() {
     return {
@@ -115,6 +118,12 @@ export default {
       form: {
         dateStart: "",
         dateEnd: "",
+        type: "",
+        status: "NORMAL",
+        clientName: "",
+        id: "",
+        amountStart: "",
+        amountEnd: "",
       },
       columns: [
         {
@@ -190,14 +199,20 @@ export default {
       getTransactionsByBook: "transactions/getTransactionsByBook",
       deleteTransaction: "transactions/deleteTransaction",
     }),
+    onChangeFilter({ type, value }) {
+      if (type == "amount") {
+        const { amountStart, amountEnd } = value;
+        this.form["amountStart"] = amountStart;
+        this.form["amountEnd"] = amountEnd;
+      } else this.form[type] = value;
+    },
     onChangeDate(dates) {
       if (dates.length !== 0) {
         this.form.dateStart = moment(dates[0]).format("YYYY-MM-DD");
         this.form.dateEnd = moment(dates[1]).format("YYYY-MM-DD");
-      }
-      else {
-        this.form.dateStart=''
-        this.form.dateEnd=''
+      } else {
+        this.form.dateStart = "";
+        this.form.dateEnd = "";
       }
     },
     onClickRow(data) {
@@ -253,6 +268,11 @@ export default {
         }
       });
     },
+    onClearAllFilter() {
+      ["status", "clientName", "type", "id", "amountStart", "amountEnd"].map(
+        (item) => (this.form[item] = "")
+      );
+    },
     onLoadMore() {
       console.log("on load more");
       if (this.data.length < this.total) {
@@ -263,16 +283,40 @@ export default {
     async onGetTransactions() {
       try {
         this.isLoading = true;
-        const { dateStart, dateEnd } = this.form;
+        const {
+          dateStart,
+          dateEnd,
+          amountStart,
+          amountEnd,
+          status,
+          id: idFilter,
+          clientName,
+          type,
+        } = this.form;
         const { id } = this.selectedBook;
         const { offset } = this;
         const res =
           this.selectedBook === "all"
-            ? await this.getTransactions({ offset })
+            ? await this.getTransactions({
+                dateStart,
+                dateEnd,
+                amountStart,
+                amountEnd,
+                status,
+                clientName,
+                type,
+                offset,
+                id: idFilter,
+              })
             : await this.getTransactionsByBook({
                 id,
                 dateStart,
                 dateEnd,
+                amountStart,
+                amountEnd,
+                status,
+                clientName,
+                type,
                 offset,
               });
         const { header, data } = res.data;

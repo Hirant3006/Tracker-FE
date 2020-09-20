@@ -11,6 +11,7 @@
     "axios": "^0.20.0",
     "babel-plugin-import": "^1.13.0",
     "core-js": "^3.6.5",
+    "debounce": "^1.2.0",
     "js-cookie": "^2.2.1",
     "jwt-decode": "^2.2.0",
     "moment-timezone": "^0.5.31",
