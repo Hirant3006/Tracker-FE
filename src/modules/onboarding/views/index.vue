@@ -31,7 +31,6 @@
           <a-card class="onboarding__create-first-book-card">
             <a-form
               class="onboarding__create-first-book-card-form"
-              @submit.stop.prevent="onInsertBook()"
             >
               <div class="onboarding__create-first-book-card-icon m-b-16">
                 <div @click="() => isVisibleModal=true">
@@ -81,6 +80,7 @@
                 block
                 html-type="submit"
                 :loading="isLoading"
+                @click="onInsertBook"
               >Xác nhận</a-button>
             </a-form>
           </a-card>
