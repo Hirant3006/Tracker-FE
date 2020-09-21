@@ -96,7 +96,7 @@ export default {
       this.$emit("clear-all");
     },
     onCloseTag(type) {
-      this.list.pop(type);
+      this.list.splice(this.list.indexOf(type),1);
       this.$emit("change", { type, value: "" });
     },
     findFilterTypeData(type) {
