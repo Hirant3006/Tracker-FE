@@ -49,6 +49,12 @@ export default {
     &__content {
         display: flex;
         justify-content: center;
+        >div:nth-child(1) {
+            width: 35%;
+        }
+        >div:nth-child(2) {
+            width: 65%;
+        }
     }
 }
 </style>
