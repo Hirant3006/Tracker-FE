@@ -4,23 +4,22 @@ import auth from '@/middlewares/auth'
 
 export default [
 	{
-		path: '/book',
-		name: routerName.BOOK,
-		meta: {
-			layout : 'default',
-			middleware: [auth]
-		},
-		component: () => import( /* webpackChunkName: "install-app" */ './views/index.vue'),
-		// children : [
-		// 	{
-		// 		path: '',
-		// 		name: 'InstallApp',
-		// 		meta: {
-		// 			layout : 'install-app',
-		// 			middleware : [ noAuth ]
-		// 		},
-		// 		component: () => import( /* webpackChunkName: "auth" */ './views/index.vue')
-		// 	},
-		// ]
+
+		path: "/book",
+		component: () =>
+			import(/* webpackChunkName: "install-app" */ "./views/layout.vue"),
+		children: [
+			{
+				path: "",
+				name: routerName.BOOK,
+				meta: {
+					middleware: [auth],
+				},
+				component: () =>
+					import(
+						/* webpackChunkName: "install-app" */ "./views/index.vue"
+					),
+			},
+		]
 	},
 ]
