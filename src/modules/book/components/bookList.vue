@@ -37,7 +37,6 @@ export default {
     flex-direction: column;
     .ant-card {
         font-size: 18px;
-        width: 400px;
         margin-bottom: 16px;
     }
     &__selected-book {
