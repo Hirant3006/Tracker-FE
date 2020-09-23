@@ -9,6 +9,7 @@ export const _types = {
     },
     actions: {
         GET_BOOKS: 'getBooks',
+        GET_BOOK_BY_ID: 'getBookById',
         INSERT_BOOK: 'insertBook',
         SET_SELECTED_BOOK: 'setSelectedBook',
     },
