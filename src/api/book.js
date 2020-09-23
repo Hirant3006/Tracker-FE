@@ -19,5 +19,11 @@ export default {
 			method: "post",
 			data
 		});
-	}
+	},
+	delete_book({ id }) {
+		return axios({
+			url: "/book/" + id,
+			method: "DELETE",
+		});
+	},
 };

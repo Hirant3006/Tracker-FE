@@ -8,8 +8,9 @@
             <book-info
                 v-if="bookInfo"
                 :data="bookInfo"
+                @delete="onDeleteBook"
                 @close="onCloseBook"
-                :isLoadingEmp="isLoading"
+                :isLoadingEmp="isLoadingDeleteBook"
                 :listEmployees="this.listEmpByBook[bookId]"
             />
         </div>
@@ -25,7 +26,7 @@ import { types as typesBook } from "@/modules/book/constant";
 export default {
     name: "Book",
     data() {
-        return { bookId: null, listEmpByBook: {}, isLoading: false };
+        return { bookId: null, listEmpByBook: {}, isLoadingDeleteBook: false };
     },
     components: {
         BookList,
@@ -33,8 +34,38 @@ export default {
     },
     methods: {
         ...mapActions({
+            getBook: "book/getBooks",
+            deleteBook: "book/deleteBook",
             getBookById: "book/getBookById",
         }),
+        async onDeleteBook() {
+            this.isLoadingDeleteBook = true;
+            if (this.selectedBook.id !== this.bookId && this.books.length > 1) {
+                const res = await this.deleteBook({
+                    id: this.bookId,
+                });
+                console.log({ res });
+                const { header, data } = res.data;
+                this.isLoadingDeleteBook = false;
+                if (header.isSuccessful) {
+                    this.bookId = null;
+                    this.getBook();
+                }
+            } else {
+                this.isLoadingDeleteBook = false;
+                const message =
+                    this.selectedBook.id === this.bookId
+                        ? "Xin hãy chuyển sang sổ khác trước khi xóa"
+                        : "Chỉ có thể xóa khi hệ thống có từ 2 sổ trở lên";
+                this.$notification["error"]({
+                    message: `Không thể xóa sổ`,
+                    description: this.message,
+                    placement: "topRight",
+                    top: "80px",
+                    duration: 5,
+                });
+            }
+        },
         async onClickBook(bookId) {
             if (this.listEmpByBook[bookId] === undefined) {
                 await this.onGetBookEmpById(bookId);
@@ -63,6 +94,9 @@ export default {
         console.log(this.$state);
     },
     computed: {
+        ...mapGetters({
+            selectedBook: typesBook.getters.GET_SELECTED_BOOK,
+        }),
         books() {
             return this.$store.state.book.books;
         },

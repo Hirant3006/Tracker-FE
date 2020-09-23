@@ -7,7 +7,18 @@
                     <span class="m-l-10">Chi tiết sổ</span>
                 </div>
                 <div class="book-info__header-button">
-                    <span class="book-info__header-button--delete">Xóa</span>
+                    <a-popconfirm
+                        title="Bạn muốn xóa sổ này?"
+                        ok-text="Yes"
+                        cancel-text="No"
+                        @confirm="onDeleteBook"
+                        v-if="!isLoadingEmp"
+                    >
+                        <a class="book-info__header-button--delete">
+                            <template>Xóa</template>
+                        </a>
+                    </a-popconfirm>
+                    <a-spin v-else />
                 </div>
             </span>
             <span class="book-info__name">
@@ -75,7 +86,7 @@ export default {
         data: {
             required: true,
         },
-        isLoading: {
+        isLoadingEmp: {
             required: false,
         },
         listEmployees: {
@@ -86,12 +97,18 @@ export default {
         onCloseCardBook() {
             this.$emit("close");
         },
+        onDeleteBook() {
+            this.$emit("delete");
+        },
     },
 };
 </script>
 
 <style lang="scss">
 .book-info {
+    .ant-spin {
+        transform: unset;
+    }
     .ant-pagination {
         display: none;
     }
@@ -172,6 +189,9 @@ export default {
             &--delete {
                 color: $danger-color;
                 cursor: pointer;
+            }
+            &--delete:hover {
+                color: lighten($danger-color, 20%);
             }
         }
     }
