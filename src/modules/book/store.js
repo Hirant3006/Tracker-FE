@@ -34,6 +34,17 @@ const actions = {
 			throw error;
 		}
 	},
+	async [_types.actions.GET_BOOK_BY_ID]({ commit },payload) {
+		try {
+			const res = await api.get_book_by_id(payload);
+			let { header, data } = res.data;
+			if (header.isSuccessful) {
+			}
+			return res;
+		} catch (error) {
+			throw error;
+		}
+	},
 	async [_types.actions.INSERT_BOOK]({ commit }, payload) {
 		try {
 			const res = await api.insert_book(payload);
