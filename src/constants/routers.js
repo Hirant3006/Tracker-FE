@@ -6,4 +6,5 @@ export default {
     DETAIL_TRANSACTION: 'Detail Transaction', 
     ONBOARDING: 'Onboarding',
     BOOK: 'Book',
+    CREATE_BOOK: 'Create Book',
 }

@@ -29,9 +29,7 @@
             <template v-else>Điền đầy đủ vào form bên dưới để tạo sổ mới</template>
           </span>
           <a-card class="onboarding__create-first-book-card">
-            <a-form
-              class="onboarding__create-first-book-card-form"
-            >
+            <a-form class="onboarding__create-first-book-card-form">
               <div class="onboarding__create-first-book-card-icon m-b-16">
                 <div @click="() => isVisibleModal=true">
                   <i :class="`fad fa-${form.icon}`"></i>
@@ -110,7 +108,12 @@
     </div>
     <a-modal v-model="isVisibleModal" title="Chọn biểu tượng" :footer="null">
       <div class="onboarding__list-icon">
-        <i v-for="(item,index) in iconList" @click="onSelectIcon(item)" :key="index" :class="`fad fa-${item}`"></i>
+        <i
+          v-for="(item,index) in iconList"
+          @click="onSelectIcon(item)"
+          :key="index"
+          :class="`fad fa-${item}`"
+        ></i>
       </div>
     </a-modal>
   </div>
@@ -166,10 +169,9 @@ export default {
       getBooks: "book/getBooks",
       selectBook: "book/setSelectedBook",
     }),
-    ...mapMutations({
-    }),
+    ...mapMutations({}),
     onSelectIcon(iconName) {
-      this.form.icon=iconName;
+      this.form.icon = iconName;
       this.isVisibleModal = false;
     },
     onCreateNewBook() {
@@ -247,12 +249,12 @@ input[type="number"] {
     flex-wrap: wrap;
     padding: 8px 16px;
     font-size: 50px;
-    height:500px;
+    height: 500px;
     overflow: hidden;
     overflow-y: scroll;
     overflow-wrap: break-word;
     i {
-      padding: 10px 20px; 
+      padding: 10px 20px;
       cursor: pointer;
     }
   }
@@ -281,6 +283,9 @@ input[type="number"] {
     display: flex;
     flex-direction: column;
     text-align: center;
+  }
+  .ant-input-number {
+    width: 90%;
   }
   &__create-first-book {
     .ant-card-body {

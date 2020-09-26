@@ -251,8 +251,9 @@ export default {
 
 <style lang="scss">
 .create-transaction {
-  margin: 0 200px;
-  align-self: center;
+      align-self: center;
+    width: 600px;
+    margin: 0 auto;
   &__error-text {
     color: $danger-color;
   }

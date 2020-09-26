@@ -192,6 +192,10 @@ export default {
   mounted() {
     this.handleScroll(() => console.log("hello"));
     this.onGetTransactions();
+    console.log('mounted')
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => console.log('hello'))
   },
   methods: {
     ...mapActions({

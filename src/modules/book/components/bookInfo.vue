@@ -7,18 +7,23 @@
           <span class="m-l-10">Chi tiết sổ</span>
         </div>
         <div class="book-info__header-button">
-          <a-popconfirm
-            title="Bạn muốn xóa sổ này?"
-            ok-text="Yes"
-            cancel-text="No"
-            @confirm="onDeleteBook"
-            v-if="!isLoadingEmp"
-          >
-            <a class="book-info__header-button--delete">
-              <template>Xóa</template>
-            </a>
-          </a-popconfirm>
-          <a-spin v-else />
+          <div v-if="!isDeletingBook">
+            <a-popconfirm
+              title="Bạn muốn xóa sổ này?"
+              ok-text="Có"
+              cancel-text="Không"
+              @confirm="onDeleteBook"
+              v-if="!isDeletingBook"
+            >
+              <a class="book-info__header-button--delete">
+                <a-button :loading="isDeletingBook" type="danger">Xóa</a-button>
+              </a>
+            </a-popconfirm>
+            <a-spin v-else />
+          </div>
+          <a-button class="m-l-10" type="primary">
+            <i class="far fa-save m-r-5" />Lưu thay đổi
+          </a-button>
         </div>
       </span>
       <span class="book-info__name">
@@ -37,11 +42,14 @@
       <div class="book-info__amount">
         <div>
           <span>Số dư:&nbsp;</span>
-          <span      
+          <span
             :class="[,`book-info__amount--${data.currentBalance >0 ? 'plus' : 'minus'}`]"
           >{{`${data.currentBalance >0 ? '+' : ''}`}}{{data.currentBalance | money({currency:'vnd'})}}</span>
         </div>
-        <div></div>
+        <div class="book-info__amount-description m-t-4" v-if="data.description">
+          <span>Ghi chú:&nbsp;</span>
+          {{data.description}}
+        </div>
       </div>
       <div class="book-info__employee">
         <div>
@@ -75,6 +83,7 @@ const columns = [
     key: "title",
   },
 ];
+import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   name: "BookInfo",
   data() {
@@ -86,6 +95,9 @@ export default {
     data: {
       required: true,
     },
+    isDeletingBook: {
+      default: false,
+    },
     isLoadingEmp: {
       required: false,
     },
@@ -94,10 +106,14 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      deleteBook: "book/deleteBook",
+    }),
     onCloseCardBook() {
       this.$emit("close");
     },
-    onDeleteBook() {
+    async onDeleteBook() {
+      this.isDeletingBook = false;
       this.$emit("delete");
     },
   },
@@ -126,6 +142,9 @@ export default {
     }
   }
   &__amount {
+    &-description {
+      font-size: 16px !important;
+    }
     padding-top: 20px;
     border-bottom: 1px solid $line-color;
     padding-bottom: 20px;
@@ -186,6 +205,7 @@ export default {
       cursor: pointer;
     }
     &-button {
+      display: flex;
       &--delete {
         color: $danger-color;
         cursor: pointer;

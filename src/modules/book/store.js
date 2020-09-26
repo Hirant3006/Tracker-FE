@@ -82,7 +82,7 @@ const mutations = {
 		state.books = payload;
 	},
 	[_types.mutations.SET_DELETE_BOOKS](state, payload = "") {
-		state.delete_books = payload;
+		state.delete_book = payload;
 	},
 };
 export default {
