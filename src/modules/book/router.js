@@ -20,6 +20,17 @@ export default [
 						/* webpackChunkName: "install-app" */ "./views/index.vue"
 					),
 			},
+			{
+				path: "/book/create",
+				name: routerName.CREATE_BOOK,
+				meta: {
+					middleware: [auth],
+				},
+				component: () =>
+					import(
+						/* webpackChunkName: "install-app" */ "./views/create.vue"
+					),
+			},
 		]
 	},
 ]
