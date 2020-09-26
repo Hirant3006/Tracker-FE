@@ -24,8 +24,9 @@
             v-if="!data.isDelete && isEdited"
             class="m-l-10"
             type="primary"
+            :loading="isEditingBook"
           >
-            <i class="far fa-save m-r-5" />Lưu thay đổi
+            <i class="far fa-save m-r-5" v-if="!isEditingBook" />Lưu thay đổi
           </a-button>
         </div>
       </span>
@@ -42,6 +43,7 @@
               <a-input
                 style="font-size: 18px"
                 v-else
+                :value="form.name"
                 @change="onChangeName"
                 @pressEnter="() => (isModifyName = !isModifyName)"
               />
@@ -51,11 +53,19 @@
                 class="far fa-edit m-l-10"
               />
             </div>
-            <span v-if="data.isDelete">Đã xóa: còn 10 ngày để khôi phục</span>
+            <span v-if="data.isDelete"
+              >Còn {{ recoverDayCount }} ngày để khôi phục</span
+            >
           </div>
         </div>
         <div>
-          <a-button v-if="data.isDelete" class="m-r-10">Khôi phục</a-button>
+          <a-button
+            @click="onRecoverBook"
+            :loading="isRecoveringBook"
+            v-if="data.isDelete"
+            class="m-r-10"
+            >Khôi phục</a-button
+          >
           <a-button>Xem thống kê</a-button>
         </div>
       </span>
@@ -146,6 +156,7 @@ const columns = [
   },
 ];
 import iconList from "@/utils/icon-list.js";
+import moment from "moment";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   name: "BookInfo",
@@ -170,6 +181,9 @@ export default {
     isEditingBook: {
       default: false,
     },
+    isRecoveringBook: {
+      default: false,
+    },
     isLoadingEmp: {
       required: false,
     },
@@ -178,7 +192,6 @@ export default {
     },
   },
   mounted() {
-    console.log("mounted");
     const { id, name, iconName, description } = this.data;
     this.form = { id, name, iconName, description };
   },
@@ -194,6 +207,13 @@ export default {
         JSON.stringify({ id, name, iconName, description })
       );
     },
+    recoverDayCount() {
+      const recentDate = moment(new Date());
+      // const endDate = moment((new Date()).setDate((new Date(this.data.regDt)).getDate()+15));
+      const endDate = moment(this.data.regDt).add(15, "days");
+      console.log({ recentDate, endDate });
+      return endDate.diff(recentDate, "days");
+    },
   },
   methods: {
     ...mapActions({
@@ -201,6 +221,9 @@ export default {
     }),
     onEditBook() {
       this.$emit("edit", this.form);
+    },
+    onRecoverBook() {
+      this.$emit("recover");
     },
     onChangeName(e) {
       this.form.name = e.target.value;

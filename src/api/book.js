@@ -33,4 +33,10 @@ export default {
 			data
 		});
 	},
+	recover_book({ id }) {
+		return axios({
+			url: "/book/"+id+'/recover',
+			method: "PUT",
+		});
+	},
 };

@@ -16,6 +16,8 @@
         @edit="onEditBook"
         @delete="onDeleteBook"
         @close="onCloseBook"
+        @recover="onRecoverBook"
+        :isRecoveringBook="isRecoveringBook"
         :isDeletingBook="isDeletingBook"
         :isEditingBook="isEditingBook"
         :listEmployees="this.listEmpByBook[bookId]"
@@ -38,6 +40,7 @@ export default {
       listEmpByBook: {},
       isDeletingBook: false,
       isEditingBook: false,
+      isRecoveringBook: false,
       compKey: 0,
       isRequiredDeletedBook: false,
     };
@@ -50,24 +53,66 @@ export default {
     ...mapActions({
       getBook: "book/getBooks",
       deleteBook: "book/deleteBook",
+      recoverBook: "book/recoverBook",
       editBook: "book/editBook",
       getBookById: "book/getBookById",
     }),
-    async onEditBook(dataEdit) {
-      this.isEditingBook = true;
-      const res = await this.editBook(dataEdit);
-      const { header, data } = res.data;
-      this.isEditingBook = false;
-      if (header.isSuccessful) {
-        this.$notification["success"]({
-          message: `Sửa sổ thành công`,
-          description: `Sổ đã được chỉnh sửa`,
+    async onRecoverBook() {
+      this.isRecoveringBook = true;
+      try {
+        const res = await this.deleteBook({
+          id: this.bookId,
+        });
+        const { header, data } = res.data;
+        this.isRecoveringBook = false;
+        if (header.isSuccessful) {
+          this.$notification["success"]({
+            message: `Khôi phục sổ thành công`,
+            description: `Sổ ${this.bookInfo.name} đã được khôi phục`,
+            placement: "topRight",
+            top: "80px",
+            duration: 5,
+          });
+          // this.bookId = null;
+          this.bookInfo.isDeleted = false;
+          this.compKey += 1;
+          this.getBook();
+        } else {
+          this.$notification["error"]({
+            message: `Khôi phục sổ không thành công`,
+            description: res.data.resultMessage,
+            placement: "topRight",
+            top: "80px",
+            duration: 5,
+          });
+        }
+      } catch (e) {
+        this.$notification["error"]({
+          message: `Khôi phục sổ không thành công`,
+          description: e.resultMessage,
           placement: "topRight",
           top: "80px",
           duration: 5,
         });
-        this.getBook();
       }
+    },
+    async onEditBook(dataEdit) {
+      this.isEditingBook = true;
+      try {
+        const res = await this.editBook(dataEdit);
+        const { header, data } = res.data;
+        this.isEditingBook = false;
+        if (header.isSuccessful) {
+          this.$notification["success"]({
+            message: `Sửa sổ thành công`,
+            description: `Sổ đã được chỉnh sửa`,
+            placement: "topRight",
+            top: "80px",
+            duration: 5,
+          });
+          this.getBook();
+        }
+      } catch (e) {}
     },
     async onDeleteBook() {
       this.isDeletingBook = true;
