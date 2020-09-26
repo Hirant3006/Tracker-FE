@@ -200,7 +200,11 @@ export default {
         : 0;
     },
     selectedBook() {
-      return this.$store.state.book.selected;
+      const selected_book = this.$store.state.book.selected;
+      console.log(selected_book);
+      return typeof selected_book === "string" && selected_book !== "all"
+        ? JSON.parse(selected_book)
+        : selected_book;
     },
   },
   watch: {
