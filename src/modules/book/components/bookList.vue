@@ -120,7 +120,7 @@ export default {
   }
   > div:nth-child(2) {
     height: 60vh;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
   &__header {
     &-search {

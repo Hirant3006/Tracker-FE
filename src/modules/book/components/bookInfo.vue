@@ -7,30 +7,50 @@
           <span class="m-l-10">Chi tiết sổ</span>
         </div>
         <div class="book-info__header-button">
-          <div v-if="!isDeletingBook">
+          <div v-if="!data.isDelete">
             <a-popconfirm
               title="Bạn muốn xóa sổ này?"
               ok-text="Có"
               cancel-text="Không"
               @confirm="onDeleteBook"
-              v-if="!isDeletingBook"
             >
               <a class="book-info__header-button--delete">
                 <a-button :loading="isDeletingBook" type="danger">Xóa</a-button>
               </a>
             </a-popconfirm>
-            <a-spin v-else />
           </div>
-          <a-button class="m-l-10" type="primary">
+          <a-button
+            @click="onEditBook"
+            v-if="!data.isDelete && isEdited"
+            class="m-l-10"
+            type="primary"
+          >
             <i class="far fa-save m-r-5" />Lưu thay đổi
           </a-button>
         </div>
       </span>
       <span class="book-info__name">
         <div>
-          <i :class="`fad  fa-${data.iconName ? data.iconName : 'book'}`"></i>
+          <i
+            style="cursor: pointer"
+            @click="() => (this.isVisibleModal = true)"
+            :class="`fad fa-${form.iconName ? form.iconName : 'book'}`"
+          ></i>
           <div class="m-l-10">
-            <span>{{data.name}}</span>
+            <div>
+              <span v-if="!isModifyName">{{ form.name }}</span>
+              <a-input
+                style="font-size: 18px"
+                v-else
+                @change="onChangeName"
+                @pressEnter="() => (isModifyName = !isModifyName)"
+              />
+              <i
+                style="font-size: 16px; cursor: pointer"
+                @click="() => (isModifyName = !isModifyName)"
+                class="far fa-edit m-l-10"
+              />
+            </div>
             <span v-if="data.isDelete">Đã xóa: còn 10 ngày để khôi phục</span>
           </div>
         </div>
@@ -43,22 +63,54 @@
         <div>
           <span>Số dư:&nbsp;</span>
           <span
-            :class="[,`book-info__amount--${data.currentBalance >0 ? 'plus' : 'minus'}`]"
-          >{{`${data.currentBalance >0 ? '+' : ''}`}}{{data.currentBalance | money({currency:'vnd'})}}</span>
+            :class="[
+              ,
+              `book-info__amount--${
+                data.currentBalance > 0 ? 'plus' : 'minus'
+              }`,
+            ]"
+            >{{ `${data.currentBalance > 0 ? "+" : ""}`
+            }}{{ data.currentBalance | money({ currency: "vnd" }) }}</span
+          >
         </div>
-        <div class="book-info__amount-description m-t-4" v-if="data.description">
+        <div
+          class="book-info__amount-description m-t-4"
+          v-if="data.description"
+        >
           <span>Ghi chú:&nbsp;</span>
-          {{data.description}}
+          <span v-if="!isModifyDescription"
+            >{{ form.description }}
+            <i
+              style="font-size: 16px; cursor: pointer"
+              @click="() => (isModifyDescription = !isModifyDescription)"
+              class="far fa-edit m-l-10"
+          /></span>
+
+          <div v-else style="display: flex">
+            <a-textarea
+              style="font-size: 18px"
+              :value="form.description"
+              @change="onChangeDes"
+              @pressEnter="() => (isModifyDescription = !isModifyDescription)"
+            />
+            <i
+              style="font-size: 16px; cursor: pointer"
+              @click="() => (isModifyDescription = !isModifyDescription)"
+              class="far fa-edit m-l-10"
+            />
+          </div>
         </div>
       </div>
       <div class="book-info__employee">
         <div>
           <div class="m-b-5">
             <span>Danh sách nhân viên</span>
-            <a-button @click="$router.push({name:$routerName.EMPLOYEE})">Chi tiết</a-button>
+            <a-button @click="$router.push({ name: $routerName.EMPLOYEE })"
+              >Chi tiết</a-button
+            >
           </div>
           <a-table
-            v-if="listEmployees!==undefined"
+            v-if="listEmployees !== undefined"
             :columns="columns"
             rowKey="id"
             :data-source="listEmployees"
@@ -66,6 +118,16 @@
         </div>
       </div>
     </a-card>
+    <a-modal v-model="isVisibleModal" title="Chọn biểu tượng" :footer="null">
+      <div class="book-info__list-icon">
+        <i
+          v-for="(item, index) in iconList"
+          @click="onSelectIcon(item)"
+          :key="index"
+          :class="`fad fa-${item}`"
+        ></i>
+      </div>
+    </a-modal>
   </div>
 </template>
 
@@ -83,12 +145,19 @@ const columns = [
     key: "title",
   },
 ];
+import iconList from "@/utils/icon-list.js";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   name: "BookInfo",
   data() {
     return {
       columns,
+      isVisibleModal: false,
+      iconList,
+      form: {},
+      compkey: 0,
+      isModifyName: false,
+      isModifyDescription: false,
     };
   },
   props: {
@@ -98,6 +167,9 @@ export default {
     isDeletingBook: {
       default: false,
     },
+    isEditingBook: {
+      default: false,
+    },
     isLoadingEmp: {
       required: false,
     },
@@ -105,16 +177,56 @@ export default {
       required: false,
     },
   },
+  mounted() {
+    console.log("mounted");
+    const { id, name, iconName, description } = this.data;
+    this.form = { id, name, iconName, description };
+  },
+  updated() {
+    // const { id, name, iconName, description } = this.data;
+    // this.form = { id, name, iconName, description };
+  },
+  computed: {
+    isEdited() {
+      const { id, name, iconName, description } = this.data;
+      return (
+        JSON.stringify(this.form) !==
+        JSON.stringify({ id, name, iconName, description })
+      );
+    },
+  },
   methods: {
     ...mapActions({
       deleteBook: "book/deleteBook",
     }),
+    onEditBook() {
+      this.$emit("edit", this.form);
+    },
+    onChangeName(e) {
+      this.form.name = e.target.value;
+    },
+    onChangeDes(e) {
+      this.form.description = e.target.value;
+    },
     onCloseCardBook() {
       this.$emit("close");
+    },
+    onSelectIcon(iconName) {
+      this.form.iconName = iconName;
+      this.compkey++;
+      this.isVisibleModal = false;
     },
     async onDeleteBook() {
       this.isDeletingBook = false;
       this.$emit("delete");
+    },
+  },
+  watch: {
+    data() {
+      const { id, name, iconName, description } = this.data;
+      this.form = { id, name, iconName, description };
+      this.isModifyName = false;
+      this.isModifyDescription = false;
     },
   },
 };
@@ -122,6 +234,20 @@ export default {
 
 <style lang="scss">
 .book-info {
+  &__list-icon {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 8px 16px;
+    font-size: 50px;
+    height: 500px;
+    overflow: hidden;
+    overflow-y: auto;
+    overflow-wrap: break-word;
+    i {
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+  }
   .ant-spin {
     transform: unset;
   }

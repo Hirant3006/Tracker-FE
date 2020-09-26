@@ -13,9 +13,11 @@
       <book-info
         v-if="bookId"
         :data="bookInfo"
+        @edit="onEditBook"
         @delete="onDeleteBook"
         @close="onCloseBook"
         :isDeletingBook="isDeletingBook"
+        :isEditingBook="isEditingBook"
         :listEmployees="this.listEmpByBook[bookId]"
       />
     </div>
@@ -35,6 +37,7 @@ export default {
       bookId: null,
       listEmpByBook: {},
       isDeletingBook: false,
+      isEditingBook: false,
       compKey: 0,
       isRequiredDeletedBook: false,
     };
@@ -47,8 +50,25 @@ export default {
     ...mapActions({
       getBook: "book/getBooks",
       deleteBook: "book/deleteBook",
+      editBook: "book/editBook",
       getBookById: "book/getBookById",
     }),
+    async onEditBook(dataEdit) {
+      this.isEditingBook = true;
+      const res = await this.editBook(dataEdit);
+      const { header, data } = res.data;
+      this.isEditingBook = false;
+      if (header.isSuccessful) {
+        this.$notification["success"]({
+          message: `Sửa sổ thành công`,
+          description: `Sổ đã được chỉnh sửa`,
+          placement: "topRight",
+          top: "80px",
+          duration: 5,
+        });
+        this.getBook();
+      }
+    },
     async onDeleteBook() {
       this.isDeletingBook = true;
       if (this.selectedBook.id !== this.bookId && this.books.length > 1) {

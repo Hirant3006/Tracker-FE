@@ -13,6 +13,7 @@ export const _types = {
         INSERT_BOOK: 'insertBook',
         SET_SELECTED_BOOK: 'setSelectedBook',
         DELETE_BOOK: 'deleteBook',
+        EDIT_BOOK: 'editBook',
     },
     mutations: {
         SET_SELECTED_BOOK: 'setSelectedBook',

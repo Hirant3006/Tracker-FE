@@ -26,4 +26,11 @@ export default {
 			method: "DELETE",
 		});
 	},
+	edit_book(data) {
+		return axios({
+			url: "/book/",
+			method: "PUT",
+			data
+		});
+	},
 };

@@ -3,30 +3,63 @@
     <sidebar :data="columnData" />
     <a-layout>
       <a-layout-header
-        style="background: #fff; padding: 0; border-bottom: 1px solid rgb(232 232 232);"
+        style="
+          background: #fff;
+          padding: 0;
+          border-bottom: 1px solid rgb(232 232 232);
+        "
       >
         <div class="app-layout__header">
           <a-dropdown>
-            <span class="ant-dropdown-link" style="cursor:pointer" @click="e => e.preventDefault()">
+            <span
+              class="ant-dropdown-link"
+              style="cursor: pointer"
+              @click="(e) => e.preventDefault()"
+            >
               <div
                 class="app-layout__selected-book app-layout__selected-book--card"
-                v-if="typeof(selectedBook)==='object'"
+                v-if="typeof selectedBook === 'object'"
               >
-                <i :class="`far fa-${selectedBook.iconName ? selectedBook.iconName : 'book'}`"></i>
+                <i
+                  :class="`far fa-${
+                    selectedBook.iconName ? selectedBook.iconName : 'book'
+                  }`"
+                ></i>
                 <div>
-                  <span>{{selectedBook.name}}</span>
+                  <span>{{ selectedBook.name }}</span>
                   <span
-                    :class="[,'app-layout__selected-book-balance',`app-layout__selected-book-balance--${selectedBook.currentBalance >0 ? 'plus' : 'minus'}`]"
-                  >{{`${selectedBook.currentBalance >0 ? '+' : ''}`}}{{selectedBook.currentBalance | money({currency:'vnd'})}}</span>
+                    :class="[
+                      ,
+                      'app-layout__selected-book-balance',
+                      `app-layout__selected-book-balance--${
+                        selectedBook.currentBalance > 0 ? 'plus' : 'minus'
+                      }`,
+                    ]"
+                    >{{ `${selectedBook.currentBalance > 0 ? "+" : ""}`
+                    }}{{
+                      selectedBook.currentBalance | money({ currency: "vnd" })
+                    }}</span
+                  >
                 </div>
               </div>
-              <div class="app-layout__selected-book app-layout__selected-book--card" v-else>
+              <div
+                class="app-layout__selected-book app-layout__selected-book--card"
+                v-else
+              >
                 <i :class="`far fa-globe`"></i>
                 <div>
                   <span>Tất cả</span>
                   <span
-                    :class="[,'app-layout__selected-book-balance',`app-layout__selected-book-balance--${totalBalance >0 ? 'plus' : 'minus'}`]"
-                  >{{`${totalBalance >= 0 ? '+' : ''}`}}{{totalBalance | money({currency:'vnd'})}}</span>
+                    :class="[
+                      ,
+                      'app-layout__selected-book-balance',
+                      `app-layout__selected-book-balance--${
+                        totalBalance > 0 ? 'plus' : 'minus'
+                      }`,
+                    ]"
+                    >{{ `${totalBalance >= 0 ? "+" : ""}`
+                    }}{{ totalBalance | money({ currency: "vnd" }) }}</span
+                  >
                 </div>
               </div>
             </span>
@@ -37,26 +70,52 @@
                   <div>
                     <span>Tất cả</span>
                     <span
-                      :class="[,'app-layout__selected-book-balance',`app-layout__selected-book-balance--${totalBalance >0 ? 'plus' : 'minus'}`]"
-                    >{{`${totalBalance >0 ? '+' : ''}`}}{{totalBalance | money({currency:'vnd'})}}</span>
+                      :class="[
+                        ,
+                        'app-layout__selected-book-balance',
+                        `app-layout__selected-book-balance--${
+                          totalBalance > 0 ? 'plus' : 'minus'
+                        }`,
+                      ]"
+                      >{{ `${totalBalance > 0 ? "+" : ""}`
+                      }}{{ totalBalance | money({ currency: "vnd" }) }}</span
+                    >
                   </div>
                 </div>
               </a-menu-item>
-              <a-menu-item v-for="(item,index) in books" :key="index" @click="onSelectBook(item)">
+              <a-menu-item
+                v-for="(item, index) in books"
+                :key="index"
+                @click="onSelectBook(item)"
+              >
                 <div class="app-layout__selected-book">
-                  <i :class="`far fa-${item.iconName ? item.iconName : 'book'}`"></i>
+                  <i
+                    :class="`far fa-${item.iconName ? item.iconName : 'book'}`"
+                  ></i>
                   <div>
-                    <span>{{item.name}}</span>
+                    <span>{{ item.name }}</span>
                     <span
-                      :class="[,'app-layout__selected-book-balance',`app-layout__selected-book-balance--${item.currentBalance >0 ? 'plus' : 'minus'}`]"
-                    >{{`${item.currentBalance >0 ? '+' : ''}`}}{{item.currentBalance | money({currency:'vnd'})}}</span>
+                      :class="[
+                        ,
+                        'app-layout__selected-book-balance',
+                        `app-layout__selected-book-balance--${
+                          item.currentBalance > 0 ? 'plus' : 'minus'
+                        }`,
+                      ]"
+                      >{{ `${item.currentBalance > 0 ? "+" : ""}`
+                      }}{{
+                        item.currentBalance | money({ currency: "vnd" })
+                      }}</span
+                    >
                   </div>
                 </div>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
           <a-dropdown>
-            <a class="ant-dropdown-link" @click="e => e.preventDefault()">{{profile.username}}</a>
+            <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">{{
+              profile.username
+            }}</a>
             <a-menu slot="overlay">
               <a-menu-item key="0" @click="logout">
                 <i class="far fa-sign-out-alt"></i>
@@ -140,28 +199,33 @@ export default {
           }, 0)
         : 0;
     },
+    selectedBook() {
+      return this.$store.state.book.selected;
+    },
   },
   watch: {
-    selectedBook() {
-      this.compKey += 1;
-      this.$notification["info"]({
-        message: `Chuyển sổ`,
-        description: "Bạn vừa chuyển sang sổ khác.",
-        placement: "topRight",
-        top: "80px",
-        duration: 5,
-      });
-      this.books !== null
-        ? this.books.reduce((prev, cur) => prev + cur.currentBalance, 0)
-        : 0;
+    selectedBook(oldVal, newVal) {
+      if (oldVal.id !== newVal.id) {
+        this.compKey += 1;
+        this.$notification["info"]({
+          message: `Chuyển sổ`,
+          description: "Bạn vừa chuyển sang sổ khác.",
+          placement: "topRight",
+          top: "80px",
+          duration: 5,
+        });
+        this.books !== null
+          ? this.books.reduce((prev, cur) => prev + cur.currentBalance, 0)
+          : 0;
+      }
     },
-    selectedBook() {
-      const selected_book = this.$store.state.book.selected;
-      console.log(selected_book);
-      return typeof selected_book === "string" && selected_book !== "all"
-        ? JSON.parse(selected_book)
-        : selected_book;
-    },
+    // selectedBook() {
+    //   const selected_book = this.$store.state.book.selected;
+    //   console.log(selected_book);
+    //   return typeof selected_book === "string" && selected_book !== "all"
+    //     ? JSON.parse(selected_book)
+    //     : selected_book;
+    // },
   },
 };
 </script>
@@ -181,7 +245,7 @@ export default {
 
 .app-layout {
   .ant-layout-content {
-    overflow-y: scroll;
+    overflow-y: auto;
     padding: 36px 24px !important;
   }
   .ant-spin {

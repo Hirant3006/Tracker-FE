@@ -251,7 +251,7 @@ input[type="number"] {
     font-size: 50px;
     height: 500px;
     overflow: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-wrap: break-word;
     i {
       padding: 10px 20px;
