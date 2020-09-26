@@ -6,6 +6,7 @@ const selected_book = 'selected_book'
 const state = {
 	books: null,
 	selected: null,
+	delete_book: null
 };
 
 const getters = {
@@ -26,8 +27,8 @@ const actions = {
 			const res = await api.get_list_book();
 			let { header, data } = res.data;
 			if (header.isSuccessful) {
-				data = data.filter(item => !item.isDelete)
-				if (data.length!==0) commit(_types.mutations.SET_BOOKS, data);
+				commit(_types.mutations.SET_BOOKS, data.filter(item => !item.isDelete));
+				commit(_types.mutations.SET_DELETE_BOOKS, data.filter(item => item.isDelete));
 			}
 			return res;
 		} catch (error) {
@@ -79,6 +80,9 @@ const mutations = {
 	},
 	[_types.mutations.SET_BOOKS](state, payload = "") {
 		state.books = payload;
+	},
+	[_types.mutations.SET_DELETE_BOOKS](state, payload = "") {
+		state.delete_books = payload;
 	},
 };
 export default {

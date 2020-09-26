@@ -16,7 +16,8 @@ export const _types = {
     },
     mutations: {
         SET_SELECTED_BOOK: 'setSelectedBook',
-        SET_BOOKS: 'setBooks'
+        SET_BOOKS: 'setBooks',
+        SET_DELETE_BOOKS: 'setDeleteBooks'
     }
 }
 

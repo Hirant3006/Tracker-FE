@@ -4,5 +4,6 @@ export const storeKeyNameSpace = {
     DASHBOARD: 'dashboard',
     TRANSACTIONS: 'transactions',
     BOOK: 'book',
+    EMPLOYEE: 'employee',
     ONBOARDING: 'onboarding',
 }
