@@ -5,7 +5,7 @@ export const _types = {
     getters: {
     },
     actions: {
-        GET_TRANSACTIONS: 'getTransactions',
+        GET_USERS: 'getUsers',
         GET_TRANSACTIONS_BY_BOOK: 'getTransactionsByBook',
         INSERT_TRANSACTION: 'insertTransaction',
         GET_TRANSACTION: 'getTransaction',

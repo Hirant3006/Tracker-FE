@@ -1,18 +1,15 @@
 import { _types } from "./constant";
 import api from "@/api";
 
-const state = {
-	transactions: 'hgell'
-};
+const state = {};
 
-const getters = {
-
-};
+const getters = {};
 
 const actions = {
-	async [_types.actions.GET_TRANSACTIONS]({ commit },payload) {
+	async [_types.actions.GET_USERS]({ commit }, payload) {
+		console.log('hello')
 		try {
-			const res = await api.get_list_transaction(payload);
+			const res = await api.get_list_user(payload);
 			let { header, data } = res.data;
 			if (header.isSuccessful) {
 			}
@@ -21,7 +18,7 @@ const actions = {
 			throw error;
 		}
 	},
-	async [_types.actions.GET_TRANSACTION]({ commit },payload) {
+	async [_types.actions.GET_TRANSACTION]({ commit }, payload) {
 		try {
 			const res = await api.get_transaction(payload);
 			return res;
@@ -29,7 +26,7 @@ const actions = {
 			throw error;
 		}
 	},
-	async [_types.actions.GET_LOG_TRANSACTION]({ commit },payload) {
+	async [_types.actions.GET_LOG_TRANSACTION]({ commit }, payload) {
 		try {
 			const res = await api.get_log_transaction(payload);
 			return res;
@@ -37,7 +34,7 @@ const actions = {
 			throw error;
 		}
 	},
-	async [_types.actions.DELETE_TRANSACTIONS]({ commit },payload) {
+	async [_types.actions.DELETE_TRANSACTIONS]({ commit }, payload) {
 		try {
 			const res = await api.delete_transaction(payload);
 			return res;
@@ -45,7 +42,7 @@ const actions = {
 			throw error;
 		}
 	},
-	async [_types.actions.GET_TRANSACTIONS_BY_BOOK]({ commit },payload) {
+	async [_types.actions.GET_TRANSACTIONS_BY_BOOK]({ commit }, payload) {
 		try {
 			const res = await api.get_list_transaction_by_book(payload);
 			let { header, data } = res.data;
@@ -82,8 +79,7 @@ const actions = {
 	},
 };
 
-const mutations = {
-};
+const mutations = {};
 
 export default {
 	state,

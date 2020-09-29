@@ -94,40 +94,6 @@ import TableCustom from "@/components/TableCustom";
 function onChange(pagination, filters, sorter) {
   console.log("params", pagination, filters, sorter);
 }
-const dummyData = [
-  {
-    id: 1,
-    name: "Nhat Tinh Anh 2",
-    title: "Nhan Vien",
-    username: "anhntt",
-    role: "MODERATOR",
-    isActive: true,
-  },
-  {
-    id: 2,
-    name: "Nhat Tinh Anh 3",
-    title: "Nhan Vien",
-    username: "anhntt",
-    role: "MODERATOR",
-    isActive: true,
-  },
-  {
-    id: 3,
-    name: "Nhat Tinh Anh 4",
-    title: "Nhan Vien",
-    username: "anhntt",
-    role: "ADMIN",
-    isActive: true,
-  },
-  {
-    id: 4,
-    name: "Nhat Tinh Anh 5",
-    title: "Nhan Vien",
-    username: "anhntt",
-    role: "MODERATOR",
-    isActive: true,
-  },
-];
 export default {
   name: "Employee",
   components: {
@@ -137,13 +103,14 @@ export default {
   data() {
     return {
       locale,
-      data: dummyData,
+      data: [],
       isLoading: false,
       status: "first_time",
       form: {
         role: "",
         name: "",
-        books: "",
+        bookId: "",
+        includeAdmin: true
       },
       columns: [
         {
@@ -185,14 +152,30 @@ export default {
   },
   mounted() {
     // this.handleScroll(() => console.log("hello"));
-    // this.onGetEmployee();
+    this.onGetEmployee();
   },
   methods: {
     ...mapActions({
-      getTransactions: "transactions/getTransactions",
-      getTransactionsByBook: "transactions/getTransactionsByBook",
-      deleteTransaction: "transactions/deleteTransaction",
+      getUsers: "employee/getUsers",
     }),
+    async onGetEmployee() {
+      this.isLoading = true;
+      const { includeAdmin, name, title, bookId } = this.form;
+      const { offset } = this;
+      const res = await this.getUsers({
+        includeAdmin:true,
+        name,
+        title,
+        bookId,
+      });
+      const { header, data } = res.data;
+      if (header.isSuccessful) {
+        this.total = data.total;
+        if (offset == 0) this.data = data.content;
+        else this.data = [...this.data, ...data.content];
+      }
+      this.isLoading = false;
+    },
     onLoadMore() {
       console.log("on load more");
       if (this.data.length < this.total) {

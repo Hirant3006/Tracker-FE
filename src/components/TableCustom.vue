@@ -255,7 +255,6 @@ export default {
   },
   mounted() {
     this.data = this.dataSource;
-    console.log("mounted");
     this.scrollToBottom && this.handleScroll(this.scrollToBottom);
     // Calculate Body width and watch
   },
