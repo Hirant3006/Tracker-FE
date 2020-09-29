@@ -166,6 +166,11 @@ export default {
           path: this.$routerName.BOOK,
           icon: "fas fa-book",
         },
+        {
+          title: "Nhân sự",
+          path: this.$routerName.EMPLOYEE,
+          icon: "fas fa-users",
+        },
       ],
     };
   },
