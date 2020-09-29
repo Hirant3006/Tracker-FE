@@ -72,7 +72,7 @@ export default {
   data() {
     return {
       filterTypes,
-      list: ["status"],
+      list: [],
       form: {
         type: null,
         status: null,

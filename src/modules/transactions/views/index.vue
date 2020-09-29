@@ -151,13 +151,6 @@ export default {
           },
           width: "15%",
         },
-        // {
-        //   title: "Loại giao dịch",
-        //   dataIndex: "type",
-        //   scopedSlots: {
-        //     customRender: "CustomType",
-        //   },
-        // },
         {
           title: "Nhân viên",
           dataIndex: "modiNm",
@@ -192,7 +185,6 @@ export default {
   mounted() {
     this.handleScroll(() => console.log("hello"));
     this.onGetTransactions();
-    console.log('mounted')
   },
   beforeRouteEnter (to, from, next) {
     next(vm => console.log('hello'))

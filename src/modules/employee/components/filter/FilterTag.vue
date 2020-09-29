@@ -92,10 +92,6 @@ export default {
     };
   },
   created() {
-    if (this.type.data_type === "status") {
-      this.data = "NORMAL";
-      this.$emit("change", { type: this.type.data_type, value: "NORMAL" });
-    }
   },
   methods: {
     truncNum(number, type) {
