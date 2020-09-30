@@ -166,6 +166,11 @@ export default {
           path: this.$routerName.BOOK,
           icon: "fas fa-book",
         },
+        {
+          title: "Nhân sự",
+          path: this.$routerName.EMPLOYEE,
+          icon: "fas fa-users",
+        },
       ],
     };
   },
@@ -201,7 +206,6 @@ export default {
     },
     selectedBook() {
       const selected_book = this.$store.state.book.selected;
-      console.log(selected_book);
       return typeof selected_book === "string" && selected_book !== "all"
         ? JSON.parse(selected_book)
         : selected_book;

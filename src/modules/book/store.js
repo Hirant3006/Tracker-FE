@@ -62,7 +62,7 @@ const actions = {
 			throw error;
 		}
 	},
-	async [_types.actions.DELETE_BOOK]({ commit }, payload) {
+	async [_types.actions.RECOVER_BOOK]({ commit }, payload) {
 		try {
 			const res = await api.recover_book(payload);
 			return res;
@@ -71,6 +71,7 @@ const actions = {
 		}
 	},
 	async [_types.actions.INSERT_BOOK]({ commit }, payload) {
+		console.log('insert')
 		try {
 			const res = await api.insert_book(payload);
 			const { header, data } = res.data;

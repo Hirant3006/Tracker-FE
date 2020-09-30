@@ -60,7 +60,7 @@ export default {
     async onRecoverBook() {
       this.isRecoveringBook = true;
       try {
-        const res = await this.deleteBook({
+        const res = await this.recoverBook({
           id: this.bookId,
         });
         const { header, data } = res.data;
@@ -115,6 +115,7 @@ export default {
       } catch (e) {}
     },
     async onDeleteBook() {
+      console.log('delete')
       this.isDeletingBook = true;
       if (this.selectedBook.id !== this.bookId && this.books.length > 1) {
         const res = await this.deleteBook({

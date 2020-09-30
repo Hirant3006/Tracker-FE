@@ -85,7 +85,7 @@
           </div>
         </div>
       </div>
-      <div class="m-table-body" style="max-height: 400px; overflow-y: scroll;overflow-x:hidden;">
+      <div class="m-table-body" style="max-height: 400px; overflow:auto">
         <table class="custom-table__body">
           <colgroup>
             <template v-for="(item,index) in columnsData">
@@ -255,7 +255,6 @@ export default {
   },
   mounted() {
     this.data = this.dataSource;
-    console.log("mounted");
     this.scrollToBottom && this.handleScroll(this.scrollToBottom);
     // Calculate Body width and watch
   },
