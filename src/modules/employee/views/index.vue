@@ -156,8 +156,43 @@ export default {
   },
   methods: {
     ...mapActions({
+      deleteUser: "employee/deleteUser",
       getUsers: "employee/getUsers",
     }),
+    async onConfirmDelete(id) {
+      this.isLoadingDelete = id;
+      try {
+        const res = await this.deleteUser({ id });
+        const { header } = res.data;
+        if (header.isSuccessful) {
+          this.onGetEmployee();
+          this.$notification["success"]({
+            message: `Xóa nhân viên`,
+            description: "Xóa nhân viên thành công",
+            placement: "topRight",
+            top: "80px",
+            duration: 5,
+          });
+        } else {
+          this.$notification["error"]({
+            message: `Xóa nhân viên`,
+            description: "Có lỗi xảy ra trong quá trình xóa",
+            placement: "topRight",
+            top: "80px",
+            duration: 5,
+          });
+        }
+      } catch (e) {
+        this.$notification["error"]({
+          message: `Xóa giao dịch`,
+          description: e.message,
+          placement: "topRight",
+          top: "80px",
+          duration: 5,
+        });
+      }
+      this.isLoadingDelete = false;
+    },
     async onGetEmployee() {
       this.isLoading = true;
       const { includeAdmin, name, title, bookId } = this.form;

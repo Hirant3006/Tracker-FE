@@ -17,23 +17,44 @@
         @submit.stop.prevent="onInsertEmployee()"
       >
         <a-form-item label="Tên nhân sự">
-          <a-input placeholder="Nhập tên nhân sự" v-model="form.clientName" />
+          <a-input placeholder="Nhập tên nhân sự" v-model="form.name" />
         </a-form-item>
         <div class="create-employee__error-text" v-if="isError">
           <span v-if="!form.name">*Tên nhân sự không được bỏ trống</span>
         </div>
         <a-form-item label="Tên tài khoản">
-          <a-input placeholder="Nhập tên tài khoản" v-model="form.clientName" />
+          <a-input placeholder="Nhập tên tài khoản" v-model="form.username" />
         </a-form-item>
         <div class="create-employee__error-text" v-if="isError">
           <span v-if="!form.username">*Tên tài khoản không được bỏ trống</span>
         </div>
-        <a-form-item label="Loại">
+        <a-form-item label="Chức vụ">
+          <a-input placeholder="Nhập tên tài khoản" v-model="form.title" />
+        </a-form-item>
+        <div class="create-employee__error-text" v-if="isError">
+          <span v-if="!form.title">*Chức vụ không được bỏ trống</span>
+        </div>
+        <a-form-item
+          label="Loại"
+          help="*Quản lí có toàn quyền sử dụng ứng dụng"
+        >
           <a-radio-group
             :options="options"
             :default-value="'MODERATOR'"
             @change="onChangeRole"
           />
+        </a-form-item>
+        <a-form-item v-if="form.role!=='ADMIN'" label="Sổ" help="*Chọn sổ nhân viên có thể truy cập">
+          <div class="create-employee__switch">
+            <div
+              v-for="(item, index) in books"
+              :key="index"
+              class="create-employee__switch-item"
+            >
+              <a-switch @change="onChangeSwitch(item.id)" />
+              <span class="m-l-5">{{ item.name }}</span>
+            </div>
+          </div>
         </a-form-item>
         <!-- <a-form-item label="Ghi chú">
           <a-textarea
@@ -77,6 +98,8 @@ export default {
         role: "MODERATOR",
         name: "",
         username: "",
+        bookIds: [],
+        title: "",
       },
       options,
       isError: false,
@@ -85,36 +108,28 @@ export default {
   },
   methods: {
     ...mapActions({
-      insertTransaction: "transactions/insertTransaction",
+      insertUser: "employee/insertUser",
       getBooks: "book/getBooks",
       selectBook: "book/setSelectedBook",
     }),
+    onChangeSwitch(id) {
+      let { bookId } = this.form;
+      bookId.includes(id)
+        ? (bookId = bookId.filter((item) => item !== id))
+        : bookId.push(id);
+      this.form.bookId = bookId;
+    },
     truncNum(number, type) {
       if (isNaN(Math.trunc(number))) return 0;
       else return Math.trunc(number);
     },
-    onSelectBook(item) {
-      this.form.book = item;
+    onChangeRole(e) {
+      this.form.role = e.target.value;
     },
-    onChangeType(e) {
-      this.form.type = e.target.value;
-    },
-    async onInsertTransaction() {
+    async onInsertEmployee() {
       this.isLoading = true;
-      const { book, type, clientName, description, amount } = this.form;
-      const bookId = book == null ? null : book.id;
-      if (!bookId || !clientName) {
-        this.isError = true;
-        this.$notification["error"]({
-          message: `Lỗi tạo giao dịch`,
-          description: "Có lỗi xảy ra trong quá trình tạo",
-          placement: "bottomRight",
-        });
-      } else if (
-        this.form.book &&
-        this.form.amount > this.form.book.currentBalance &&
-        this.form.type === "EXPENSE"
-      ) {
+      const { role, name, username, bookId, title } = this.form;
+      if (!name || !username || !title) {
         this.isError = true;
         this.$notification["error"]({
           message: `Lỗi tạo giao dịch`,
@@ -123,39 +138,28 @@ export default {
         });
       } else {
         try {
-          const insertTransactiondata = await this.insertTransaction({
+          const res = await this.insertUser({
+            role,
+            name,
+            username,
             bookId,
-            type,
-            clientName,
-            description,
-            amount,
+            title,
           });
-          const { header, data } = insertTransactiondata.data;
+          const { header, data } = res.data;
           this.isLoading = false;
           console.log(header, data);
           if (header.isSuccessful) {
-            await this.getBooks();
-            if (typeof this.selectedBook === "object") {
-              if (this.selectedBook.id === bookId) {
-                const newDataSelectedBook = this.selectedBook;
-                newDataSelectedBook.currentBalance =
-                  type === "INCOME"
-                    ? newDataSelectedBook.currentBalance + amount
-                    : newDataSelectedBook.currentBalance - amount;
-                this.selectBook(newDataSelectedBook);
-              }
-            }
             this.$notification["success"]({
-              message: `Tạo giao dịch thành công`,
-              description: `Đã tạo giao dịch mới cho sổ ${this.form.book.name}`,
+              message: `Tạo nhân viên mới thành công`,
+              description: `Nhân viên ${this.form.name} đã được tạo`,
               placement: "topRight",
               top: "80px",
               duration: 5,
             });
-            this.$router.push({ name: this.$routerName.TRANSACTIONS });
+            this.$router.push({ name: this.$routerName.EMPLOYEE });
           } else {
             this.$notification["error"]({
-              message: `Tạo giao dịch`,
+              message: `Lỗi tạo nhân viên`,
               description: "Có lỗi xảy ra trong quá trình tạo",
               placement: "topRight",
               top: "80px",
@@ -169,11 +173,7 @@ export default {
       this.isLoading = false;
     },
   },
-  created() {
-    if (this.selectedBook !== "all") {
-      this.form.book = this.selectedBook;
-    }
-  },
+  created() {},
   computed: {
     ...mapGetters({
       profile: typesAuth.getters.GET_USER_PROFILE,
@@ -197,6 +197,13 @@ export default {
   align-self: center;
   width: 600px;
   margin: 0 auto;
+  &__switch {
+    display: flex;
+    flex-wrap: wrap;
+    &-item {
+      width: 50%;
+    }
+  }
   &__error-text {
     color: $danger-color;
   }

@@ -7,11 +7,11 @@ export const _types = {
     actions: {
         GET_USERS: 'getUsers',
         GET_TRANSACTIONS_BY_BOOK: 'getTransactionsByBook',
-        INSERT_TRANSACTION: 'insertTransaction',
+        INSERT_USER: 'insertUser',
         GET_TRANSACTION: 'getTransaction',
         EDIT_TRANSACTION: 'editTransaction',
         GET_LOG_TRANSACTION: 'getLogTransaction',
-        DELETE_TRANSACTIONS: 'deleteTransaction',
+        DELETE_USER: 'deleteUser',
     },
     mutations: {
     }

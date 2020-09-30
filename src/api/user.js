@@ -27,19 +27,20 @@ export default {
 	// 		method: "GET",
 	// 	});
 	// },
-	// insert_transaction(data) {
-	// 	return axios({
-	// 		url: "/transaction",
-	// 		method: "post",
-	// 		data,
-	// 	});
-	// },
-	// delete_transaction({ id }) {
-	// 	return axios({
-	// 		url: "/transaction/" + id,
-	// 		method: "DELETE",
-	// 	});
-	// },
+	insert_user(data) {
+		return axios({
+			url: "/user",
+			method: "post",
+			data,
+		});
+	},
+	delete_user({ id }) {
+		console.log('delete api')
+		return axios({
+			url: "/user/" + id,
+			method: "DELETE",
+		});
+	},
 	// edit_transaction(data) {
 	// 	return axios({
 	// 		url: "/transaction",
