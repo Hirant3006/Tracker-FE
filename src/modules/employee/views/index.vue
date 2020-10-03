@@ -137,7 +137,7 @@ export default {
           width: "30%",
         },
         {
-          title: "Thông tin",
+          title: "Chức vụ",
           dataIndex: "title",
           scopedSlots: {
             customRender: "customTitle",
