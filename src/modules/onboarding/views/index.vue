@@ -302,8 +302,9 @@ input[type="number"] {
   margin: 0 120px;
   align-self: center;
   &__list-card {
-    padding: 0 130px;
+    padding: 0 10vw;
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
     > div {
       margin: 16px;
