@@ -12,7 +12,7 @@
         <div class="activity-trans-card__info">
           <span>
             Nhân viên
-            <b>{{record.data.regNm}}</b> đã
+            <b>{{record.data.regNm}}</b> (ID:{{record.data.regUserId}}) đã
             <span v-if="record.actionType==='INSERT'">
               <b>tạo</b> giao dịch
             </span>

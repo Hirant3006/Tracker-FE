@@ -18,17 +18,9 @@ const actions = {
 			throw error;
 		}
 	},
-	async [_types.actions.GET_TRANSACTION]({ commit }, payload) {
+	async [_types.actions.GET_USER]({ commit }, payload) {
 		try {
-			const res = await api.get_transaction(payload);
-			return res;
-		} catch (error) {
-			throw error;
-		}
-	},
-	async [_types.actions.GET_LOG_TRANSACTION]({ commit }, payload) {
-		try {
-			const res = await api.get_log_transaction(payload);
+			const res = await api.get_user(payload);
 			return res;
 		} catch (error) {
 			throw error;
@@ -38,17 +30,6 @@ const actions = {
 		console.log('delete')
 		try {
 			const res = await api.delete_user(payload);
-			return res;
-		} catch (error) {
-			throw error;
-		}
-	},
-	async [_types.actions.GET_TRANSACTIONS_BY_BOOK]({ commit }, payload) {
-		try {
-			const res = await api.get_list_transaction_by_book(payload);
-			let { header, data } = res.data;
-			if (header.isSuccessful) {
-			}
 			return res;
 		} catch (error) {
 			throw error;
@@ -67,9 +48,10 @@ const actions = {
 			throw error;
 		}
 	},
-	async [_types.actions.EDIT_TRANSACTION]({ commit }, payload) {
+	async [_types.actions.EDIT_USER]({ commit }, payload) {
+		console.log(payload)
 		try {
-			const res = await api.edit_transaction(payload);
+			const res = await api.edit_user(payload);
 			const { header, data } = res.data;
 			if (header.isSuccessful) {
 				// commit(_types.mutations.INSERT_BOOK, data);

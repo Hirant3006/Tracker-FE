@@ -2,21 +2,19 @@
   <div class="detail-transaction">
     <i
       class="far fa-arrow-left m-b-10"
-      style="text-align:left;cursor:pointer"
-      @click="() => $router.push({name:$routerName.TRANSACTIONS})"
+      style="text-align: left; cursor: pointer"
+      @click="() => $router.push({ name: $routerName.EMPLOYEE })"
     >
       <span class="m-l-5">Trở về</span>
     </i>
     <h2 class="m-l-8">
-      <b>Mã giao dịch: &nbsp;</b>
-      {{$route.params.id}}
+      <b>Mã nhân viên: &nbsp;</b>
+      {{ $route.params.id }}
     </h2>
-    <div v-if="id!==null && data!==null">
+    <div v-if="id !== null && data !== null">
       <a-tabs :activeKey="activeTab" @tabClick="onChangeTab">
         <a-tab-pane key="detail" tab="Chi tiết">
-          <detail-transaction :data="data" :key="compKey" @modify="onModifyData" />
-        </a-tab-pane>
-        <a-tab-pane key="activity" tab="Hoạt động" force-render>
+          <detail-emp :data="data" :key="compKey" @modify="onModifyData" />
         </a-tab-pane>
       </a-tabs>
     </div>
@@ -35,30 +33,15 @@
 </template>
 
 <script>
-const dummyData = {
-  id: 1,
-  bookId: 5,
-  type: "EXPENSE",
-  amount: 1000000,
-  clientName: "Nguyen Văn Long",
-  description: "Mua 500 tấn thép",
-  isDelete: false,
-  regDt: "2020-09-06 13:07:25",
-  regUserId: 1,
-  regNm: "SYSTEM",
-  modiDt: "2020-09-09 21:09:55",
-  modiUserId: 2,
-  modiNm: "Nhat Tinh Anh",
-};
-import detailTransaction from "../components/detailTransaction";
+import detailEmp from "../components/detailEmp";
 import { types as typesAuth } from "@/modules/auth/constant";
 import { types as typesBook } from "@/modules/book/constant";
 import { mapActions, mapGetters } from "vuex";
 import TableCustom from "@/components/TableCustom";
 export default {
-  name: "DetailTransaction",
+  name: "DetailEmp",
   components: {
-    detailTransaction,
+    detailEmp,
   },
   data() {
     return {
@@ -68,41 +51,42 @@ export default {
       isModifyData: false,
       isVisibleModalConfirm: false,
       activeTab: "detail",
-      compKey:0
+      compKey: 0,
     };
   },
   created() {
     const { id } = this.$route.params;
     this.id = id;
-    this.handleGetTransaction(id);
+    this.handleGetEmp(id);
   },
   mounted() {},
   methods: {
     ...mapActions({
-      getTransactions: "transactions/getTransaction",
+      getUser: "employee/getUser",
     }),
     onModifyData(bool) {
       this.isModifyData = bool;
     },
-    async handleGetTransaction(id) {
+    async handleGetEmp(id) {
       try {
-        const res = await this.getTransactions({ id });
+        const res = await this.getUser({ id });
         const { header, data } = res.data;
         if (header.isSuccessful) {
+          data.bookId = data.bookList.map((item) => item.id);
           this.data = data;
         }
       } catch (e) {}
     },
     onChangeTab(key) {
-      console.log(key)
+      console.log(key);
       if (key == "activity" && this.isModifyData) {
         this.isVisibleModalConfirm = true;
-      } else this.activeTab=key
+      } else this.activeTab = key;
     },
     onOkConfirmModal() {
       const { id } = this.$route.params;
       this.id = id;
-      this.handleGetTransaction(id);
+      this.handleGetEmp(id);
       this.activeTab = "activity";
       this.isVisibleModalConfirm = false;
       this.compKey++;

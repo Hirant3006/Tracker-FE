@@ -163,12 +163,12 @@ export default {
         },
         {
           title: "Sổ",
-          path: this.$routerName.BOOK,
+          path: '/book',
           icon: "fas fa-book",
         },
         {
           title: "Nhân sự",
-          path: this.$routerName.EMPLOYEE,
+          path: '/employee',
           icon: "fas fa-users",
         },
       ],

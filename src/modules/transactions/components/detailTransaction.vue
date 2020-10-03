@@ -245,6 +245,9 @@ export default {
 .detail-trans {
   width: 600px;
   margin: 0 auto;
+  .ant-form-item {
+    margin-bottom: 8px !important;
+  }
   .ant-col .ant-form-item-control-wrapper {
     width: fit-content;
   }
