@@ -67,6 +67,11 @@
             }}
           </div>
         </template>
+        <template slot="CustomEmp" slot-scope="{ itemRow }">
+          <div>
+            {{itemRow.text}}(ID:{{itemRow.record.regUserId}})
+          </div>
+        </template>
         <template slot="CustomAmount" slot-scope="{ itemRow }">
           <a-popover trigger="hover">
             <template slot="content">{{
@@ -187,6 +192,9 @@ export default {
         },
         {
           title: "Nhân viên",
+          scopedSlots: {
+            customRender: "CustomEmp",
+          },
           dataIndex: "modiNm",
         },
         {
