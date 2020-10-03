@@ -113,11 +113,11 @@ export default {
       selectBook: "book/setSelectedBook",
     }),
     onChangeSwitch(id) {
-      let { bookId } = this.form;
-      bookId.includes(id)
-        ? (bookId = bookId.filter((item) => item !== id))
-        : bookId.push(id);
-      this.form.bookId = bookId;
+      let { bookIds } = this.form;
+      bookIds.includes(id)
+        ? (bookIds = bookIds.filter((item) => item !== id))
+        : bookIds.push(id);
+      this.form.bookIds = bookIds;
     },
     truncNum(number, type) {
       if (isNaN(Math.trunc(number))) return 0;
@@ -128,7 +128,7 @@ export default {
     },
     async onInsertEmployee() {
       this.isLoading = true;
-      const { role, name, username, bookId, title } = this.form;
+      const { role, name, username, bookIds, title } = this.form;
       if (!name || !username || !title) {
         this.isError = true;
         this.$notification["error"]({
@@ -142,7 +142,7 @@ export default {
             role,
             name,
             username,
-            bookId,
+            bookIds,
             title,
           });
           const { header, data } = res.data;

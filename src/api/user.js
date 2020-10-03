@@ -1,7 +1,7 @@
 import axios from "@/plugins/axios";
 
 export default {
-	get_list_user({ offset = null, title, includeAdmin, name, bookId }) {
+	get_list_user({ offset = null, title, includeAdmin, name, bookID }) {
 		return axios({
 			url: "/user",
 			method: "get",
@@ -11,16 +11,16 @@ export default {
 				title,
 				includeAdmin,
 				name,
-				bookId,
+				bookID,
 			},
 		});
 	},
-	// get_transaction({ id }) {
-	// 	return axios({
-	// 		url: "/transaction/" + id,
-	// 		method: "GET",
-	// 	});
-	// },
+	get_user({ id }) {
+		return axios({
+			url: "/user/" + id,
+			method: "GET",
+		});
+	},
 	// get_log_transaction({ id }) {
 	// 	return axios({
 	// 		url: "/logging/transaction/" + id,
@@ -41,11 +41,11 @@ export default {
 			method: "DELETE",
 		});
 	},
-	// edit_transaction(data) {
-	// 	return axios({
-	// 		url: "/transaction",
-	// 		method: "PUT",
-	// 		data,
-	// 	});
-	// },
+	edit_user(data) {
+		return axios({
+			url: "/user",
+			method: "PUT",
+			data,
+		});
+	},
 };

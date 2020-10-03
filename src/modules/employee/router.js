@@ -20,7 +20,7 @@ export default [
 					),
 			},
 			{
-				path: "create",
+				path: "/employee/create",
 				name: routerName.CREATE_EMPLOYEE,
 				meta: {
 					middleware: [auth],
@@ -28,15 +28,15 @@ export default [
 				component: () =>
 					import(/* webpackChunkName: "auth" */ "./views/create.vue"),
 			},
-			// {
-			// 	path: "/detail/:id",
-			// 	name: routerName.DETAIL_EMPLOYEE,
-			// 	meta: {
-			// 		middleware: [auth],
-			// 	},
-			// 	component: () =>
-			// 		import(/* webpackChunkName: "auth" */ "./views/detail.vue"),
-			// },
+			{
+				path: "/employee/detail/:id",
+				name: routerName.DETAIL_EMPLOYEE,
+				meta: {
+					middleware: [auth],
+				},
+				component: () =>
+					import(/* webpackChunkName: "auth" */ "./views/detail.vue"),
+			},
 			
 		],
 	},

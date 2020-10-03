@@ -14,6 +14,7 @@
         @clear-all="onClearAllFilter"
         @change="onChangeFilter"
         class="m-t-10 m-b-10"
+        :form="form"
       />
     </div>
     <div style="text-align: right"></div>
@@ -22,7 +23,7 @@
       <span
         v-if="this.status == 'first_time'"
         class="manage-employee__title m-b-16"
-        >Chưa có giao dịch nào được tạo</span
+        >Chưa có nhân viên nào được tạo</span
       >
       <span
         v-else-if="this.status == 'not_first_time'"
@@ -40,7 +41,17 @@
         rowKey="id"
       >
         <template slot="customBooks" slot-scope="{ itemRow }">
-          <i :class="`far fa-book`"></i>
+          <a-popover>
+            <div slot="content">
+              <template v-if="itemRow.record.bookList.length !== 0">
+                <div v-for="item in itemRow.record.bookList" :key="item.id">
+                  <i :class="`far fa-book`"></i>&nbsp;{{ item.name }}
+                </div>
+              </template>
+              <template v-else>Nhân viên không thuộc sổ nào</template>
+            </div>
+            <i :class="`far fa-info`"></i>
+          </a-popover>
         </template>
         <template slot="customRole" slot-scope="{ itemRow }">
           <div class="manage-employee__role">
@@ -100,6 +111,7 @@ export default {
     TableCustom,
     FilterHandler,
   },
+  
   data() {
     return {
       locale,
@@ -107,10 +119,11 @@ export default {
       isLoading: false,
       status: "first_time",
       form: {
-        role: "",
+        includeAdmin: "",
         name: "",
-        bookId: "",
-        includeAdmin: true
+        title: "",
+        bookID: "",
+        includeAdmin: "",
       },
       columns: [
         {
@@ -124,7 +137,14 @@ export default {
           width: "30%",
         },
         {
-          title: "Chức vụ",
+          title: "Thông tin",
+          dataIndex: "title",
+          scopedSlots: {
+            customRender: "customTitle",
+          },
+        },
+        {
+          title: "Quyền",
           dataIndex: "role",
           scopedSlots: {
             customRender: "customRole",
@@ -195,13 +215,13 @@ export default {
     },
     async onGetEmployee() {
       this.isLoading = true;
-      const { includeAdmin, name, title, bookId } = this.form;
+      const { includeAdmin, name, title, bookID } = this.form;
       const { offset } = this;
       const res = await this.getUsers({
-        includeAdmin:true,
+        includeAdmin,
         name,
         title,
-        bookId,
+        bookID,
       });
       const { header, data } = res.data;
       if (header.isSuccessful) {
@@ -215,7 +235,7 @@ export default {
       console.log("on load more");
       if (this.data.length < this.total) {
         this.offset += 10;
-        this.onGetTransactions();
+        this.onGetEmployee();
       }
     },
     onClickRow(data) {
@@ -244,11 +264,34 @@ export default {
     },
     onChange,
   },
+  watch: {
+    form: {
+      deep: true,
+      handler(val) {
+        this.offset = 0;
+        this.onGetEmployee();
+        this.status = "not_first_time";
+      },
+    },
+  },
 };
 </script>
 
 <style lang="scss">
 .manage-employee {
+  &__title {
+    font-weight: 600;
+    font-size: 24px;
+  }
+  &__no-data {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    img {
+      width: 200px;
+      align-self: center;
+    }
+  }
   &__action {
     display: flex;
     button:nth-child(2) {
