@@ -1,45 +1,64 @@
 <template>
   <div class="filter-tag">
-    <span>{{type.name}}:</span>
-    <template v-if="['status','type'].includes(type.data_type)">
+    <span>{{ type.name }}:</span>
+    <template v-if="['status', 'type'].includes(type.data_type)">
       <a-select
         placeholder="Chọn tình trạng"
-        v-model="data"
+        :value="data"
         style="width: 120px"
         @change="handleChangeValue"
       >
         <a-select-option
-          v-for="(item,index) in dataTypes[type.data_type]"
+          v-for="(item, index) in dataTypes[type.data_type]"
           :value="item.data_type"
           :key="index"
-        >{{item.name}}</a-select-option>
+          >{{ item.name }}</a-select-option
+        >
       </a-select>
     </template>
-    <template v-else-if="['id','clientName'].includes(type.data_type)">
-      <a-input placeholder="Nhập thông tin" @change="handleChangeValue" />
+    <template v-else-if="['id', 'clientName'].includes(type.data_type)">
+      <a-input
+        :value="data"
+        placeholder="Nhập thông tin"
+        @change="handleChangeValue"
+      />
     </template>
     <template v-else>
       <a-input-number
-        :default-value="amountStart"
-        style=" width: 200px; text-align: center"
-        :formatter="value => ` ${truncNum(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-        :parser="value => value.replace(/\$\s?|(,*)/g, '')"
-        @change="value => value!==null ? amountStart=value : amountStart=0"
+        :value="amountStart"
+        style="width: 200px; text-align: center"
+        :formatter="
+          (value) => ` ${truncNum(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        "
+        :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
+        @change="
+          (value) =>
+            value !== null ? (amountStart = value) : (amountStart = 0)
+        "
         :min="0"
         placeholder="Nhỏ nhất"
       ></a-input-number>
       <a-input
         @change="handleChangeAmountEnd"
-        style=" width: 30px; border-left: 0; pointer-events: none; backgroundColor: #fff"
+        style="
+          width: 30px;
+          border-left: 0;
+          pointer-events: none;
+          backgroundcolor: #fff;
+        "
         placeholder="~"
         disabled
       />
       <a-input-number
-        :default-value="amountEnd"
+        :value="amountEnd"
         style="width: 200px; text-align: center; border-left: 0"
-        :formatter="value => ` ${truncNum(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-        :parser="value => value.replace(/\$\s?|(,*)/g, '')"
-        @change="value => value!==null ? amountEnd=value : amountEnd=0"
+        :formatter="
+          (value) => ` ${truncNum(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        "
+        :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
+        @change="
+          (value) => (value !== null ? (amountEnd = value) : (amountEnd = 0))
+        "
         :min="0"
         placeholder="Lớn nhất"
       ></a-input-number>
@@ -82,6 +101,13 @@ export default {
     type: {
       required: true,
     },
+    defaultData: {
+      require: true,
+    },
+  },
+  mounted() {
+    this.defaultData !== undefined &&
+      (this.data = this.$clone(this.defaultData));
   },
   data() {
     return {
@@ -108,6 +134,7 @@ export default {
       }
       const { type } = this;
       this.$emit("change", { type: type.data_type, value });
+      this.data =value;
     }, 500),
     onClearFilterTag() {
       this.$emit("close", this.type.data_type);
@@ -128,6 +155,18 @@ export default {
         this.$emit("change", { type: "amountEnd", amountEnd });
       }
     }, 500),
+  },
+  mounted() {
+    console.log(typeof defaultData)
+    if (this.defaultData !== undefined && typeof this.defaultData === "string")
+      this.data = this.$clone(this.defaultData);
+    else {
+      const { amountStart, amountEnd } = this.defaultData;
+      if (amountStart && amountEnd) {
+        this.amountStart = amountStart;
+        this.amountEnd = amountEnd;
+      }
+    }
   },
   watch: {
     amountStart: debounce(function () {

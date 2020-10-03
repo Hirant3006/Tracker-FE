@@ -28,15 +28,15 @@ export default [
 				component: () =>
 					import(/* webpackChunkName: "auth" */ "./views/create.vue"),
 			},
-			// {
-			// 	path: "/detail/:id",
-			// 	name: routerName.DETAIL_EMPLOYEE,
-			// 	meta: {
-			// 		middleware: [auth],
-			// 	},
-			// 	component: () =>
-			// 		import(/* webpackChunkName: "auth" */ "./views/detail.vue"),
-			// },
+			{
+				path: "/detail/:id",
+				name: routerName.DETAIL_EMPLOYEE,
+				meta: {
+					middleware: [auth],
+				},
+				component: () =>
+					import(/* webpackChunkName: "auth" */ "./views/detail.vue"),
+			},
 			
 		],
 	},

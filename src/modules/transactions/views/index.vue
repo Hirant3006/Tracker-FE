@@ -7,21 +7,29 @@
       <a-range-picker class="m-b-10" :locale="locale" @change="onChangeDate" />
       <a-button
         class="m-l-10"
-        @click="() => $router.push({name:$routerName.CREATE_TRANSACTION})"
+        @click="() => $router.push({ name: $routerName.CREATE_TRANSACTION })"
         type="primary"
-      >Tạo mới</a-button>
+        >Tạo mới</a-button
+      >
     </div>
-    <filter-handler @clear-all="onClearAllFilter" @change="onChangeFilter" class="m-t-10 m-b-10" />
-    <div class="manage-transactions__no-data m-t-50" v-if="this.total==0 ">
+    <filter-handler
+      :form="form"
+      @clear-all="onClearAllFilter"
+      @change="onChangeFilter"
+      class="m-t-10 m-b-10"
+    />
+    <div class="manage-transactions__no-data m-t-50" v-if="this.total == 0">
       <img class="m-b-24" src="@/assets/images/not-found.png" alt="not found" />
       <span
-        v-if="this.status=='first_time'"
+        v-if="this.status == 'first_time'"
         class="manage-transactions__title m-b-16"
-      >Chưa có giao dịch nào được tạo</span>
+        >Chưa có giao dịch nào được tạo</span
+      >
       <span
-        v-else-if="this.status=='not_first_time'"
+        v-else-if="this.status == 'not_first_time'"
         class="manage-transactions__title m-b-16"
-      >Không có dữ liệu</span>
+        >Không có dữ liệu</span
+      >
     </div>
     <template v-else>
       <TableCustom
@@ -33,32 +41,55 @@
         @click-row="onClickRow"
         rowKey="id"
       >
-        <template slot="CustomeRegDt" slot-scope="{itemRow}">
-          <div>{{itemRow.text | formatDate}}</div>
+        <template slot="CustomeRegDt" slot-scope="{ itemRow }">
+          <div>{{ itemRow.text | formatDate }}</div>
         </template>
-        <template slot="CustomStatus" slot-scope="{itemRow}">
+        <template slot="CustomStatus" slot-scope="{ itemRow }">
           <div
-            :class="[`manage-transactions__type-tag`,`manage-transactions__type-tag--${itemRow.record.isDelete==true ? 'deleted' : itemRow.record.modiDt == itemRow.record.regDt ? 'origin' :'modified' }`]"
+            :class="[
+              `manage-transactions__type-tag`,
+              `manage-transactions__type-tag--${
+                itemRow.record.isDelete == true
+                  ? 'deleted'
+                  : itemRow.record.modiDt == itemRow.record.regDt
+                  ? 'origin'
+                  : 'modified'
+              }`,
+            ]"
           >
             <span>•</span>
-            &nbsp;{{itemRow.record.isDelete==true ? 'Đã xóa' : itemRow.record.modiDt == itemRow.record.regDt ? 'Nguyên bản' :'Đã sửa' }}
+            &nbsp;{{
+              itemRow.record.isDelete == true
+                ? "Đã xóa"
+                : itemRow.record.modiDt == itemRow.record.regDt
+                ? "Nguyên bản"
+                : "Đã sửa"
+            }}
           </div>
         </template>
-        <template slot="CustomAmount" slot-scope="{itemRow}">
+        <template slot="CustomAmount" slot-scope="{ itemRow }">
           <a-popover trigger="hover">
-            <template slot="content">{{itemRow.record.type==='INCOME' ? 'Thu' : 'Chi'}}</template>
+            <template slot="content">{{
+              itemRow.record.type === "INCOME" ? "Thu" : "Chi"
+            }}</template>
             <div
-              :class="[`manage-transactions__money`,`manage-transactions__money--${itemRow.record.type.toLowerCase()}`]"
-            >{{`${itemRow.record.type==='INCOME' ? '+' : '-'}`}}{{itemRow.text | money({currency:'vnd'})}}</div>
+              :class="[
+                `manage-transactions__money`,
+                `manage-transactions__money--${itemRow.record.type.toLowerCase()}`,
+              ]"
+            >
+              {{ `${itemRow.record.type === "INCOME" ? "+" : "-"}`
+              }}{{ itemRow.text | money({ currency: "vnd" }) }}
+            </div>
           </a-popover>
         </template>
-        <template slot="CustomDescription" slot-scope="{itemRow}">
+        <template slot="CustomDescription" slot-scope="{ itemRow }">
           <a-popover trigger="hover">
-            <template slot="content">{{itemRow.text}}</template>
-            <div class="wrap-text">{{itemRow.text}}</div>
+            <template slot="content">{{ itemRow.text }}</template>
+            <div class="wrap-text">{{ itemRow.text }}</div>
           </a-popover>
         </template>
-        <template slot="CustomAction" slot-scope="{itemRow}">
+        <template slot="CustomAction" slot-scope="{ itemRow }">
           <div class="manage-transactions__action">
             <a-tooltip>
               <template slot="title">Chi tiết</template>
@@ -76,10 +107,13 @@
               <a-tooltip>
                 <template slot="title">Xóa</template>
                 <a-button
-                  :disabled="itemRow.record.isDelete==true && isLoadingDelete===itemRow.record.id"
-                  :loading="isLoadingDelete===itemRow.record.id"
+                  :disabled="
+                    itemRow.record.isDelete == true &&
+                    isLoadingDelete === itemRow.record.id
+                  "
+                  :loading="isLoadingDelete === itemRow.record.id"
                   type="danger"
-                  style="padding:0 12px"
+                  style="padding: 0 12px"
                 >
                   <i :class="`far fa-trash`"></i>
                 </a-button>
@@ -183,11 +217,10 @@ export default {
     };
   },
   mounted() {
-    this.handleScroll(() => console.log("hello"));
     this.onGetTransactions();
   },
-  beforeRouteEnter (to, from, next) {
-    next(vm => console.log('hello'))
+  beforeRouteEnter(to, from, next) {
+    next((vm) => console.log("hello"));
   },
   methods: {
     ...mapActions({
@@ -212,7 +245,6 @@ export default {
       }
     },
     onClickRow(data) {
-      console.log("click row", data);
       this.$router.push({
         name: this.$routerName.DETAIL_TRANSACTION,
         params: {
@@ -253,16 +285,6 @@ export default {
         });
       }
       this.isLoadingDelete = false;
-    },
-    handleScroll(func) {
-      const table = document.querySelector(".m-table-body");
-      table.addEventListener("scroll", async (event) => {
-        let maxScroll = event.target.scrollHeight - event.target.clientHeight;
-        let currentScroll = event.target.scrollTop;
-        if (currentScroll > maxScroll - 1) {
-          func();
-        }
-      });
     },
     onClearAllFilter() {
       ["status", "clientName", "type", "id", "amountStart", "amountEnd"].map(
@@ -305,7 +327,7 @@ export default {
                 id: idFilter,
               })
             : await this.getTransactionsByBook({
-                id:idFilter,
+                id: idFilter,
                 dateStart,
                 dateEnd,
                 amountStart,
@@ -314,7 +336,7 @@ export default {
                 clientName,
                 type,
                 offset,
-                bookId: id
+                bookId: id,
               });
         const { header, data } = res.data;
         if (header.isSuccessful) {

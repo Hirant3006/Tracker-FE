@@ -1,7 +1,7 @@
 <template>
   <div class="filter-tag">
-    <span>{{type.name}}:</span>
-    <template v-if="['status','type'].includes(type.data_type)">
+    <span>{{ type.name }}:</span>
+    <template v-if="['includeAdmin', 'bookID'].includes(type.data_type)">
       <a-select
         placeholder="Chọn tình trạng"
         v-model="data"
@@ -9,72 +9,36 @@
         @change="handleChangeValue"
       >
         <a-select-option
-          v-for="(item,index) in dataTypes[type.data_type]"
+          v-for="(item, index) in dataTypes[type.data_type]"
           :value="item.data_type"
           :key="index"
-        >{{item.name}}</a-select-option>
+          >{{ item.name }}</a-select-option
+        >
       </a-select>
     </template>
-    <template v-else-if="['id','clientName'].includes(type.data_type)">
-      <a-input placeholder="Nhập thông tin" @change="handleChangeValue" />
-    </template>
-    <template v-else>
-      <a-input-number
-        :default-value="amountStart"
-        style=" width: 200px; text-align: center"
-        :formatter="value => ` ${truncNum(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-        :parser="value => value.replace(/\$\s?|(,*)/g, '')"
-        @change="value => value!==null ? amountStart=value : amountStart=0"
-        :min="0"
-        placeholder="Nhỏ nhất"
-      ></a-input-number>
-      <a-input
-        @change="handleChangeAmountEnd"
-        style=" width: 30px; border-left: 0; pointer-events: none; backgroundColor: #fff"
-        placeholder="~"
-        disabled
-      />
-      <a-input-number
-        :default-value="amountEnd"
-        style="width: 200px; text-align: center; border-left: 0"
-        :formatter="value => ` ${truncNum(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-        :parser="value => value.replace(/\$\s?|(,*)/g, '')"
-        @change="value => value!==null ? amountEnd=value : amountEnd=0"
-        :min="0"
-        placeholder="Lớn nhất"
-      ></a-input-number>
+    <template v-else-if="['title', 'name'].includes(type.data_type)">
+      <a-input placeholder="Nhập thông tin" :value="data" @change="handleChangeValue" />
     </template>
     <i @click="onClearFilterTag" :class="`far fa-times m-r-5`"></i>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
+import { types as typesBook } from "@/modules/book/constant";
 import debounce from "debounce";
 const dataTypes = {
-  status: [
+  includeAdmin: [
     {
-      name: "Nguyên bản",
-      data_type: "NORMAL",
+      name: "Có",
+      data_type: "true",
     },
     {
-      name: "Đã sửa",
-      data_type: "MODIFIED",
-    },
-    {
-      name: "Đã xóa",
-      data_type: "DELETED",
+      name: "Không",
+      data_type: "false",
     },
   ],
-  type: [
-    {
-      name: "Chi",
-      data_type: "EXPENSE",
-    },
-    {
-      name: "Thu",
-      data_type: "INCOME",
-    },
-  ],
+  bookID: [],
 };
 export default {
   name: "FilterTag",
@@ -82,16 +46,26 @@ export default {
     type: {
       required: true,
     },
+    defaultData: {
+      require: true,
+    },
   },
   data() {
     return {
       dataTypes,
       data: "",
-      amountStart: "",
-      amountEnd: "",
     };
   },
   created() {
+    this.dataTypes.bookID = this.books.map((item) => {
+      return {
+        name: item.name,
+        data_type: item.id,
+      };
+    });
+  },
+  mounted() {
+    this.data = this.$clone(this.defaultData)
   },
   methods: {
     truncNum(number, type) {
@@ -108,22 +82,11 @@ export default {
     onClearFilterTag() {
       this.$emit("close", this.type.data_type);
     },
-    handleChangeAmountStart: debounce(function (e) {
-      this.amountStart = e.target.value;
-      const { amountStart, amountEnd } = this;
-      if (amountStart && amountEnd) {
-        this.$emit("change", { type: "amountStart", amountStart });
-        this.$emit("change", { type: "amountEnd", amountEnd });
-      }
-    }, 500),
-    handleChangeAmountEnd: debounce(function (e) {
-      this.amountEnd = e.target.value;
-      const { amountStart, amountEnd } = this;
-      if (amountStart && amountEnd) {
-        this.$emit("change", { type: "amountStart", amountStart });
-        this.$emit("change", { type: "amountEnd", amountEnd });
-      }
-    }, 500),
+  },
+  computed: {
+    ...mapGetters({
+      books: typesBook.getters.GET_BOOKS,
+    }),
   },
   watch: {
     amountStart: debounce(function () {

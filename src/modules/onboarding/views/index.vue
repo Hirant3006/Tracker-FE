@@ -2,70 +2,105 @@
   <div class="onboarding">
     <div v-if="!books">
       <transition name="fade-in" mode="out-in">
-        <div class="onboarding__no-data" v-if="onCreatedNewBook==false">
-          <img class="m-b-24" src="@/assets/images/not-found.png" alt="not found" />
+        <div class="onboarding__no-data" v-if="onCreatedNewBook == false">
+          <img
+            class="m-b-24"
+            src="@/assets/images/not-found.png"
+            alt="not found"
+          />
           <span class="onboarding__title m-b-16">Chưa có sổ nào được tạo</span>
           <a-button
             class="onboarding__no-data-button"
-            v-if="profile && profile.role==='ADMIN'"
+            v-if="profile && profile.role === 'ADMIN'"
             type="primary"
             size="large"
             block
-            @click="() => onCreatedNewBook=true"
-          >Tạo sổ</a-button>
-          <span class="onboarding__sub-title" v-else>Liên hệ quản lí để biết thêm thông tin</span>
+            @click="() => (onCreatedNewBook = true)"
+            >Tạo sổ</a-button
+          >
+          <span class="onboarding__sub-title" v-else
+            >Liên hệ quản lí để biết thêm thông tin</span
+          >
         </div>
         <div class="onboarding__create-first-book" v-else>
           <i
             class="far fa-arrow-left"
-            style="text-align:left;cursor:pointer"
-            @click="() => onCreatedNewBook=false"
+            style="text-align: left; cursor: pointer"
+            @click="() => (onCreatedNewBook = false)"
           >
             <span class="m-l-5">Trở về</span>
           </i>
           <span class="onboarding__title m-b-16">👋 Xin chào!!</span>
           <span class="onboarding__sub-title m-b-30">
-            <template v-if="books && books.length===0">Hãy bắt đầu tạo quyển sổ đầu tiên</template>
-            <template v-else>Điền đầy đủ vào form bên dưới để tạo sổ mới</template>
+            <template v-if="books && books.length === 0"
+              >Hãy bắt đầu tạo quyển sổ đầu tiên</template
+            >
+            <template v-else
+              >Điền đầy đủ vào form bên dưới để tạo sổ mới</template
+            >
           </span>
           <a-card class="onboarding__create-first-book-card">
             <a-form class="onboarding__create-first-book-card-form">
               <div class="onboarding__create-first-book-card-icon m-b-16">
-                <div @click="() => isVisibleModal=true">
+                <div @click="() => (isVisibleModal = true)">
                   <i :class="`fad fa-${form.icon}`"></i>
                 </div>
               </div>
               <a-form-item
                 label="Tên sổ"
-                :validate-status="isError && !$v.form.name.required ? 'error' : ''"
+                :validate-status="
+                  isError && !$v.form.name.required ? 'error' : ''
+                "
               >
                 <!--  -->
                 <a-input v-model="form.name" />
-                <div class="error-text" v-if="isError && !$v.form.name.required">
+                <div
+                  class="error-text"
+                  v-if="isError && !$v.form.name.required"
+                >
                   <span>*Tên sổ không được bỏ trống</span>
                 </div>
               </a-form-item>
               <a-form-item
                 label="Số dư ban đầu"
-                :validate-status="isError && !$v.form.balance.required ? 'error' : ''"
+                :validate-status="
+                  isError && !$v.form.balance.required ? 'error' : ''
+                "
               >
                 <!--  -->
                 <!-- <a-input suffix="VND" type="number" /> -->
                 <a-input-number
                   :default-value="form.balance"
-                  :formatter="value => ` ${truncNum(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                  :parser="value => value.replace(/\$\s?|(,*)/g, '')"
-                  @change="value => value!==null ? form.balance=value : form.balance=0"
+                  :formatter="
+                    (value) =>
+                      ` ${truncNum(value)}`.replace(
+                        /\B(?=(\d{3})+(?!\d))/g,
+                        ','
+                      )
+                  "
+                  :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
+                  @change="
+                    (value) =>
+                      value !== null
+                        ? (form.balance = value)
+                        : (form.balance = 0)
+                  "
                   :min="0"
                 ></a-input-number>
                 <span class="m-l-10">VNĐ</span>
-                <div class="error-text" v-if="isError && !$v.form.balance.required">
+                <div
+                  class="error-text"
+                  v-if="isError && !$v.form.balance.required"
+                >
                   <span>*Số dư không được bỏ trống</span>
                 </div>
               </a-form-item>
               <a-form-item label="Ghi chú">
                 <!-- :validate-status="isError && !$v.form.username.required ? 'error' : ''" -->
-                <a-textarea v-model="form.description" :auto-size="{ minRows: 3, maxRows: 5 }" />
+                <a-textarea
+                  v-model="form.description"
+                  :auto-size="{ minRows: 3, maxRows: 5 }"
+                />
               </a-form-item>
               <!-- <div class="auth__error-text" v-if="isError">
                 <span v-if="!$v.form.username.required">*Tên không được bỏ trống</span>
@@ -79,7 +114,8 @@
                 html-type="submit"
                 :loading="isLoading"
                 @click="onInsertBook"
-              >Xác nhận</a-button>
+                >Xác nhận</a-button
+              >
             </a-form>
           </a-card>
         </div>
@@ -88,19 +124,21 @@
     <div v-else>
       <div
         class="onboarding__title m-b-24 align-center"
-        style="text-align:center"
-      >Chọn sổ để tiếp tục</div>
+        style="text-align: center"
+      >
+        Chọn sổ để tiếp tục
+      </div>
       <div class="onboarding__list-card">
         <book-card
           @click="onSelectBook"
-          v-if="profile && profile.role==='ADMIN'"
+          v-if="profile && profile.role === 'ADMIN'"
           type="blank"
           icon="globe"
           name="Tất cả"
         />
         <book-card
           @click="onSelectBook(book)"
-          v-for="(book,index) in books"
+          v-for="(book, index) in books"
           :key="index"
           :data="book"
         />
@@ -109,7 +147,7 @@
     <a-modal v-model="isVisibleModal" title="Chọn biểu tượng" :footer="null">
       <div class="onboarding__list-icon">
         <i
-          v-for="(item,index) in iconList"
+          v-for="(item, index) in iconList"
           @click="onSelectIcon(item)"
           :key="index"
           :class="`fad fa-${item}`"
@@ -264,6 +302,7 @@ input[type="number"] {
   margin: 0 120px;
   align-self: center;
   &__list-card {
+    padding: 0 130px;
     display: flex;
     flex-wrap: wrap;
     > div {
