@@ -9,8 +9,13 @@
           border-bottom: 1px solid rgb(232 232 232);
         "
       >
-        <div class="app-layout__header">
-          <a-dropdown>
+        <div
+          :class="[
+            'app-layout__header',
+            !isShowDropDown && 'app-layout__header--hide-dropdown',
+          ]"
+        >
+          <a-dropdown v-if="isShowDropDown">
             <span
               class="ant-dropdown-link"
               style="cursor: pointer"
@@ -163,16 +168,19 @@ export default {
         },
         {
           title: "Sổ",
-          path: '/book',
+          path: "/book",
           icon: "fas fa-book",
         },
         {
           title: "Nhân sự",
-          path: '/employee',
+          path: "/employee",
           icon: "fas fa-users",
         },
       ],
     };
+  },
+  mounted() {
+    console.log(this.$route);
   },
   methods: {
     ...mapActions({
@@ -197,6 +205,9 @@ export default {
       books: typesBook.getters.GET_BOOKS,
       selectedBook: typesBook.getters.GET_SELECTED_BOOK,
     }),
+    isShowDropDown() {
+      return this.$route.name !== "Dashboard";
+    },
     totalBalance() {
       return this.books !== null
         ? this.books.reduce((prev, cur) => {
@@ -294,6 +305,9 @@ export default {
     }
   }
   &__header {
+    &--hide-dropdown {
+      justify-content: flex-end;
+    }
     padding: 0 24px;
     display: flex;
     justify-content: space-between;
