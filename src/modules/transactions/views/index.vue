@@ -28,8 +28,9 @@
       <span
         v-else-if="this.status == 'not_first_time'"
         class="manage-transactions__title m-b-16"
-        >Không có dữ liệu</span
       >
+        Không có dữ liệu
+      </span>
     </div>
     <template v-else>
       <TableCustom
@@ -68,9 +69,7 @@
           </div>
         </template>
         <template slot="CustomEmp" slot-scope="{ itemRow }">
-          <div>
-            {{itemRow.text}}(ID:{{itemRow.record.regUserId}})
-          </div>
+          <div>{{ itemRow.text }}(ID:{{ itemRow.record.regUserId }})</div>
         </template>
         <template slot="CustomAmount" slot-scope="{ itemRow }">
           <a-popover trigger="hover">

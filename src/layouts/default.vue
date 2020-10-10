@@ -176,6 +176,11 @@ export default {
           path: "/employee",
           icon: "fas fa-users",
         },
+        {
+          title: "Cài đặt",
+          path: "/setting",
+          icon: "fas fa-cog",
+        },
       ],
     };
   },
