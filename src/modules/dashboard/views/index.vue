@@ -114,6 +114,7 @@
         </a-menu>
       </a-dropdown>
       <a-range-picker
+        style="align-self: center"
         :defaultValue="defaultDateTime"
         class="m-b-10"
         :locale="locale"
@@ -125,13 +126,56 @@
       <a-spin size="large"></a-spin>
     </div>
     <div
-      class="dashboard__no-data"
+      class="dashboard__no-data m-t-32"
       v-else-if="data !== null && data.length === 0"
     >
       <img class="m-b-24" src="@/assets/images/not-found.png" alt="not found" />
       <span class="dashboard__no-data-title m-b-16">Chưa có dữ liệu</span>
     </div>
-    <div v-else></div>
+    <div class="dashboard__content m-t-16" v-else>
+      <a-card>
+        <div class="dashboard__content-description">
+          <div class="m-b-8">
+            <b>Số dư:</b>
+            <span
+              :class="[
+                'dashboard__content-money',
+                'dashboard__content-money--income',
+              ]"
+              >&nbsp; +300 000 000đ</span
+            >
+          </div>
+          <div class="dashboard__content-description-body">
+            <div>
+              <b>Tổng thu:</b>
+              <span
+                :class="[
+                  'dashboard__content-money',
+                  'dashboard__content-money--income',
+                ]"
+              >
+                &nbsp; +1 000 000 vnđ</span
+              >
+            </div>
+            <div>
+              <b> Tổng chi:</b>
+              <span
+                :class="[
+                  'dashboard__content-money',
+                  'dashboard__content-money--expense',
+                ]"
+              >
+                &nbsp; -1 000 000 vnđ</span
+              >
+            </div>
+          </div>
+        </div>
+        <pie-chart class="m-t-18" :chartdata="dataPieChart" />
+      </a-card>
+      <a-card v-if="dataChart !== null" class="m-t-16">
+        <line-chart :chartdata="dataLineChart" />
+      </a-card>
+    </div>
   </div>
 </template>
 
@@ -141,9 +185,14 @@ import { types as typesAuth } from "@/modules/auth/constant";
 import { types as typesBook } from "@/modules/book/constant";
 import locale from "ant-design-vue/es/date-picker/locale/vi_VN";
 import moment from "moment";
-
+import LineChart from "../components/LineChart";
+import PieChart from "../components/PieChart";
 export default {
   name: "DashBoard",
+  components: {
+    LineChart,
+    PieChart,
+  },
   data() {
     return {
       locale,
@@ -155,6 +204,18 @@ export default {
       },
       data: null,
       format: "YYYY-MM-DD",
+      dummyData: [
+        {
+          date: "2020-09-30",
+          income: 1232131,
+          expense: 0,
+        },
+        {
+          date: "2020-10-10",
+          income: 12312312,
+          expense: 0,
+        },
+      ],
     };
   },
   created() {
@@ -208,6 +269,57 @@ export default {
       books: typesBook.getters.GET_BOOKS,
       profile: typesAuth.getters.GET_USER_PROFILE,
     }),
+    dataLineChart() {
+      let labels = [];
+      let dataSetIncome = [];
+      let dataSetExpense = [];
+      if (this.data !== null && this.data.length !== 0) {
+        this.data.forEach((item) => {
+          labels.push(item.date);
+          dataSetIncome.push(item.income);
+          dataSetExpense.push(item.expense);
+        });
+        return {
+          labels,
+          datasets: [
+            {
+              label: "Thu",
+              backgroundColor: "#72d7bf",
+              data: dataSetIncome,
+            },
+            {
+              label: "Chi",
+              backgroundColor: "#7989ff",
+              data: dataSetExpense,
+            },
+          ],
+        };
+      }
+      return null;
+    },
+    dataPieChart() {
+      let labels = [];
+      let dataSetIncome = [];
+      let dataSetExpense = [];
+      if (this.data !== null && this.data.length !== 0) {
+        this.data.forEach((item) => {
+          labels.push(item.date);
+          dataSetIncome.push(item.income);
+          dataSetExpense.push(item.expense);
+        });
+        return {
+          labels: ["Thu", "Chi"],
+          datasets: [
+            {
+              label: "Thu",
+              backgroundColor: ["#72d7bf", "#7989ff"],
+              data: [10000, 20000],
+            },
+          ],
+        };
+      }
+      return null;
+    },
     defaultDateTime() {
       return [moment(this.form.fromDateTime), moment(this.form.toDateTime)];
     },
@@ -236,6 +348,27 @@ export default {
 
 <style lang="scss">
 .dashboard {
+  margin: 0 15vw;
+  &__content {
+    &-money {
+      &--income {
+        color: $success-color;
+      }
+      &--expense {
+        color: $danger-color;
+      }
+    }
+    &-description {
+      font-size: 18px !important;
+      &-body {
+        display: flex;
+        justify-content: space-between;
+        > div {
+          flex: 1 1 50%;
+        }
+      }
+    }
+  }
   &__loading {
     text-align: center;
   }
