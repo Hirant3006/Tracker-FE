@@ -10,6 +10,8 @@ export const _types = {
         INSERT_USER: 'insertUser',
         EDIT_USER: 'editUser',
         DELETE_USER: 'deleteUser',
+        ACTIVE_USER: 'activeUser',
+        DEACTIVE_USER: 'deactiveUser',
     },
     mutations: {
     }
