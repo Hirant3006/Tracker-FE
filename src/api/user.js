@@ -35,7 +35,7 @@ export default {
 		});
 	},
 	delete_user({ id }) {
-		console.log('delete api')
+		console.log("delete api");
 		return axios({
 			url: "/user/" + id,
 			method: "DELETE",
@@ -46,6 +46,19 @@ export default {
 			url: "/user",
 			method: "PUT",
 			data,
+		});
+	},
+	active_user({ id }) {
+		console.log("delete api");
+		return axios({
+			url: "/user/" + id + "/activate",
+			method: "PATCH",
+		});
+	},
+	deactive_user({ id }) {
+		return axios({
+			url: "/user/" + id + "/deactive",
+			method: "PATCH",
 		});
 	},
 };

@@ -53,6 +53,45 @@
             <i :class="`far fa-info`"></i>
           </a-popover>
         </template>
+        <template slot="customName" slot-scope="{ itemRow }">
+          <div class="manage-employee__name">
+            <a-popconfirm
+              :title="`Bạn có muốn ${
+                itemRow.record.isActive === false ? 'mở khóa' : 'khóa'
+              } nhân viên này?`"
+              ok-text="Yes"
+              cancel-text="No"
+              @confirm="
+                onModUser(
+                  itemRow.record.id,
+                  itemRow.record.isActive === false ? 'active' : 'deactive'
+                )
+              "
+            >
+              <a-tooltip placement="bottom">
+                <template v-if="itemRow.record.isActive === true" slot="title"
+                  >Tài khoản đang hoạt động, Nhấn để khóa tài khoản</template
+                >
+                <template v-else slot="title"
+                  >Tài khoản đã bị khóa, nhấn để mở khóa</template
+                >
+                <i
+                  style="cursor: pointer"
+                  class="co-danger"
+                  v-if="itemRow.record.isActive === false"
+                  :class="`far fa-lock`"
+                ></i>
+                <i
+                  style="cursor: pointer"
+                  class="co-success"
+                  v-if="itemRow.record.isActive === true"
+                  :class="`far fa-unlock`"
+                ></i>
+              </a-tooltip>
+            </a-popconfirm>
+            &nbsp;{{ itemRow.text }}
+          </div>
+        </template>
         <template slot="customRole" slot-scope="{ itemRow }">
           <div class="manage-employee__role">
             {{ itemRow.text === "ADMIN" ? "Quản lí" : "Nhân viên" }}
@@ -68,7 +107,7 @@
             </a-tooltip>
 
             <a-popconfirm
-              title="Bạn có muốn xóa giao dịch này?"
+              title="Bạn có muốn xóa nhân viên này?"
               ok-text="Yes"
               cancel-text="No"
               @confirm="onConfirmDelete(itemRow.record.id)"
@@ -111,7 +150,7 @@ export default {
     TableCustom,
     FilterHandler,
   },
-  
+
   data() {
     return {
       locale,
@@ -135,6 +174,9 @@ export default {
           title: "Tên",
           dataIndex: "name",
           width: "30%",
+          scopedSlots: {
+            customRender: "customName",
+          },
         },
         {
           title: "Chức vụ",
@@ -177,8 +219,30 @@ export default {
   methods: {
     ...mapActions({
       deleteUser: "employee/deleteUser",
+      activeUser: "employee/activeUser",
+      deactiveUser: "employee/deactiveUser",
       getUsers: "employee/getUsers",
     }),
+    async onModUser(id, type) {
+      const res =
+        type === "active"
+          ? await this.activeUser({id})
+          : await this.deactiveUser({id});
+      const { header } = res.data;
+      if (header.isSuccessful) {
+        this.data[this.data.findIndex((item) => item.id === id)].isActive =
+          type === "active";
+        this.$notification["success"]({
+          message: `${type === "active" ? "Mở khóa" : "khóa"} nhân viên`,
+          description: `${
+            type === "active" ? "Mở khóa" : "khóa"
+          } nhân viên thành công`,
+          placement: "topRight",
+          top: "80px",
+          duration: 5,
+        });
+      }
+    },
     async onConfirmDelete(id) {
       this.isLoadingDelete = id;
       try {
@@ -278,6 +342,12 @@ export default {
 </script>
 
 <style lang="scss">
+.co-danger {
+  color: $danger-color;
+}
+.co-success {
+  color: $success-color;
+}
 .manage-employee {
   &__title {
     font-weight: 600;

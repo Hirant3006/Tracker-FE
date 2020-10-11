@@ -9,5 +9,6 @@ export default {
     DETAIL_EMPLOYEE: 'Detail Employee', 
     ONBOARDING: 'Onboarding',
     BOOK: 'Book',
+    SETTING: 'Setting',
     CREATE_BOOK: 'Create Book',
 }

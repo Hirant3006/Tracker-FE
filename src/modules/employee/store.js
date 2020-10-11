@@ -27,7 +27,6 @@ const actions = {
 		}
 	},
 	async [_types.actions.DELETE_USER]({ commit }, payload) {
-		console.log('delete')
 		try {
 			const res = await api.delete_user(payload);
 			return res;
@@ -35,8 +34,23 @@ const actions = {
 			throw error;
 		}
 	},
+	async [_types.actions.ACTIVE_USER]({ commit }, payload) {
+		try {
+			const res = await api.active_user(payload);
+			return res;
+		} catch (error) {
+			throw error;
+		}
+	},
+	async [_types.actions.DEACTIVE_USER]({ commit }, payload) {
+		try {
+			const res = await api.deactive_user(payload);
+			return res;
+		} catch (error) {
+			throw error;
+		}
+	},
 	async [_types.actions.INSERT_USER]({ commit }, payload) {
-		console.log('insert')
 		try {
 			const res = await api.insert_user(payload);
 			const { header, data } = res.data;
