@@ -8,4 +8,11 @@ export default {
 			params: data,
 		});
 	},
+	get_statistic_summary(data) {
+		return axios({
+			url: "/statistic/income-expense/summary",
+			method: "get",
+			params: data,
+		});
+	},
 };

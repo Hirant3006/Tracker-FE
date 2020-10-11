@@ -22,11 +22,12 @@ export default {
         tooltips: {
           callbacks: {
             label: (tooltipItem, chart) => {
-              return this.money(tooltipItem.yLabel,{ currency: 'vnd' })
+              console.log(tooltipItem,chart.datasets[0].data[tooltipItem.datasetIndex])
+              return this.money(chart.datasets[0].data[tooltipItem.index],{ currency: 'vnd' })
             },
           },
         },
-      },
+      }, 
     };
   },
   methods: {

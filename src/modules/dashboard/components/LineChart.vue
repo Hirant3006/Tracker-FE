@@ -18,6 +18,10 @@ export default {
     return {
       options: {
         responsive: true,
+        title: {
+          display: true,
+          text: "Biểu đồ thu chi theo thời gian",
+        },
         maintainAspectRatio: false,
         tooltips: {
           callbacks: {
@@ -36,7 +40,7 @@ export default {
                 },
                 ticks: {
                   callback: function (label, index, labels) {
-                    return label+'asdas';
+                    return label + "asdas";
                   },
                 },
               },
