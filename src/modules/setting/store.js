@@ -16,6 +16,22 @@ const actions = {
 			throw error;
 		}
 	},
+	async [_types.actions.CHANGE_INFO]({ commit }, payload) {
+		try {
+			const res = await api.change_info_user(payload);
+			return res;
+		} catch (error) {
+			throw error;
+		}
+	},
+	async [_types.actions.CHANGE_PASSWORD]({ commit }, payload) {
+		try {
+			const res = await api.change_password(payload);
+			return res;
+		} catch (error) {
+			throw error;
+		}
+	},
 };
 
 const mutations = {};

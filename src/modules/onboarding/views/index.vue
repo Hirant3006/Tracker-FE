@@ -8,7 +8,7 @@
             src="@/assets/images/not-found.png"
             alt="not found"
           />
-          <span class="onboarding__title m-b-16">Chưa có sổ nào được tạo</span>
+          <span class="onboarding__title m-b-16">Chưa có sổ nào được tạo hoặc có thể truy cập</span>
           <a-button
             class="onboarding__no-data-button"
             v-if="profile && profile.role === 'ADMIN'"
@@ -18,9 +18,12 @@
             @click="() => (onCreatedNewBook = true)"
             >Tạo sổ</a-button
           >
-          <span class="onboarding__sub-title" v-else
-            >Liên hệ quản lí để biết thêm thông tin</span
-          >
+          <div style="display:flex;flex-direction:column;justify-content:center" v-else>
+            <span class="onboarding__sub-title" 
+              >Liên hệ quản lí để biết thêm thông tin</span
+            >
+            <a-button class="m-t-16" style="align-self: center;"  @click="logout">Đăng xuất</a-button>
+          </div>
         </div>
         <div class="onboarding__create-first-book" v-else>
           <i
@@ -203,6 +206,7 @@ export default {
   },
   methods: {
     ...mapActions({
+      logout: "auth/logout",
       insertBook: "book/insertBook",
       getBooks: "book/getBooks",
       selectBook: "book/setSelectedBook",

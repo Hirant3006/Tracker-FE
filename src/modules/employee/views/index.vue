@@ -233,9 +233,9 @@ export default {
         this.data[this.data.findIndex((item) => item.id === id)].isActive =
           type === "active";
         this.$notification["success"]({
-          message: `${type === "active" ? "Mở khóa" : "khóa"} nhân viên`,
+          message: `${type === "active" ? "Mở khóa" : "Khóa"} nhân viên`,
           description: `${
-            type === "active" ? "Mở khóa" : "khóa"
+            type === "active" ? "Mở khóa" : "Khóa"
           } nhân viên thành công`,
           placement: "topRight",
           top: "80px",

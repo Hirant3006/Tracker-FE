@@ -218,6 +218,9 @@ export default {
 .detail-emp {
   width: 600px;
   margin: 0 auto;
+  &__error-text {
+    color: $danger-color;
+  }
   .ant-form-item {
     margin-bottom: 8px !important;
   }
