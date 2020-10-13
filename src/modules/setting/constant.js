@@ -6,6 +6,8 @@ export const _types = {
     },
     actions: {
         GET_STATISTIC: 'getStatistic',
+        CHANGE_INFO: 'changeInfo',
+        CHANGE_PASSWORD: 'changePassword',
     },
     mutations: {
     }

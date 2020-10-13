@@ -125,7 +125,7 @@
               <a-menu-item key="0" @click="logout">
                 <i class="far fa-sign-out-alt"></i>
                 &nbsp;
-                <span>Log out</span>
+                <span>Đăng xuất</span>
               </a-menu-item>
             </a-menu>
           </a-dropdown>

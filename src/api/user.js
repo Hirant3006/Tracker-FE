@@ -49,7 +49,6 @@ export default {
 		});
 	},
 	active_user({ id }) {
-		console.log("delete api");
 		return axios({
 			url: "/user/" + id + "/activate",
 			method: "PATCH",
@@ -57,8 +56,22 @@ export default {
 	},
 	deactive_user({ id }) {
 		return axios({
-			url: "/user/" + id + "/deactive",
+			url: "/user/" + id + "/deactivate",
 			method: "PATCH",
+		});
+	},
+	change_info_user(data) {
+		return axios({
+			url: "/profile",
+			method: "PUT",
+			data,
+		});
+	},
+	change_password(data) {
+		return axios({
+			url: "/profile/password",
+			method: "PATCH",
+			data,
 		});
 	},
 };

@@ -4,7 +4,7 @@
       <h3>Cài đặt</h3>
       <div class="m-t-10">
         <a-tabs :activeKey="activeTab" @tabClick="onChangeTab">
-          <a-tab-pane key="detail" tab="Tài khoản"></a-tab-pane>
+          <a-tab-pane key="detail" tab="Tài khoản"><account-tab /> </a-tab-pane>
           <a-tab-pane key="activity" tab="Hoạt động"></a-tab-pane>
         </a-tabs>
       </div>
@@ -16,8 +16,12 @@
 import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 import { types as typesAuth } from "@/modules/auth/constant";
 import { types as typesBook } from "@/modules/book/constant";
+import AccountTab from "../components/accountTab";
 export default {
   name: "Setting",
+  components: {
+    AccountTab,
+  },
   data() {
     return {
       activeTab: "detail",
