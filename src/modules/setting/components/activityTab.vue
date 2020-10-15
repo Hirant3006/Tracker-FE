@@ -1,68 +1,64 @@
 <template>
-  <div class="account-tab">
-    <a-card>
-      <a-form class="account-tab__form" @submit.stop.prevent="onEditProfile()">
-        <a-form-item label="Tên">
-          <a-input v-model="form.name" />
-        </a-form-item>
-        <div class="account-tab__error-text" v-if="isError">
-          <span v-if="!form.name">*Tên tài khoản không được bỏ trống</span>
-        </div>
-        <a-form-item label="Email">
-          <a-input v-model="form.email" />
-        </a-form-item>
-        <div class="account-tab__error-text" v-if="isError">
-          <span v-if="!form.email">*Email không được bỏ trống</span>
-          <span v-else-if="!$v.form.email.email"
-            >*Định dạng email không hợp lệ</span
-          >
-        </div>
-        <div class="account-tab__changepass">
-          <a-button
-            class="m-b-25 m-t-16 account-tab__changepass-btn"
-            type="link"
-            @click="() => (isVisibleModal = true)"
-            block
-            >Đổi mật khẩu</a-button
-          >
-        </div>
-        <div v-if="isModify" class="account-tab__button-group">
-          <a-button
-            class="m-b-25 m-t-16"
-            type="primary"
-            block
-            html-type="submit"
-            :loading="isLoading"
-            >Lưu</a-button
-          >
-          <a-button
-            class="m-b-25 m-t-16"
-            type="default"
-            block
-            @click="onCancelModify"
-            >Bỏ qua</a-button
-          >
-        </div>
-      </a-form>
-    </a-card>
+  <div class="activity-tab">
+    <a-form class="activity-tab__form" @submit.stop.prevent="onEditProfile()">
+      <div class="activity-tab__form-part">
+        <h3>Ứng dụng</h3>
+        <a-card>
+          <a-form-item label="Hoạt động nhân viên">
+            <a-input v-model="form.name" />
+          </a-form-item>
+          <div class="activity-tab__error-text" v-if="isError">
+            <span v-if="!form.name">*Tên tài khoản không được bỏ trống</span>
+          </div>
+        </a-card>
+      </div>
+      <div class="activity-tab__form-part">
+        <h3>Email</h3>
+        <a-card>
+          <a-form-item label="Tên">
+            <a-input v-model="form.name" />
+          </a-form-item>
+          <div class="activity-tab__error-text" v-if="isError">
+            <span v-if="!form.name">*Tên tài khoản không được bỏ trống</span>
+          </div>
+        </a-card>
+      </div>
+      <div v-if="isModify" class="activity-tab__button-group">
+        <a-button
+          class="m-b-25 m-t-16"
+          type="primary"
+          block
+          html-type="submit"
+          :loading="isLoading"
+          >Lưu</a-button
+        >
+        <a-button
+          class="m-b-25 m-t-16"
+          type="default"
+          block
+          @click="onCancelModify"
+          >Bỏ qua</a-button
+        >
+      </div>
+    </a-form>
     <a-modal v-model="isVisibleModal" title="Đổi mật khẩu" :footer="null">
-      <a-form class="account-tab__form" @submit.stop.prevent="onEditPassword()">
+      <a-form class="activity-tab__form" @submit.stop.prevent="onEditPassword()">
         <a-form-item label="Nhập mật khẩu cũ">
           <a-input type="password" v-model="form_pass.oldPassword" />
         </a-form-item>
-        <div class="account-tab__error-text" v-if="isErrorPassword">
+        <div class="activity-tab__error-text" v-if="isErrorPassword">
           <span v-if="!form_pass.oldPassword">*Không được bỏ trống</span>
         </div>
         <a-form-item label="Nhập mật khẩu mới">
           <a-input type="password" v-model="form_pass.newPassword" />
         </a-form-item>
-        <div class="account-tab__error-text" v-if="isErrorPassword">
+        <div class="activity-tab__error-text" v-if="isErrorPassword">
           <span v-if="!form_pass.newPassword">*Không được bỏ trống</span>
         </div>
-        <div class="account-tab__error-text" v-if="isErrorPassword">
+        <div class="activity-tab__error-text" v-if="isErrorPassword">
           <span>*Mật khẩu không đúng</span>
         </div>
-        <div class="account-tab__button-group">
+        <div class="activity-tab__button-group">
           <a-button
             class="m-b-25 m-t-16"
             type="primary"
@@ -89,7 +85,7 @@ import { required, email } from "vuelidate/lib/validators";
 import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 import { types as typesAuth } from "@/modules/auth/constant";
 export default {
-  name: "AccountTab",
+  name: "ActivityTab",
   validations: {
     form: {
       email: {
@@ -255,9 +251,19 @@ export default {
 </script>
 
 <style lang="scss">
-.account-tab {
+.activity-tab {
   &__form {
     padding: 16px 24px;
+    width:700px ;
+    margin: 0 auto;
+    &-part {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 24px;
+        h3 {
+            flex: 1 1 20%;
+        }
+    }
   }
   &__error-text {
     color: $danger-color;
