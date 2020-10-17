@@ -10,5 +10,6 @@ export default {
     ONBOARDING: 'Onboarding',
     BOOK: 'Book',
     SETTING: 'Setting',
+    ACTIVITY: 'Activity',
     CREATE_BOOK: 'Create Book',
 }
