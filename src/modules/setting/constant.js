@@ -8,6 +8,8 @@ export const _types = {
         GET_STATISTIC: 'getStatistic',
         CHANGE_INFO: 'changeInfo',
         CHANGE_PASSWORD: 'changePassword',
+        GET_NOTIFICATION_SETTING: 'getNotificationSetting',
+        UPDATE_NOTIFICATION_SETTING: 'updateNotificationSetting'
     },
     mutations: {
     }

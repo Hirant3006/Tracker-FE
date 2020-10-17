@@ -1,22 +1,50 @@
 <template>
   <div class="activity-tab">
-    <a-form class="activity-tab__form" @submit.stop.prevent="onEditProfile()">
-      <div class="activity-tab__form-part">
-        <h3>Ứng dụng</h3>
+    <a-form
+      v-if="dataEmail !== null"
+      class="activity-tab__form"
+      @submit.stop.prevent="onEditNotiSetting()"
+    >
+      <!-- <div class="activity-tab__form-part">
+        <h3>Ứng dụng:</h3>
         <a-card>
-          <a-form-item label="Hoạt động nhân viên">
-            <a-input v-model="form.name" />
+          <a-form-item
+            v-for="(part, index) in dataList"
+            :key="index"
+            :label="part.name"
+          >
+            <a-checkbox
+              width="300px"
+              v-for="(item, index) in part.data"
+              :defaultChecked="handleDefaultValue(item.type)"
+              @change="onChangeValue(item.type)"
+              :key="index"
+            >
+              {{ item.name }}
+            </a-checkbox>
           </a-form-item>
           <div class="activity-tab__error-text" v-if="isError">
             <span v-if="!form.name">*Tên tài khoản không được bỏ trống</span>
           </div>
         </a-card>
-      </div>
+      </div> -->
       <div class="activity-tab__form-part">
-        <h3>Email</h3>
+        <h3>Email:</h3>
         <a-card>
-          <a-form-item label="Tên">
-            <a-input v-model="form.name" />
+          <a-form-item
+            v-for="(part, index) in dataList"
+            :key="index"
+            :label="part.name"
+          >
+            <a-checkbox
+              width="300px"
+              v-for="(item, index) in part.data"
+              :defaultChecked="handleDefaultValue(item.type, 'Email')"
+              @change="onChangeValue(item.type, 'Email')"
+              :key="index"
+            >
+              {{ item.name }}
+            </a-checkbox>
           </a-form-item>
           <div class="activity-tab__error-text" v-if="isError">
             <span v-if="!form.name">*Tên tài khoản không được bỏ trống</span>
@@ -41,42 +69,6 @@
         >
       </div>
     </a-form>
-    <a-modal v-model="isVisibleModal" title="Đổi mật khẩu" :footer="null">
-      <a-form class="activity-tab__form" @submit.stop.prevent="onEditPassword()">
-        <a-form-item label="Nhập mật khẩu cũ">
-          <a-input type="password" v-model="form_pass.oldPassword" />
-        </a-form-item>
-        <div class="activity-tab__error-text" v-if="isErrorPassword">
-          <span v-if="!form_pass.oldPassword">*Không được bỏ trống</span>
-        </div>
-        <a-form-item label="Nhập mật khẩu mới">
-          <a-input type="password" v-model="form_pass.newPassword" />
-        </a-form-item>
-        <div class="activity-tab__error-text" v-if="isErrorPassword">
-          <span v-if="!form_pass.newPassword">*Không được bỏ trống</span>
-        </div>
-        <div class="activity-tab__error-text" v-if="isErrorPassword">
-          <span>*Mật khẩu không đúng</span>
-        </div>
-        <div class="activity-tab__button-group">
-          <a-button
-            class="m-b-25 m-t-16"
-            type="primary"
-            block
-            html-type="submit"
-            :loading="isLoadingPassword"
-            >Đổi mật khẩu</a-button
-          >
-          <a-button
-            class="m-b-25 m-t-16"
-            type="default"
-            block
-            @click="onCancelModal"
-            >Bỏ qua</a-button
-          >
-        </div>
-      </a-form>
-    </a-modal>
   </div>
 </template>
 
@@ -84,6 +76,63 @@
 import { required, email } from "vuelidate/lib/validators";
 import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 import { types as typesAuth } from "@/modules/auth/constant";
+const dataList = [
+  {
+    name: "Sổ",
+    data: [
+      {
+        name: "Thêm",
+        type: "INSERT_BOOK",
+      },
+      {
+        name: "Sửa",
+        type: "UPDATE_BOOK",
+      },
+      {
+        name: "Xóa",
+        type: "DELETE_BOOK",
+      },
+      {
+        name: "Sổ sắp bị xóa",
+        type: "BOOK_WILL_PERMANENTLY_DELETED",
+      },
+    ],
+  },
+  {
+    name: "Giao dịch",
+    data: [
+      {
+        name: "Thêm",
+        type: "INSERT_TRANSACTION",
+      },
+      {
+        name: "Sửa",
+        type: "UPDATE_TRANSACTION",
+      },
+      {
+        name: "Xóa",
+        type: "DELETE_TRANSACTION",
+      },
+    ],
+  },
+  {
+    name: "Nhân viên",
+    data: [
+      {
+        name: "Đăng nhập",
+        type: "SIGN_IN",
+      },
+      {
+        name: "Xóa",
+        type: "DELETE_USER",
+      },
+      {
+        name: "Khóa nhân viên",
+        type: "DEACTIVATE_USER",
+      },
+    ],
+  },
+];
 export default {
   name: "ActivityTab",
   validations: {
@@ -96,6 +145,10 @@ export default {
   data() {
     return {
       isModify: false,
+      dataList,
+      dataEmail: null,
+      defaultDataEmail: null,
+      dataInapp: null,
       form: {
         email: "",
         name: "",
@@ -113,113 +166,87 @@ export default {
     };
   },
   created() {
-    const { name, email } = this.profile;
-    this.form = { name, email };
-    this.defaultData = this.$clone(this.form);
+    // const { name, email } = this.profile;
+    // this.form = { name, email };
+    // this.defaultData = this.$clone(this.form);
+    this.onGetNotificationSetting();
   },
   mounted() {
     const { changePassword, changeInfo } = this;
-    console.log({ changeInfo, changePassword });
   },
   methods: {
     ...mapActions({
       changeInfo: "setting/changeInfo",
       changePassword: "setting/changePassword",
       getUserProfile: "auth/getUserProfile",
+      getNotificationSetting: "setting/getNotificationSetting",
+      updateNotificationSetting: "setting/updateNotificationSetting",
     }),
-    async onEditPassword() {
-      this.isLoadingPassword = true;
-      const { oldPassword, newPassword } = this.form_pass;
-      if (!oldPassword || !newPassword) {
-        this.isError = true;
-        this.$notification["error"]({
-          message: `Lỗi sửa thông tin`,
-          description: "Có lỗi xảy ra trong quá trình sửa thông tin",
-          placement: "bottomRight",
-          placement: "topRight",
-          top: "80px",
-          duration: 5,
-        });
-      } else {
-        const res = await this.changePassword({
-          oldPassword,
-          newPassword,
-        });
-        const { header, data } = res.data;
-        this.isLoadingPassword = false;
-        if (header.isSuccessful) {
-          this.$notification["success"]({
-            message: `Đổi mật khẩu thành công`,
-            description: `Mật khẩu mới đã được lưu`,
-            placement: "bottomRight",
-            placement: "topRight",
-            top: "80px",
-            duration: 5,
-          });
-          this.form_pass = {
-            oldPassword: "",
-            newPassword: "",
-          };
-          this.isVisibleModal = false;
-          // this.$router.push({ name: this.$routerName.SETTING });
-        } else {
-          this.$notification["error"]({
-            message: `Lỗi sửa thông tin`,
-            description: "Có lỗi xảy ra trong quá trình sửa thông tin",
-            placement: "bottomRight",
-            top: "80px",
-            duration: 5,
-          });
-          this.isErrorPassword = true;
-          this.isLoadingPassword = false;
-        }
-      }
-      this.isLoadingPassword = false;
+    onChangeValue(name, type) {
+      const index = this[`data${type}`].findIndex((item) => item.name === name);
+      console.log("hello ", this[`data${type}`][index], index);
+      this[`data${type}`][index].isOn = !this[`data${type}`][index].isOn;
     },
-    async onEditProfile() {
+    handleDefaultValue(name, type) {
+      return this[`data${type}`].find((item) => item.name === name).isOn;
+    },
+    async onGetNotificationSetting() {
       this.isLoading = true;
-      const { name, email } = this.form;
-      if (!name || !email) {
-        this.isError = true;
-        this.$notification["error"]({
-          message: `Lỗi sửa thông tin`,
-          description: "Có lỗi xảy ra trong quá trình sửa thông tin",
-          placement: "bottomRight",
-          placement: "topRight",
-          top: "80px",
-          duration: 5,
-        });
-      } else {
-        const res = await this.changeInfo({
-          name,
-          email,
-        });
+      try {
+        const res = await this.getNotificationSetting();
         const { header, data } = res.data;
         this.isLoading = false;
         if (header.isSuccessful) {
-          this.$notification["success"]({
-            message: `Sửa thông tin thành công`,
-            description: `Thông tin mới đã được lưu lại`,
-            placement: "bottomRight",
+          this.dataEmail = data;
+          this.defaultDataEmail = this.$clone(data);
+          this.isModify = false;
+        } else {
+          this.$notification["error"]({
+            message: `Lỗi lấy thông tin`,
+            description: "Có lỗi xảy ra trong quá trình lấy thông tin",
             placement: "topRight",
             top: "80px",
             duration: 5,
           });
-          this.getUserProfile();
-          this.defaultData = this.$clone(this.form);
-          this.isModify = false;
-          // this.$router.push({ name: this.$routerName.SETTING });
-        } else {
-          this.$notification["error"]({
-            message: `Lỗi sửa thông tin`,
-            description: "Có lỗi xảy ra trong quá trình sửa thông tin",
-            placement: "bottomRight",
-            top: "80px",
-            duration: 5,
-          });
-          this.isError = true;
           this.isLoading = false;
         }
+      } catch (e) {
+        this.$notification["error"]({
+          message: `Lỗi lấy thông tin`,
+          description: "Có lỗi xảy ra trong quá trình lấy thông tin",
+          placement: "topRight",
+          top: "80px",
+          duration: 5,
+        });
+      }
+    },
+    async onEditNotiSetting() {
+      this.isLoading = true;
+      const res = await this.updateNotificationSetting(this.dataEmail);
+      const { header, data } = res.data;
+      this.isLoading = false;
+      if (header.isSuccessful) {
+        this.$notification["success"]({
+          message: `Sửa thông tin thành công`,
+          description: `Thông tin mới đã được lưu lại`,
+          placement: "bottomRight",
+          placement: "topRight",
+          top: "80px",
+          duration: 5,
+        });
+        this.defaultDataEmail = this.$clone(this.dataEmail);
+        this.isModify = false;
+        // this.$router.push({ name: this.$routerName.SETTING });
+      } else {
+        this.$notification["error"]({
+          message: `Lỗi cập nhật thông tin`,
+          description: "Có lỗi xảy ra trong quá trình cập nhật thông tin",
+          placement: "bottomRight",
+          top: "80px",
+          duration: 5,
+        });
+        this.isError = true;
+        this.isLoading = false;
       }
       this.isLoading = false;
     },
@@ -238,11 +265,12 @@ export default {
     }),
   },
   watch: {
-    form: {
+    dataEmail: {
       deep: true,
       handler(val) {
+        console.log({ val });
         this.isModify =
-          JSON.stringify(this.defaultData) !== JSON.stringify(val);
+          JSON.stringify(this.defaultDataEmail) !== JSON.stringify(val);
         this.$emit("modify", this.isModify);
       },
     },
@@ -252,17 +280,20 @@ export default {
 
 <style lang="scss">
 .activity-tab {
+  .ant-card-body {
+    padding-bottom: 0px;
+  }
   &__form {
     padding: 16px 24px;
-    width:700px ;
+    width: 700px;
     margin: 0 auto;
     &-part {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 24px;
-        h3 {
-            flex: 1 1 20%;
-        }
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px;
+      h3 {
+        flex: 1 1 20%;
+      }
     }
   }
   &__error-text {
