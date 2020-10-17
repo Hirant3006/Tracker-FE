@@ -92,6 +92,10 @@ const dataList = [
         name: "Xóa",
         type: "DELETE_BOOK",
       },
+      {
+        name: "Sổ sắp bị xóa",
+        type: "BOOK_WILL_PERMANENTLY_DELETED",
+      },
     ],
   },
   {
@@ -116,7 +120,15 @@ const dataList = [
     data: [
       {
         name: "Đăng nhập",
-        type: "LOGIN",
+        type: "SIGN_IN",
+      },
+      {
+        name: "Xóa",
+        type: "DELETE_USER",
+      },
+      {
+        name: "Khóa nhân viên",
+        type: "DEACTIVATE_USER",
       },
     ],
   },
