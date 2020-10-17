@@ -32,6 +32,22 @@ const actions = {
 			throw error;
 		}
 	},
+	async [_types.actions.GET_NOTIFICATION_SETTING]({ commit }, payload) {
+		try {
+			const res = await api.get_notification_setting();
+			return res;
+		} catch (error) {
+			throw error;
+		}
+	},
+	async [_types.actions.UPDATE_NOTIFICATION_SETTING]({ commit }, payload) {
+		try {
+			const res = await api.update_notification_setting(payload);
+			return res;
+		} catch (error) {
+			throw error;
+		}
+	},
 };
 
 const mutations = {};
