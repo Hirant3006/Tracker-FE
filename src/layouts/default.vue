@@ -177,6 +177,11 @@ export default {
           icon: "fas fa-users",
         },
         {
+          title: "Hoạt động",
+          path: "/activity",
+          icon: "fas fa-exclamation-circle",
+        },
+        {
           title: "Cài đặt",
           path: "/setting",
           icon: "fas fa-cog",

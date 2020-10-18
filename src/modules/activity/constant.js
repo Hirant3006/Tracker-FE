@@ -5,11 +5,8 @@ export const _types = {
     getters: {
     },
     actions: {
-        GET_STATISTIC: 'getStatistic',
-        CHANGE_INFO: 'changeInfo',
-        CHANGE_PASSWORD: 'changePassword',
-        GET_NOTIFICATION_SETTING: 'getNotificationSetting',
-        UPDATE_NOTIFICATION_SETTING: 'updateNotificationSetting'
+        GET_CHECK_NEW_LOG: 'getCheckNewLog',
+        GET_LOG: 'getLog',
     },
     mutations: {
     }

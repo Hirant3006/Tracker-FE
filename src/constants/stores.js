@@ -7,4 +7,5 @@ export const storeKeyNameSpace = {
     EMPLOYEE: 'employee',
     ONBOARDING: 'onboarding',
     SETTING: 'setting',
+    ACTIVITY: 'activity',
 }
