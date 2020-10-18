@@ -230,7 +230,9 @@ export default {
     };
   },
   mounted() {
-    this.onGetTransactions();
+    window.setTimeout(() => {
+      this.onGetTransactions();
+    }, 5000);
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => console.log("hello"));

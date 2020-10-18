@@ -22,14 +22,14 @@
                 <span class="m-l-10">{{ item.title }}</span>
               </div>
             </template>
-            <template v-else>
+            <div @click="onClickActivity" v-else>
               <div class="m-l-4" style="margin-left: 4px">
-                <a-badge dot>
+                <a-badge :dot="isNewLog">
                   <i :class="item.icon"></i>
                 </a-badge>
                 <span class="m-l-10">{{ item.title }}</span>
               </div>
-            </template>
+            </div>
           </router-link>
         </a-menu-item>
       </a-menu>
@@ -38,6 +38,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
+
 export default {
   props: {
     data: {
@@ -45,12 +47,38 @@ export default {
       default: () => [],
     },
   },
+  mounted() {
+    window.setInterval(() => {
+      this.getCheckNewLog();
+    }, 5000);
+  },
   data() {
     return {
       selectedKeys: [],
       collapsed: false,
+      isHaveActiviy: false,
       defaultSelectedKeys: [this.$route.name],
     };
+  },
+  methods: {
+    ...mapActions({
+      getCheckNewLog: "activity/getCheckNewLog",
+    }),
+    onClickActivity() {
+      this.isHaveActiviy= false
+    },
+  },
+  computed: {
+    isNewLog() {
+      return this.$store.state.activity.isNewLog;
+    },
+  },
+  watch: {
+    isNewLog() {
+      if (isNewLog) {
+        this.isHaveActiviy = true;
+      }
+    },
   },
 };
 </script>

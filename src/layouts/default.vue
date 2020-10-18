@@ -178,7 +178,7 @@ export default {
         },
         {
           title: "Hoạt động",
-          path: "/activity  ",
+          path: "/activity",
           icon: "fas fa-exclamation-circle",
         },
         {
