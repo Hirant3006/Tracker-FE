@@ -6,7 +6,11 @@
         <div class="activity__loading" v-if="isLoading">
           <a-spin size="large"></a-spin>
         </div>
-        <template v-else> </template>
+        <template v-else>
+          <div v-for="(item,index) in data" :key="index">
+            <transaction-card v-if="item.type==='BOOK_TRANSACTION'"  :data="item" ></transaction-card>
+          </div>
+        </template>
       </div>
     </div>
   </div>
@@ -16,9 +20,12 @@
 import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 import { types as typesAuth } from "@/modules/auth/constant";
 import { types as typesBook } from "@/modules/book/constant";
+import TransactionCard from '../components/transactionCard'
 export default {
   name: "Activity",
-  components: {},
+  components: {
+    TransactionCard
+  },
   data() {
     return {
       isLoading: false,
