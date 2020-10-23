@@ -6,8 +6,10 @@
         <div class="activity__loading" v-if="isLoading">
           <a-spin size="large"></a-spin>
         </div>
-            <component v-for="(item,index) in data" :is="checkComp(item.type)" :key="index+'user'" :data='item'/>
-            
+        <template v-for="(item,index) in data" >
+            {{checkComp(item.type)}} {{index}}
+            <component :is="checkComp(item.type)" :key="index" :data='item'/>
+        </template>
             <!-- <user-card :key="index+'user'" v-if="item.type==='USER'" />
             <user-card :key="index+'book'" v-if="item.type==='BOOK'" :data='item'/> -->
       </div>

@@ -169,7 +169,7 @@ export default {
       if (!bookId || !clientName) {
         this.isError = true;
         this.$notification["error"]({
-          message: `Lỗi sửa giao dịch`,
+          message: `Sửa giao dịch`,
           description: "Có lỗi xảy ra trong quá trình sửa",
           placement: "bottomRight",
         });
@@ -180,7 +180,7 @@ export default {
       ) {
         this.isError = true;
         this.$notification["error"]({
-          message: `Lỗi sửa giao dịch`,
+          message: `Sửa giao dịch`,
           description: "Có lỗi xảy ra trong quá trình sửa",
           placement: "bottomRight",
         });
@@ -200,7 +200,7 @@ export default {
           const newDataBook = this.books.find((item) => item.id === bookId);
           this.selectBook(newDataBook);
           this.$notification["success"]({
-            message: `sửa giao dịch thành công`,
+            message: `Sửa giao dịch thành công`,
             description: `Đã sửa giao dịch có mã GD là ${this.$route.params.id}`,
             placement: "topRight",
             top: "80px",
@@ -208,8 +208,9 @@ export default {
           });
           this.$router.push({ name: this.$routerName.TRANSACTIONS });
         } else {
+          console.log('lỗi nè')
           this.$notification["error"]({
-            message: `sửa giao dịch`,
+            message: `Sửa giao dịch`,
             description: "Có lỗi xảy ra trong quá trình sửa",
             placement: "topRight",
             top: "80px",
