@@ -86,9 +86,9 @@
 </template>
 
 <script>
+import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 import { types as typesAuth } from "@/modules/auth/constant";
 import { types as typesBook } from "@/modules/book/constant";
-import { mapActions, mapGetters } from "vuex";
 import dummyData from "./dummyActivityData";
 export default {
   name: "ActivityTab",

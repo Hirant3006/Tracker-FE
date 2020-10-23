@@ -23,11 +23,13 @@ import { types as typesAuth } from "@/modules/auth/constant";
 import { types as typesBook } from "@/modules/book/constant";
 import UserCard from '../components/UserCard'
 import BookCard from '../components/BookCard'
+import TransactionCard from '../components/transactionCard'
 export default {
   name: "Activity",
   components: {
     UserCard,
-    BookCard
+    BookCard,
+    TransactionCard
   },
   data() {
     return {
@@ -54,6 +56,7 @@ export default {
     checkComp(type){
       if (type==='USER') return 'user-card'
       else if (type==='BOOK') return 'book-card'
+      else if (type==='BOOK_TRANSACTION') return 'transaction-card'
       else null
     },
     checkNameBookByID(id) {
