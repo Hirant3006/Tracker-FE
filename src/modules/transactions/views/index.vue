@@ -116,7 +116,7 @@
                 <a-button
                   :disabled="
                     itemRow.record.isDelete == true &&
-                    isLoadingDelete === itemRow.record.id
+                      isLoadingDelete === itemRow.record.id
                   "
                   :loading="isLoadingDelete === itemRow.record.id"
                   type="danger"
@@ -230,12 +230,10 @@ export default {
     };
   },
   mounted() {
-    window.setTimeout(() => {
-      this.onGetTransactions();
-    }, 5000);
+    this.onGetTransactions();
   },
   beforeRouteEnter(to, from, next) {
-    next((vm) => console.log("hello"));
+    next(vm => console.log("hello"));
   },
   methods: {
     ...mapActions({
@@ -303,7 +301,7 @@ export default {
     },
     onClearAllFilter() {
       ["status", "clientName", "type", "id", "amountStart", "amountEnd"].map(
-        (item) => (this.form[item] = "")
+        item => (this.form[item] = "")
       );
     },
     onLoadMore() {

@@ -4,7 +4,7 @@ import auth from "@/middlewares/auth";
 
 export default [
 	{
-		path: "/",
+		path: "/transaction",
 		component: () =>
 		import(/* webpackChunkName: "install-app" */ "./views/layout.vue"),
 		children: [

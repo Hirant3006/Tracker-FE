@@ -158,12 +158,12 @@ export default {
       columnData: [
         {
           title: "Trang chủ",
-          path: this.$routerName.DASHBOARD,
+          path: "/",
           icon: "fas fa-bell",
         },
         {
           title: "Giao dịch",
-          path: "/",
+          path: "/transaction",
           icon: "fas fa-cash-register",
         },
         {

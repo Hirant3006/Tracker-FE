@@ -8,58 +8,30 @@
             `user-card__icon--${data.actionType.toLowerCase()}`,
           ]"
         >
-          <i :class="`far fa-user-lock`" v-if="data.type='DEACTIVE'"></i>
-          <i :class="`far fa-user-unlock`" v-if="data.type='ACTIVE'"></i>
+          <i :class="`far fa-user-lock`" v-if="data.actionType='SIGN_IN'"></i>
+          <i :class="`far fa-user-lock`" v-else-if="data.actionType='DEACTIVE'"></i>
+          <i :class="`far fa-user-unlock`" v-else-if="data.actionType='ACTIVE'"></i>
         </div>
         <div class="user-card__info">
-          test
-          <!-- <span>
+          <span>
             Nhân viên
-            <b>{{record.data.regNm}}</b> (ID:{{record.data.regUserId}}) đã
-            <span v-if="record.actionType==='INSERT'">
-              <b>tạo</b> giao dịch
+            <b>{{data.name}}</b> (ID:{{data.id}}) đã
+            <span v-if="data.actionType==='SIGN_IN'">
+              <b>đăng nhập</b> vào hệ thống
             </span>
-            <span v-if="record.actionType==='DELETE'">
-              <b>xóa</b> giao dịch
+            <span v-if="data.actionType==='DEACTIVE'">
+              bị <b>khóa</b> tài khoản
             </span>
-            <span v-if="record.actionType==='UPDATE'">
-              <b>sửa</b> giao dịch
+            <span v-if="data.actionType==='ACTIVE'">
+              được <b>mở khóa</b> tài khoản
             </span>
           </span>
           <span>
             Thời gian:
-            <b>{{record.regDt}}</b>
-          </span> -->
+            <b>{{data.regDt}}</b>
+          </span>
         </div>
       </div>
-      <div class="user-card__extra-info">
-        <span>Nội dung thay đổi:</span>
-      </div>
-      <!-- <div v-if="record.actionType==='INSERT'" class="user-card__extra-info">
-        <span>Nội dung:</span>
-        <template v-for="(dataType,index) in dataTypeList">
-          <div :key="'qwdwq'+index">
-            <span>
-              -
-              <span>{{dataType.name}}: &nbsp;</span>
-            </span>
-            <span v-if="dataType.type==='amount'">
-              {{
-              record.data[dataType.type] | money({ currency: 'vnd' })
-              }}
-            </span>
-            <span v-else-if="dataType.type==='bookId'">
-              {{
-              checkNameBookByID(record.data[dataType.type])
-              }}
-            </span>
-            <span
-              v-else-if="dataType.type==='type'"
-            >{{record.data[dataType.type]==='INCOME' ? 'Thu' : 'Chi'}}</span>
-            <span v-else>{{record.data[dataType.type]}}</span>
-          </div>
-        </template>
-      </div> -->
     </a-card>
   </div>
 </template>
