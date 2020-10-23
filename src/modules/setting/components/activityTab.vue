@@ -4,6 +4,7 @@
       v-if="data !== null"
       class="activity-tab__form"
       @submit.stop.prevent="onEditNotiSetting()"
+      :key="compKey"
     >
       <div class="activity-tab__form-part">
         <h3>Ứng dụng:</h3>
@@ -160,6 +161,7 @@ export default {
       isLoadingPassword: false,
       isError: false,
       isErrorPassword: false,
+			compKey: 0
     };
   },
   created() {
@@ -252,7 +254,7 @@ export default {
       this.isVisibleModal = false;
     },
     onCancelModify() {
-      this.form = this.$clone(this.defaultData);
+      this.data = this.$clone(this.defaultData);
       this.compKey += 1;
     },
   },
