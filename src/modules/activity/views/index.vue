@@ -6,11 +6,11 @@
         <div class="activity__loading" v-if="isLoading">
           <a-spin size="large"></a-spin>
         </div>
-        <template v-else>
-          <div v-for="(item,index) in data" :key="index">
-            <transaction-card v-if="item.type==='BOOK_TRANSACTION'"  :data="item" ></transaction-card>
-          </div>
+        <template v-for="(item,index) in data" >
+            <component :is="checkComp(item.type)" :key="index" :data='item'/>
         </template>
+            <!-- <user-card :key="index+'user'" v-if="item.type==='USER'" />
+            <user-card :key="index+'book'" v-if="item.type==='BOOK'" :data='item'/> -->
       </div>
     </div>
   </div>
@@ -20,10 +20,14 @@
 import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 import { types as typesAuth } from "@/modules/auth/constant";
 import { types as typesBook } from "@/modules/book/constant";
-import TransactionCard from '../components/transactionCard'
+import UserCard from '../components/UserCard'
+import BookCard from '../components/BookCard'
+import TransactionCard from '../components/TransactionCard'
 export default {
   name: "Activity",
   components: {
+    UserCard,
+    BookCard,
     TransactionCard
   },
   data() {
@@ -48,6 +52,12 @@ export default {
     ...mapActions({
       getLog: "activity/getLog",
     }),
+    checkComp(type){
+      if (type==='USER') return 'user-card'
+      else if (type==='BOOK') return 'book-card'
+      else if (type==='BOOK_TRANSACTION') return 'transaction-card'
+      else null
+    },
     checkNameBookByID(id) {
       return this.books.find((item) => item.id == id).name;
     },

@@ -24,7 +24,7 @@
             </template>
             <div @click="onClickActivity" v-else>
               <div class="m-l-4" style="margin-left: 4px">
-                <a-badge :dot="isNewLog">
+                <a-badge :dot="isHaveActiviy">
                   <i :class="item.icon"></i>
                 </a-badge>
                 <span class="m-l-10">{{ item.title }}</span>
@@ -75,7 +75,7 @@ export default {
   },
   watch: {
     isNewLog() {
-      if (isNewLog) {
+      if (this.isNewLog && !this.isHaveActiviy) {
         this.isHaveActiviy = true;
       }
     },
