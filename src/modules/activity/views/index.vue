@@ -7,7 +7,6 @@
           <a-spin size="large"></a-spin>
         </div>
         <template v-for="(item,index) in data" >
-            {{checkComp(item.type)}} {{index}}
             <component :is="checkComp(item.type)" :key="index" :data='item'/>
         </template>
             <!-- <user-card :key="index+'user'" v-if="item.type==='USER'" />
@@ -23,7 +22,7 @@ import { types as typesAuth } from "@/modules/auth/constant";
 import { types as typesBook } from "@/modules/book/constant";
 import UserCard from '../components/UserCard'
 import BookCard from '../components/BookCard'
-import TransactionCard from '../components/transactionCard'
+import TransactionCard from '../components/TransactionCard'
 export default {
   name: "Activity",
   components: {

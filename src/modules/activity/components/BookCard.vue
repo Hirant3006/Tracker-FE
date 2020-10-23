@@ -109,7 +109,7 @@ export default {
 
   &__icon {
     text-align: center;
-    margin-right: 40px;
+    margin:0 20px;
     &--update {
       color: $warning-color;
     }

@@ -1,11 +1,11 @@
 <template>
   <div class="activity-tab">
     <a-form
-      v-if="dataEmail !== null"
+      v-if="data !== null"
       class="activity-tab__form"
       @submit.stop.prevent="onEditNotiSetting()"
     >
-      <!-- <div class="activity-tab__form-part">
+      <div class="activity-tab__form-part">
         <h3>Ứng dụng:</h3>
         <a-card>
           <a-form-item
@@ -16,8 +16,8 @@
             <a-checkbox
               width="300px"
               v-for="(item, index) in part.data"
-              :defaultChecked="handleDefaultValue(item.type)"
-              @change="onChangeValue(item.type)"
+              :defaultChecked="handleDefaultValue(item.type,'InApp')"
+              @change="onChangeValue(item.type,'InApp')"
               :key="index"
             >
               {{ item.name }}
@@ -27,7 +27,7 @@
             <span v-if="!form.name">*Tên tài khoản không được bỏ trống</span>
           </div>
         </a-card>
-      </div> -->
+      </div>
       <div class="activity-tab__form-part">
         <h3>Email:</h3>
         <a-card>
@@ -46,9 +46,6 @@
               {{ item.name }}
             </a-checkbox>
           </a-form-item>
-          <div class="activity-tab__error-text" v-if="isError">
-            <span v-if="!form.name">*Tên tài khoản không được bỏ trống</span>
-          </div>
         </a-card>
       </div>
       <div v-if="isModify" class="activity-tab__button-group">
@@ -146,8 +143,8 @@ export default {
     return {
       isModify: false,
       dataList,
-      dataEmail: null,
-      defaultDataEmail: null,
+      data: null,
+      defaultData: null,
       dataInapp: null,
       form: {
         email: "",
@@ -183,12 +180,12 @@ export default {
       updateNotificationSetting: "setting/updateNotificationSetting",
     }),
     onChangeValue(name, type) {
-      const index = this[`data${type}`].findIndex((item) => item.name === name);
-      console.log("hello ", this[`data${type}`][index], index);
-      this[`data${type}`][index].isOn = !this[`data${type}`][index].isOn;
+      const index = this.data.findIndex((item) => item.name === name);
+      console.log("hello ", this.data[index], index);
+      this.data[index][`is${type}`] = !this.data[index][`is${type}`];
     },
     handleDefaultValue(name, type) {
-      return this[`data${type}`].find((item) => item.name === name).isOn;
+      return this.data.find((item) => item.name === name)[`is${type}`];
     },
     async onGetNotificationSetting() {
       this.isLoading = true;
@@ -197,8 +194,8 @@ export default {
         const { header, data } = res.data;
         this.isLoading = false;
         if (header.isSuccessful) {
-          this.dataEmail = data;
-          this.defaultDataEmail = this.$clone(data);
+          this.data = data;
+          this.defaultData = this.$clone(data);
           this.isModify = false;
         } else {
           this.$notification["error"]({
@@ -222,7 +219,7 @@ export default {
     },
     async onEditNotiSetting() {
       this.isLoading = true;
-      const res = await this.updateNotificationSetting(this.dataEmail);
+      const res = await this.updateNotificationSetting(this.data);
       const { header, data } = res.data;
       this.isLoading = false;
       if (header.isSuccessful) {
@@ -234,7 +231,7 @@ export default {
           top: "80px",
           duration: 5,
         });
-        this.defaultDataEmail = this.$clone(this.dataEmail);
+        this.defaultData = this.$clone(this.data);
         this.isModify = false;
         // this.$router.push({ name: this.$routerName.SETTING });
       } else {
@@ -265,12 +262,12 @@ export default {
     }),
   },
   watch: {
-    dataEmail: {
+    data: {
       deep: true,
       handler(val) {
         console.log({ val });
         this.isModify =
-          JSON.stringify(this.defaultDataEmail) !== JSON.stringify(val);
+          JSON.stringify(this.defaultData) !== JSON.stringify(val);
         this.$emit("modify", this.isModify);
       },
     },
