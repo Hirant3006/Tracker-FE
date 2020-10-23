@@ -9,6 +9,7 @@
         <template v-else>
           <div v-for="(item,index) in data" :key="index">
             <user-card v-if="item.type==='USER'" :data='item'/>
+            <transaction-card v-if="item.type==='BOOK_TRANSACTION'"  :data="item" ></transaction-card>
           </div>
         </template>
       </div>
@@ -21,10 +22,12 @@ import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 import { types as typesAuth } from "@/modules/auth/constant";
 import { types as typesBook } from "@/modules/book/constant";
 import UserCard from '../components/UserCard'
+import TransactionCard from '../components/transactionCard'
 export default {
   name: "Activity",
   components: {
-    UserCard
+    UserCard,
+    TransactionCard
   },
   data() {
     return {
