@@ -1,6 +1,7 @@
 // import noAuth from './middlewares/notAuth'
 import routerName from "@/constants/routers";
 import auth from "@/middlewares/auth";
+import isMod from '@/middlewares/isMod.js'
 
 export default [
 	{
@@ -12,7 +13,7 @@ export default [
 				path: "",
 				name: routerName.EMPLOYEE,
 				meta: {
-					middleware: [auth],
+					middleware: [auth,isMod],
 				},
 				component: () =>
 					import(
@@ -23,7 +24,7 @@ export default [
 				path: "/employee/create",
 				name: routerName.CREATE_EMPLOYEE,
 				meta: {
-					middleware: [auth],
+					middleware: [auth,isMod],
 				},
 				component: () =>
 					import(/* webpackChunkName: "auth" */ "./views/create.vue"),
@@ -32,7 +33,7 @@ export default [
 				path: "/employee/detail/:id",
 				name: routerName.DETAIL_EMPLOYEE,
 				meta: {
-					middleware: [auth],
+					middleware: [auth,isMod],
 				},
 				component: () =>
 					import(/* webpackChunkName: "auth" */ "./views/detail.vue"),

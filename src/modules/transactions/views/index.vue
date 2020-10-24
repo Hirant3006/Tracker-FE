@@ -232,9 +232,6 @@ export default {
   mounted() {
     this.onGetTransactions();
   },
-  beforeRouteEnter(to, from, next) {
-    next(vm => console.log("hello"));
-  },
   methods: {
     ...mapActions({
       getTransactions: "transactions/getTransactions",
