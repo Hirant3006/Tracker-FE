@@ -10,7 +10,7 @@
         >
           <i :class="`far fa-user-lock`" v-if="data.actionType='SIGN_IN'"></i>
           <i :class="`far fa-user-lock`" v-else-if="data.actionType='DEACTIVE'"></i>
-          <i :class="`far fa-user-unlock`" v-else-if="data.actionType='ACTIVE'"></i>
+          <i :class="`far fa-times`" v-else-if="data.actionType='DELETE'"></i>
         </div>
         <div class="user-card__info">
           <span>
@@ -22,8 +22,8 @@
             <span v-if="data.actionType==='DEACTIVE'">
               bị <b>khóa</b> tài khoản
             </span>
-            <span v-if="data.actionType==='ACTIVE'">
-              được <b>mở khóa</b> tài khoản
+            <span v-if="data.actionType==='DELETE'">
+              bị <b>xóa</b> 
             </span>
           </span>
           <span>

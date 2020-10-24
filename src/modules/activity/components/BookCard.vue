@@ -10,20 +10,36 @@
         >
           <i v-if="data.actionType === 'INSERT'" :class="`far fa-plus`"></i>
           <i v-if="data.actionType === 'DELETE'" :class="`far fa-trash`"></i>
-          <i v-if="data.actionType === 'UPDATE'" :class="`far fa-info`"></i>
+          <i
+            v-if="
+              ['UPDATE', 'BOOK_WILL_PERMANENTLY_DELETED'].includes(
+                data.actionType
+              )
+            "
+            :class="`far fa-info`"
+          ></i>
         </div>
         <div class="book-card__info">
-          <span>
-            Nhân viên
-            <b>{{ data.data.regNm }}</b> (ID:{{ data.data.regUserId }}) đã
-            <span v-if="data.actionType === 'INSERT'"> <b>tạo</b> sổ </span>
-            <span v-if="data.actionType === 'DELETE'"> <b>xóa</b> sổ </span>
-            <span v-if="data.actionType === 'UPDATE'"> <b>sửa</b> sổ </span>
-          </span>
-          <span>
-            Thời gian:
-            <b>{{ data.regDt }}</b>
-          </span>
+          <template
+            v-if="!['INSERT', 'DELETE', 'UPDATE'].includes(data.actionType)"
+          >
+            <span>
+              Sổ sắp bị <b>xóa</b>, hãy vào chi tiết sổ nếu muốn khôi phục
+            </span>
+          </template>
+          <template v-else>
+            <span>
+              Nhân viên
+              <b>{{ data.data.regNm }}</b> (ID:{{ data.data.regUserId }}) đã
+              <span v-if="data.actionType === 'INSERT'"> <b>tạo</b> sổ </span>
+              <span v-if="data.actionType === 'DELETE'"> <b>xóa</b> sổ </span>
+              <span v-if="data.actionType === 'UPDATE'"> <b>sửa</b> sổ </span>
+            </span>
+            <span>
+              Thời gian:
+              <b>{{ data.regDt }}</b>
+            </span>
+          </template>
         </div>
       </div>
       <div v-if="data.actionType === 'UPDATE'" class="book-card__extra-info">
@@ -43,7 +59,12 @@
           </div>
         </template>
       </div>
-      <div v-if="data.actionType === 'INSERT'" class="book-card__extra-info">
+      <div
+        v-if="
+          ['INSERT', 'BOOK_WILL_PERMANENTLY_DELETED'].includes(data.actionType)
+        "
+        class="book-card__extra-info"
+      >
         <span>Nội dung:</span>
         <template v-for="(dataType, index) in dataTypeList">
           <div :key="'qwdwq' + index">
@@ -109,7 +130,7 @@ export default {
 
   &__icon {
     text-align: center;
-    margin:0 20px;
+    margin: 0 20px;
     &--update {
       color: $warning-color;
     }

@@ -1,6 +1,6 @@
 <template>
   <a-layout class="app-layout" id="components-layout-demo-custom-trigger">
-    <sidebar :data="columnData" />
+    <sidebar :data="profile.role === 'ADMIN' ? columnDataAdmin : columnDataMod" />
     <a-layout>
       <a-layout-header
         style="
@@ -155,7 +155,29 @@ export default {
     return {
       spinning: true,
       compKey: 0,
-      columnData: [
+      columnDataMod: [
+        // {
+        //   title: "Trang chủ",
+        //   path: "/",
+        //   icon: "fas fa-bell",
+        // },
+        {
+          title: "Giao dịch",
+          path: "/transaction",
+          icon: "fas fa-cash-register",
+        },
+        // {
+        //   title: "Hoạt động",
+        //   path: "/activity",
+        //   icon: "fas fa-exclamation-circle",
+        // },
+        {
+          title: "Cài đặt",
+          path: "/setting",
+          icon: "fas fa-cog",
+        },
+      ],
+      columnDataAdmin: [
         {
           title: "Trang chủ",
           path: "/",

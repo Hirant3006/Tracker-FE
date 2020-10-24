@@ -181,7 +181,7 @@
             </div>
           </div>
         </div>
-        <pie-chart v-if="dataSummary !== null && dataSummary.income!== 0 && dataSummary.expense!== 0" class="m-t-18" :chartdata="dataPieChart" />
+        <pie-chart v-if="dataSummary !== null && (dataSummary.income!== 0 || dataSummary.expense!== 0)" class="m-t-18" :chartdata="dataPieChart" />
       </a-card>
       <a-card v-if="data !== null && data.length > 0" class="m-t-16">
         <line-chart :chartdata="dataLineChart" />

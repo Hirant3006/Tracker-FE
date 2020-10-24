@@ -23,7 +23,7 @@ export default {
 }
 </script>
 <style lang="scss" >
-	.app-loading ,.app-error{
+	.app-loading .app-error{
 		height: 100vh;
 		width: 100%;
 		display: flex;
