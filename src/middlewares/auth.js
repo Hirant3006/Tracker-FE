@@ -18,7 +18,6 @@ export default async function({ next, from, to, router, store, app }) {
 		(await store.dispatch(typesBook.actions.GET_BOOKS));
 		!store.state.auth.profile &&
 		(await store.dispatch(typesAuth.actions.GET_USER_PROFILE));
-		console.log('hello',{to,routerModList,role:store.state.auth.profile,state:store.state})
 		
 		if (selected_book) {
 			await store.dispatch(typesBook.actions.SET_SELECTED_BOOK,selected_book)
