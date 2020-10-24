@@ -1,4 +1,5 @@
 import routerName from "@/constants/routers";
+import routerModList from "@/constants/routerMod";
 import { types as typesAuth } from "@/modules/auth/constant";
 import { types as typesBook } from "@/modules/book/constant";
 import cookie from "js-cookie";
@@ -14,24 +15,31 @@ export default async function({ next, from, to, router, store, app }) {
     selected_book && await store.dispatch(typesBook.actions.SET_SELECTED_BOOK,selected_book)
 	if (token) {
 		!store.state.book.books &&
-			(await store.dispatch(typesBook.actions.GET_BOOKS));
+		(await store.dispatch(typesBook.actions.GET_BOOKS));
 		!store.state.auth.profile &&
-            (await store.dispatch(typesAuth.actions.GET_USER_PROFILE));
+		(await store.dispatch(typesAuth.actions.GET_USER_PROFILE));
+		console.log('hello',{to,routerModList,role:store.state.auth.profile,state:store.state})
+		
+		if (selected_book) {
+			await store.dispatch(typesBook.actions.SET_SELECTED_BOOK,selected_book)
+		}
+		if (!routerModList.includes(to.name) && store.state.auth.profile.role!=='ADMIN') {
+			return next({
+				path: '/Transaction',
+			  });
+		} 
 		if ((store.state.book.books==null || store.state.book.selected === null || store.state.book.books.length===0) && to.name !== routerName.ONBOARDING) {
-			next({ name: routerName.ONBOARDING });
-		} else {
-            next({ name: routerName.TRANSACTION });
-        }
-		// if (selected_book) {
-		//     await store.dispatch(typesBook.actions.SET_SELECTED_BOOK,selected_book)
-		// }
-		// if (to.name == routerName.ONBOARDING && store.state.book.selected) {
-		//     next({name: routerName.DASHBOARD})
-		// }
-		// else if ((!store.state.book.selected || store.state.book.books ==null) && to.name!==routerName.ONBOARDING) {
+			return next({ name: routerName.ONBOARDING });
+		} 
+		else if (to.name == routerName.ONBOARDING && store.state.book.selected) {
+		    return next({name: routerName.DASHBOARD})
+		}
+		else if ((!store.state.book.selected || store.state.book.books ==null) && to.name!==routerName.ONBOARDING) {
 
-		//     next({name: routerName.ONBOARDING})
-		// }
-		// else next()
+		    return next({name: routerName.ONBOARDING})
+		}
+		else {
+            return next({ name: routerName.TRANSACTION });
+        }
 	} else next({ name: routerName.LOGIN });
 }
