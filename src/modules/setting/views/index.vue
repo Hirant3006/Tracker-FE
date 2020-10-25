@@ -5,7 +5,7 @@
       <div class="m-t-10">
         <a-tabs :activeKey="activeTab" @tabClick="onChangeTab">
           <a-tab-pane key="detail" tab="Tài khoản"><account-tab/> </a-tab-pane>
-          <a-tab-pane key="activity" tab="Hoạt động"><activity-tab/></a-tab-pane>
+          <a-tab-pane v-if="profile.role==='ADMIN'" key="activity" tab="Hoạt động"><activity-tab/></a-tab-pane>
         </a-tabs>
       </div>
     </div>

@@ -20,7 +20,7 @@
             @modify="onModifyData"
           />
         </a-tab-pane>
-        <a-tab-pane key="activity" tab="Hoạt động" force-render>
+        <a-tab-pane v-if="profile.role==='ADMIN'" key="activity" tab="Hoạt động" force-render>
           <activityTransaction />
         </a-tab-pane>
       </a-tabs>
@@ -44,7 +44,7 @@ import detailTransaction from "../components/detailTransaction";
 import activityTransaction from "../components/activityTransaction";
 import { types as typesAuth } from "@/modules/auth/constant";
 import { types as typesBook } from "@/modules/book/constant";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 import TableCustom from "@/components/TableCustom";
 export default {
   name: "DetailTransaction",
@@ -69,6 +69,11 @@ export default {
     this.handleGetTransaction(id);
   },
   mounted() {},
+   computed: {
+    ...mapGetters({
+      profile: typesAuth.getters.GET_USER_PROFILE,
+    }),
+  },
   methods: {
     ...mapActions({
       getTransactions: "transactions/getTransaction",

@@ -8,6 +8,7 @@
         <div class="account-tab__error-text" v-if="isError">
           <span v-if="!form.name">*Tên tài khoản không được bỏ trống</span>
         </div>
+        <template v-if="profile.role==='ADMIN'">
         <a-form-item label="Email">
           <a-input v-model="form.email" />
         </a-form-item>
@@ -17,6 +18,7 @@
             >*Định dạng email không hợp lệ</span
           >
         </div>
+        </template>
         <div class="account-tab__changepass">
           <a-button
             class="m-b-25 m-t-16 account-tab__changepass-btn"
