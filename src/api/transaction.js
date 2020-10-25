@@ -13,7 +13,7 @@ export default {
 		id,
 	}) {
 		return axios({
-			url: "/transaction/",
+			url: "/transaction",
 			method: "get",
 			params: {
 				size: 10,
@@ -22,7 +22,7 @@ export default {
 				dateEnd,
 				amountStart,
 				amountEnd,
-				status,
+				status,	
 				clientName,
 				type,
 				id
