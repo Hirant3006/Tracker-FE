@@ -3,7 +3,6 @@
         <div
           :class="[
             'user-card__icon',
-            `user-card__icon--${data.actionType.toLowerCase()}`,
           ]"
         >
           <i
@@ -54,6 +53,9 @@ export default {
 .user-card {
   margin: 0 auto;
   width: 498px;
+  .ant-card-body {
+    display: flex;
+  }
   .ant-card {
     width: 500px;
     margin: 0 auto;

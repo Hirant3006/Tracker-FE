@@ -1,23 +1,24 @@
 <template>
   <div class="book-card">
     <a-card class="m-b-10" v-if="data !== undefined">
+      <template v-if="data.type!=='BOOK_WILL_PERMANENTLY_DELETED'">
       <div class="book-card">
         <div
           :class="[
             'book-card__icon',
-            `book-card__icon--${data.actionType.toLowerCase()}`,
+            `book-card__icon--update`,
           ]"
         >
-          <i v-if="data.actionType === 'INSERT'" :class="`far fa-plus`"></i>
-          <i v-if="data.actionType === 'DELETE'" :class="`far fa-trash`"></i>
-          <i
-            v-if="
-              ['UPDATE', 'BOOK_WILL_PERMANENTLY_DELETED'].includes(
-                data.actionType
-              )
-            "
-            :class="`far fa-info`"
-          ></i>
+            <i v-if="data.actionType === 'INSERT'" :class="`far fa-plus`"></i>
+            <i v-if="data.actionType === 'DELETE'" :class="`far fa-trash`"></i>
+            <i
+              v-if="
+                ['UPDATE', 'BOOK_WILL_PERMANENTLY_DELETED'].includes(
+                  data.actionType
+                )
+              "
+              :class="`far fa-info`"
+            ></i>
         </div>
         <div class="book-card__info">
           <template
@@ -86,6 +87,29 @@
           </div>
         </template>
       </div>
+      </template>
+      <template v-else>
+        <div class="book-card">
+        <div
+          :class="[
+            'book-card__icon',
+            `book-card__icon--update`,
+          ]"
+        >
+            <i
+              :class="`far fa-info`"
+            ></i>
+        </div>
+        <div class="book-card__info">
+          <template
+          >
+            <span>
+              Sổ <b>{{data.name}}</b>(ID:{{data.bookId}}) sắp bị <b>xóa</b>, hãy vào chi tiết sổ nếu muốn khôi phục
+            </span>
+          </template>
+        </div>
+      </div>
+      </template>
     </a-card>
   </div>
 </template>

@@ -53,8 +53,8 @@ export default {
       getLog: "activity/getLog",
     }),
     checkComp(type){
-      if (type==='USER') return 'user-card'
-      else if (type==='BOOK') return 'book-card'
+      if (type==='USER' ) return 'user-card'
+      else if (type==='BOOK' || type==='BOOK_WILL_PERMANENTLY_DELETED') return 'book-card'
       else if (type==='BOOK_TRANSACTION') return 'transaction-card'
       else null
     },
