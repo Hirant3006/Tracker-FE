@@ -138,7 +138,7 @@ export default {
 <style lang='scss'>
 .transaction-card {
   margin: 0 auto;
-  // width: 498px;
+  width: 498px;
   .ant-card {
     width: 500px;
     margin: 0 auto;
