@@ -11,7 +11,7 @@ export default {
 				title,
 				includeAdmin,
 				name,
-				bookID,
+				bookId: bookID,
 			},
 		});
 	},

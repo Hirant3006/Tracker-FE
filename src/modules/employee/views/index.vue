@@ -31,7 +31,7 @@
         >Không có dữ liệu</span
       >
     </div>
-    <template v-else>
+    <template v-else-if="data.length!==0">
       <TableCustom
         :isLoading="isLoading"
         :columns="columns"
@@ -43,7 +43,7 @@
         <template slot="customBooks" slot-scope="{ itemRow }">
           <a-popover>
             <div slot="content">
-              <template v-if="itemRow.record.bookList.length !== 0">
+              <template v-if="itemRow.record.bookList && itemRow.record.bookList.length !== 0">
                 <div v-for="item in itemRow.record.bookList" :key="item.id">
                   <i :class="`far fa-book`"></i>&nbsp;{{ item.name }}
                 </div>
@@ -155,6 +155,7 @@ export default {
     return {
       locale,
       data: [],
+      compKey: 0,
       isLoading: false,
       status: "first_time",
       form: {
@@ -292,6 +293,7 @@ export default {
         this.total = data.total;
         if (offset == 0) this.data = data.content;
         else this.data = [...this.data, ...data.content];
+        this.compKey++
       }
       this.isLoading = false;
     },
