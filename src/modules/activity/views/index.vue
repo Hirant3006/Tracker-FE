@@ -7,7 +7,7 @@
           <a-spin size="large"></a-spin>
         </div>
         <template v-for="(item,index) in data" >
-            <component :is="checkComp(item.type)" :key="index" :data='item'/>
+            <component :is="checkComp(item.type)" :key="index" :data='$clone(item)'/>
         </template>
             <!-- <user-card :key="index+'user'" v-if="item.type==='USER'" />
             <user-card :key="index+'book'" v-if="item.type==='BOOK'" :data='item'/> -->
@@ -53,7 +53,7 @@ export default {
       getLog: "activity/getLog",
     }),
     checkComp(type){
-      if (type==='USER' ) return 'user-card'
+      if (type==='USER' || type=='SIGN_IN') return 'user-card'
       else if (type==='BOOK' || type==='BOOK_WILL_PERMANENTLY_DELETED') return 'book-card'
       else if (type==='BOOK_TRANSACTION') return 'transaction-card'
       else null
@@ -65,7 +65,7 @@ export default {
       this.isLoading = true;
       try {
         const res = await this.getLog();
-        console.log({ res });
+        console.log({ data:res.data.data });
         const { header, data } = res.data;
         if (header.isSuccessful) {
           this.data = data;

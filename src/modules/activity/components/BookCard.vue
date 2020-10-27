@@ -6,7 +6,7 @@
         <div
           :class="[
             'book-card__icon',
-            `book-card__icon--update`,
+            `book-card__icon--${data.actionType.toLowerCase()}`,
           ]"
         >
             <i v-if="data.actionType === 'INSERT'" :class="`far fa-plus`"></i>

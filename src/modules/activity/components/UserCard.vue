@@ -3,29 +3,30 @@
         <div
           :class="[
             'user-card__icon',
+            data.actionType == 'DELETE' && 'user-card__icon--delete'
           ]"
         >
           <i
-            :class="`far fa-user-lock`"
-            v-if="(data.actionType = 'SIGN_IN')"
+            :class="`far fa-sign-in-alt`"
+            v-if="(data.type == 'SIGN_IN')"
           ></i>
           <i
             :class="`far fa-user-lock`"
-            v-else-if="(data.actionType = 'DEACTIVE')"
+            v-else-if="(data.actionType == 'DEACTIVATE')"
           ></i>
           <i
             :class="`far fa-times`"
-            v-else-if="(data.actionType = 'DELETE')"
+            v-else-if="(data.actionType == 'DELETE')"
           ></i>
         </div>
         <div class="user-card__info">
           <span>
             Nhân viên
             <b>{{ data.name }}</b> (ID:{{ data.id }}) đã
-            <span v-if="data.actionType === 'SIGN_IN'">
+            <span v-if="data.type === 'SIGN_IN'">
               <b>đăng nhập</b> vào hệ thống
             </span>
-            <span v-if="data.actionType === 'DEACTIVE'">
+            <span v-if="data.actionType === 'DEACTIVATE'">
               bị <b>khóa</b> tài khoản
             </span>
             <span v-if="data.actionType === 'DELETE'"> bị <b>xóa</b> </span>

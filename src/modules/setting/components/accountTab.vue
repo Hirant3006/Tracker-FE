@@ -185,7 +185,18 @@ export default {
     async onEditProfile() {
       this.isLoading = true;
       const { name, email } = this.form;
-      if (!name || !email) {
+      if ((!name || !email) && this.profile.role==='ADMIN') {
+        this.isError = true;
+        this.$notification["error"]({
+          message: `Lỗi sửa thông tin`,
+          description: "Có lỗi xảy ra trong quá trình sửa thông tin",
+          placement: "bottomRight",
+          placement: "topRight",
+          top: "80px",
+          duration: 5,
+        });
+      }
+      else if (!name && this.profile.role!=='ADMIN') {
         this.isError = true;
         this.$notification["error"]({
           message: `Lỗi sửa thông tin`,

@@ -166,7 +166,7 @@ export default {
         color: $danger-color;
       }
       &--insert {
-        color: $success-color;
+        color: $success-color !important;
       }
       i {
         font-size: 30px;

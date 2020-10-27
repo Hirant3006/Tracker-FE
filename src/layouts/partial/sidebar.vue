@@ -12,17 +12,15 @@
         class="m-t-40"
         theme="dark"
         mode="vertical"
-        :default-selected-keys="defaultSelectedKeys"
+        :defaultSelectedKeys="selectedKeys"
+        :key="compKey"
       >
         <a-menu-item v-for="item in data" :key="item.title">
           <router-link :to="item.path">
-            <template v-if="item.title !== 'Hoạt động'">
-              <div class="m-l-4" style="margin-left: 4px">
-                <i :class="item.icon"></i>
-                <span class="m-l-10">{{ item.title }}</span>
-              </div>
-            </template>
-            <div @click="onClickActivity" v-else>
+            <div
+              @click="onClickActivity"
+              v-if="item.title === 'Hoạt động' && profile.role === 'ADMIN'"
+            >
               <div class="m-l-4" style="margin-left: 4px">
                 <a-badge :dot="isHaveActiviy">
                   <i :class="item.icon"></i>
@@ -30,6 +28,12 @@
                 <span class="m-l-10">{{ item.title }}</span>
               </div>
             </div>
+            <template v-else>
+              <div class="m-l-4" style="margin-left: 4px">
+                <i :class="item.icon"></i>
+                <span class="m-l-10">{{ item.title }}</span>
+              </div>
+            </template>
           </router-link>
         </a-menu-item>
       </a-menu>
@@ -38,7 +42,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
+import { types as typesAuth } from "@/modules/auth/constant";
 
 export default {
   props: {
@@ -54,10 +59,10 @@ export default {
   },
   data() {
     return {
-      selectedKeys: [],
       collapsed: false,
       isHaveActiviy: false,
-      defaultSelectedKeys: [this.$route.name],
+      selectedKeys: [this.$route.name],
+      compKey: 0,
     };
   },
   methods: {
@@ -65,10 +70,13 @@ export default {
       getCheckNewLog: "activity/getCheckNewLog",
     }),
     onClickActivity() {
-      this.isHaveActiviy= false
+      this.isHaveActiviy = false;
     },
   },
   computed: {
+    ...mapGetters({
+      profile: typesAuth.getters.GET_USER_PROFILE,
+    }),
     isNewLog() {
       return this.$store.state.activity.isNewLog;
     },
@@ -78,6 +86,15 @@ export default {
       if (this.isNewLog && !this.isHaveActiviy) {
         this.isHaveActiviy = true;
       }
+    },
+    $route: {
+      deep: true,
+      handler(val, oldVal) {
+        console.log(val.name);
+        if (val.name !== oldVal.name) {
+          this.selectedKeys = [this.$route.name];
+        }
+      },
     },
   },
 };

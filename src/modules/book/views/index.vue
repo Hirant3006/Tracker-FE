@@ -21,6 +21,7 @@
         :isDeletingBook="isDeletingBook"
         :isEditingBook="isEditingBook"
         :listEmployees="this.listEmpByBook[bookId]"
+        ref="bookInfo"
       />
     </div>
   </div>
@@ -95,6 +96,7 @@ export default {
           duration: 5,
         });
       }
+      this.isRecoveringBook = false;
     },
     async onEditBook(dataEdit) {
       this.isEditingBook = true;

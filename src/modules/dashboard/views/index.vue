@@ -225,6 +225,10 @@ export default {
       .format(this.format);
   },
   mounted() {
+    console.log(this.$route)
+    if(this.$route.params.bookData!==undefined) {
+      this.form.book= this.$route.params.bookData
+    }
     this.onGetStatistic();
     this.onGetStatisticSummary();
   },

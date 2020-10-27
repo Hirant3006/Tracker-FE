@@ -49,7 +49,7 @@
               </div>
               <div
                 class="app-layout__selected-book app-layout__selected-book--card"
-                v-else
+                v-else-if="profile.role==='ADMIN'"
               >
                 <i :class="`far fa-globe`"></i>
                 <div>
@@ -69,7 +69,7 @@
               </div>
             </span>
             <a-menu slot="overlay">
-              <a-menu-item key="-1" @click="onSelectBook('all')">
+              <a-menu-item key="-1" @click="onSelectBook('all')" v-if="profile.role==='ADMIN'">
                 <div class="app-layout__selected-book">
                   <i :class="`far fa-globe`"></i>
                   <div>
@@ -166,11 +166,11 @@ export default {
           path: "/transaction",
           icon: "fas fa-cash-register",
         },
-        // {
-        //   title: "Hoạt động",
-        //   path: "/activity",
-        //   icon: "fas fa-exclamation-circle",
-        // },
+        {
+          title: "Hoạt động",
+          path: "/activity",
+          icon: "fas fa-exclamation-circle",
+        },
         {
           title: "Cài đặt",
           path: "/setting",

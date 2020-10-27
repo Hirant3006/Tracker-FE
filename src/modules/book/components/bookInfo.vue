@@ -66,7 +66,9 @@
             class="m-r-10"
             >Khôi phục</a-button
           >
-          <a-button>Xem thống kê</a-button>
+          <a-button 
+            @click="onChangeStatictisRoute"
+          >Xem thống kê</a-button>
         </div>
       </span>
       <div class="book-info__amount">
@@ -210,7 +212,7 @@ export default {
     recoverDayCount() {
       const recentDate = moment(new Date());
       // const endDate = moment((new Date()).setDate((new Date(this.data.regDt)).getDate()+15));
-      const endDate = moment(this.data.regDt).add(15, "days");
+      const endDate = moment(this.data.modiDt).add(16, "days");
       console.log({ recentDate, endDate });
       return endDate.diff(recentDate, "days");
     },
@@ -219,6 +221,10 @@ export default {
     ...mapActions({
       deleteBook: "book/deleteBook",
     }),
+    onChangeStatictisRoute(){
+      console.log(this.data.id)
+      this.$router.push({name:this.$routerName.DASHBOARD,params: {bookData: this.data}})
+    },
     onEditBook() {
       this.$emit("edit", this.form);
     },
