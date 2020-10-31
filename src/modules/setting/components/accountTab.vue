@@ -8,16 +8,16 @@
         <div class="account-tab__error-text" v-if="isError">
           <span v-if="!form.name">*Tên tài khoản không được bỏ trống</span>
         </div>
-        <template v-if="profile.role==='ADMIN'">
-        <a-form-item label="Email">
-          <a-input v-model="form.email" />
-        </a-form-item>
-        <div class="account-tab__error-text" v-if="isError">
-          <span v-if="!form.email">*Email không được bỏ trống</span>
-          <span v-else-if="!$v.form.email.email"
-            >*Định dạng email không hợp lệ</span
-          >
-        </div>
+        <template v-if="profile.role === 'ADMIN'">
+          <a-form-item label="Email">
+            <a-input v-model="form.email" />
+          </a-form-item>
+          <div class="account-tab__error-text" v-if="isError">
+            <span v-if="!form.email">*Email không được bỏ trống</span>
+            <span v-else-if="!$v.form.email.email"
+              >*Định dạng email không hợp lệ</span
+            >
+          </div>
         </template>
         <div class="account-tab__changepass">
           <a-button
@@ -185,7 +185,7 @@ export default {
     async onEditProfile() {
       this.isLoading = true;
       const { name, email } = this.form;
-      if ((!name || !email) && this.profile.role==='ADMIN') {
+      if ((!name || !email) && this.profile.role === "ADMIN") {
         this.isError = true;
         this.$notification["error"]({
           message: `Lỗi sửa thông tin`,
@@ -195,8 +195,7 @@ export default {
           top: "80px",
           duration: 5,
         });
-      }
-      else if (!name && this.profile.role!=='ADMIN') {
+      } else if (!name && this.profile.role !== "ADMIN") {
         this.isError = true;
         this.$notification["error"]({
           message: `Lỗi sửa thông tin`,
@@ -217,7 +216,7 @@ export default {
           this.$notification["success"]({
             message: `Sửa thông tin thành công`,
             description: `Thông tin mới đã được lưu lại`,
-            placement: "bottomRight",
+            placement: "topRight",
             placement: "topRight",
             top: "80px",
             duration: 5,
@@ -227,13 +226,22 @@ export default {
           this.isModify = false;
           // this.$router.push({ name: this.$routerName.SETTING });
         } else {
-          this.$notification["error"]({
-            message: `Lỗi sửa thông tin`,
-            description: "Có lỗi xảy ra trong quá trình sửa thông tin",
-            placement: "bottomRight",
-            top: "80px",
-            duration: 5,
-          });
+          if (header.resultMessage === "Email existed!") {
+            this.$notification["error"]({
+              message: `Lỗi cập nhật thông tin`,
+              description: "Email này đã được đăng ký cho tài khoản khác",
+              placement: "topRight",
+              top: "80px",
+              duration: 5,
+            });
+          } else
+            this.$notification["error"]({
+              message: `Lỗi sửa thông tin`,
+              description: "Có lỗi xảy ra trong quá trình sửa thông tin",
+              placement: "topRight",
+              top: "80px",
+              duration: 5,
+            });
           this.isError = true;
           this.isLoading = false;
         }

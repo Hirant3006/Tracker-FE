@@ -17,7 +17,11 @@
       </a-select>
     </template>
     <template v-else-if="['title', 'name'].includes(type.data_type)">
-      <a-input placeholder="Nhập thông tin" :value="data" @change="handleChangeValue" />
+      <a-input
+        placeholder="Nhập thông tin"
+        :value="data"
+        @change="handleChangeValue"
+      />
     </template>
     <i @click="onClearFilterTag" :class="`far fa-times m-r-5`"></i>
   </div>
@@ -65,7 +69,11 @@ export default {
     });
   },
   mounted() {
-    this.data = this.$clone(this.defaultData)
+    this.data = this.$clone(this.defaultData);
+    if (this.type.data_type === "includeAdmin") {
+      this.data = "true";
+      this.$emit("change", { type: this.type.data_type, value: true });
+    }
   },
   methods: {
     truncNum(number, type) {

@@ -1,42 +1,79 @@
 <template>
   <div :key="compKey" class="detail-trans">
-    <a-form class="detail-trans__create-card-form" @submit.stop.prevent="onEditTrans()">
+    <a-form
+      class="detail-trans__create-card-form"
+      @submit.stop.prevent="onEditTrans()"
+    >
       <a-form-item label="Sổ">
-        <div style="width: fit-content;">
+        <div style="width: fit-content">
           <a-dropdown :disabled="true">
             <span
               class="ant-dropdown-link"
-              style="cursor:pointer;"
-              @click="e => e.preventDefault()"
+              style="cursor: pointer"
+              @click="(e) => e.preventDefault()"
             >
               <div
-                style="justify-content:space-between"
+                style="justify-content: space-between"
                 class="d-flex justify-space-between detail-trans__selected-book detail-trans__selected-book--card"
                 v-if="!book"
               >
-                <span class="detail-trans__selected-book-title m-r-10">Chọn sổ</span>
-                <i v-if="profile.role=='ADMIN'" :class="`far fa-angle-down`"></i>
+                <span class="detail-trans__selected-book-title m-r-10"
+                  >Chọn sổ</span
+                >
+                <i
+                  v-if="profile.role == 'ADMIN'"
+                  :class="`far fa-angle-down`"
+                ></i>
               </div>
-              <div v-else class="detail-trans__selected-book detail-trans__selected-book--card">
-                <i :class="`far fa-${book.iconName ? book.iconName : 'book'}`"></i>
+              <div
+                v-else
+                class="detail-trans__selected-book detail-trans__selected-book--card"
+              >
+                <i
+                  :class="`far fa-${book.iconName ? book.iconName : 'book'}`"
+                ></i>
                 <div>
-                  <span>{{book.name}}</span>
+                  <span>{{ book.name }}</span>
                   <span
-                    :class="['detail-trans__selected-book-balance',`detail-trans__selected-book-balance--${book.currentBalance >0 ? 'plus' : 'minus'}`]"
-                  >{{book.currentBalance | money({currency:'vnd'})}}</span>
+                    :class="[
+                      'detail-trans__selected-book-balance',
+                      `detail-trans__selected-book-balance--${
+                        book.currentBalance > 0 ? 'plus' : 'minus'
+                      }`,
+                    ]"
+                    >{{
+                      book.currentBalance | money({ currency: "vnd" })
+                    }}</span
+                  >
                 </div>
-                <i style="margin-left:30px" :class="`far fa-angle-down`"></i>
+                <i style="margin-left: 30px" :class="`far fa-angle-down`"></i>
               </div>
             </span>
             <a-menu slot="overlay">
-              <a-menu-item v-for="(item,index) in books" :key="index" @click="onSelectBook(item)">
+              <a-menu-item
+                v-for="(item, index) in books"
+                :key="index"
+                @click="onSelectBook(item)"
+              >
                 <div class="detail-trans__selected-book">
-                  <i :class="`far fa-${item.iconName ? item.iconName : 'book'}`"></i>
+                  <i
+                    :class="`far fa-${item.iconName ? item.iconName : 'book'}`"
+                  ></i>
                   <div>
-                    <span>{{item.name}}</span>
+                    <span>{{ item.name }}</span>
                     <span
-                      :class="[,'detail-trans__selected-book-balance',`detail-trans__selected-book-balance--${item.currentBalance >0 ? 'plus' : 'minus'}`]"
-                    >{{`${item.currentBalance >0 ? '+' : '-'}`}}{{item.currentBalance | money({currency:'vnd'})}}</span>
+                      :class="[
+                        ,
+                        'detail-trans__selected-book-balance',
+                        `detail-trans__selected-book-balance--${
+                          item.currentBalance > 0 ? 'plus' : 'minus'
+                        }`,
+                      ]"
+                      >{{ `${item.currentBalance > 0 ? "+" : "-"}`
+                      }}{{
+                        item.currentBalance | money({ currency: "vnd" })
+                      }}</span
+                    >
                   </div>
                 </div>
               </a-menu-item>
@@ -48,24 +85,39 @@
         <span v-if="!form.book">*Sổ không được bỏ trống</span>
       </div>
       <a-form-item label="Loại">
-        <a-radio-group :options="options" :default-value="form.type" @change="onChangeType" />
+        <a-radio-group
+          :options="options"
+          :default-value="form.type"
+          @change="onChangeType"
+        />
       </a-form-item>
       <a-form-item label="Số tiền">
         <!--  -->
         <!-- <a-input suffix="VND" type="number" /> -->
         <a-input-number
           :default-value="form.amount"
-          :formatter="value => `${truncNum(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-          :parser="value => value.replace(/\$\s?|(,*)/g, '')"
-          @change="value => value!==null ? form.amount=value : form.amount=0"
+          :formatter="
+            (value) =>
+              `${truncNum(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+          "
+          :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
+          @change="
+            (value) =>
+              value !== null ? (form.amount = value) : (form.amount = 0)
+          "
           :min="0"
         ></a-input-number>
         <span class="m-l-10">VNĐ</span>
       </a-form-item>
       <div class="detail-trans__error-text" v-if="isError">
         <span
-          v-if="form.book!==null && form.amount>form.book.currentBalance && form.type==='EXPENSE'"
-        >*Số tiền vượt quá hạn mức</span>
+          v-if="
+            form.book !== null &&
+            form.amount > form.book.currentBalance &&
+            form.type === 'EXPENSE'
+          "
+          >*Số tiền vượt quá hạn mức</span
+        >
       </div>
       <a-form-item label="Tên khách">
         <a-input placeholder="Nhập tên khách" v-model="form.clientName" />
@@ -91,8 +143,15 @@
           block
           html-type="submit"
           :loading="isLoading"
-        >Lưu</a-button>
-        <a-button class="m-b-25 m-t-16" type="default" block @click="onCancelModify">Bỏ qua</a-button>
+          >Lưu</a-button
+        >
+        <a-button
+          class="m-b-25 m-t-16"
+          type="default"
+          block
+          @click="onCancelModify"
+          >Bỏ qua</a-button
+        >
       </div>
     </a-form>
   </div>
@@ -208,14 +267,22 @@ export default {
           });
           this.$router.push({ name: this.$routerName.TRANSACTIONS });
         } else {
-          console.log('lỗi nè')
-          this.$notification["error"]({
-            message: `Sửa giao dịch`,
-            description: "Có lỗi xảy ra trong quá trình sửa",
-            placement: "topRight",
-            top: "80px",
-            duration: 5,
-          });
+          if (header.resultMessage === "Description can't null!") {
+            this.$notification["error"]({
+              message: `Lỗi sửa giao dịch`,
+              description: "Ghi chú không được để trống",
+              placement: "topRight",
+              top: "80px",
+              duration: 5,
+            });
+          } else
+            this.$notification["error"]({
+              message: `Sửa giao dịch`,
+              description: "Có lỗi xảy ra trong quá trình sửa",
+              placement: "topRight",
+              top: "80px",
+              duration: 5,
+            });
           this.isError = true;
           this.isLoading = false;
         }

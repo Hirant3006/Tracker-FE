@@ -135,7 +135,6 @@
 
 <script>
 import moment from "moment";
-import FilterHandler from "../components/filter/FilterHandler";
 import locale from "ant-design-vue/es/date-picker/locale/vi_VN";
 import { mapActions, mapGetters } from "vuex";
 import { types as typesBook } from "@/modules/book/constant";
@@ -147,8 +146,8 @@ function onChange(pagination, filters, sorter) {
 export default {
   name: "Transactions",
   components: {
-    TableCustom,
-    FilterHandler,
+    TableCustom:() => import('@/components/TableCustom'),
+    FilterHandler:() => import('../components/filter/FilterHandler'),
   },
   data() {
     return {

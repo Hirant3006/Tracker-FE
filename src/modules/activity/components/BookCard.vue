@@ -1,12 +1,12 @@
 <template>
-  <div class="book-card">
+  <div class="book-card-activity">
     <a-card class="m-b-10" v-if="data !== undefined">
       <template v-if="data.type!=='BOOK_WILL_PERMANENTLY_DELETED'">
-      <div class="book-card">
+      <div class="book-card-activity">
         <div
           :class="[
-            'book-card__icon',
-            `book-card__icon--${data.actionType.toLowerCase()}`,
+            'book-card-activity__icon',
+            `book-card-activity__icon--${data.actionType.toLowerCase()}`,
           ]"
         >
             <i v-if="data.actionType === 'INSERT'" :class="`far fa-plus`"></i>
@@ -20,7 +20,7 @@
               :class="`far fa-info`"
             ></i>
         </div>
-        <div class="book-card__info">
+        <div class="book-card-activity__info">
           <template
             v-if="!['INSERT', 'DELETE', 'UPDATE'].includes(data.actionType)"
           >
@@ -43,7 +43,7 @@
           </template>
         </div>
       </div>
-      <div v-if="data.actionType === 'UPDATE'" class="book-card__extra-info">
+      <div v-if="data.actionType === 'UPDATE'" class="book-card-activity__extra-info">
         <span>Nội dung thay đổi:</span>
         <template v-for="(dataType, index) in dataTypeList">
           <div
@@ -64,7 +64,7 @@
         v-if="
           ['INSERT', 'BOOK_WILL_PERMANENTLY_DELETED'].includes(data.actionType)
         "
-        class="book-card__extra-info"
+        class="book-card-activity__extra-info"
       >
         <span>Nội dung:</span>
         <template v-for="(dataType, index) in dataTypeList">
@@ -89,18 +89,18 @@
       </div>
       </template>
       <template v-else>
-        <div class="book-card">
+        <div class="book-card-activity">
         <div
           :class="[
-            'book-card__icon',
-            `book-card__icon--update`,
+            'book-card-activity__icon',
+            `book-card-activity__icon--update`,
           ]"
         >
             <i
               :class="`far fa-info`"
             ></i>
         </div>
-        <div class="book-card__info">
+        <div class="book-card-activity__info">
           <template
           >
             <span>
@@ -135,7 +135,7 @@ export default {
 </script>
 
 <style lang="scss">
-.book-card {
+.book-card-activity {
   .ant-card {
     width: 500px;
     margin: 0 auto;

@@ -26,7 +26,7 @@
           <a-input placeholder="Nhập tên tài khoản" v-model="form.username" />
         </a-form-item>
         <div class="create-employee__error-text" v-if="isError">
-          <span v-if="!form.username">*Tên tài khoản không được bỏ trống</span>
+          <span v-if="!form.username || isError">*{{userNameErrorText}}</span>
         </div>
         <a-form-item label="Chức vụ">
           <a-input placeholder="Nhập tên tài khoản" v-model="form.title" />
@@ -44,7 +44,11 @@
             @change="onChangeRole"
           />
         </a-form-item>
-        <a-form-item v-if="form.role!=='ADMIN'" label="Sổ" help="*Chọn sổ nhân viên có thể truy cập">
+        <a-form-item
+          v-if="form.role !== 'ADMIN'"
+          label="Sổ"
+          help="*Chọn sổ nhân viên có thể truy cập"
+        >
           <div class="create-employee__switch">
             <div
               v-for="(item, index) in books"
@@ -104,6 +108,7 @@ export default {
       options,
       isError: false,
       isLoading: false,
+      userNameErrorText: "Tên tài khoản không được bỏ trống",
     };
   },
   methods: {
@@ -158,13 +163,24 @@ export default {
             });
             this.$router.push({ name: this.$routerName.EMPLOYEE });
           } else {
-            this.$notification["error"]({
-              message: `Lỗi tạo nhân viên`,
-              description: "Có lỗi xảy ra trong quá trình tạo",
-              placement: "topRight",
-              top: "80px",
-              duration: 5,
-            });
+            if (header.resultMessage === "Username existed!") {
+              this.$notification["error"]({
+                message: `Lỗi tạo nhân viên`,
+                description: "Tên tài khoản đã được sử dụng",
+                placement: "topRight",
+                top: "80px",
+                duration: 5,
+              });
+              this.isError = true;
+              this.userNameErrorText = "Tên tài khoản đã được sử dụng";
+            } else
+              this.$notification["error"]({
+                message: `Lỗi tạo nhân viên`,
+                description: "Có lỗi xảy ra trong quá trình tạo",
+                placement: "topRight",
+                top: "80px",
+                duration: 5,
+              });
           }
         } catch (e) {
           this.isError = true;
@@ -187,6 +203,14 @@ export default {
             return prev + cur.currentBalance;
           }, 0)
         : 0;
+    },
+  },
+  watch: {
+    form: {
+      deep: true,
+      handler(val) {
+        this.userNameErrorText !== "Tên tài khoản không được bỏ trống" && (this.userNameErrorText === "Tên tài khoản không được bỏ trống")
+      },
     },
   },
 };

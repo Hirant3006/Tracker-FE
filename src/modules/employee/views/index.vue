@@ -136,19 +136,17 @@
 
 <script>
 import moment from "moment";
-import FilterHandler from "../components/filter/FilterHandler";
 import locale from "ant-design-vue/es/date-picker/locale/vi_VN";
 import { mapActions, mapGetters } from "vuex";
 import { types as typesBook } from "@/modules/book/constant";
-import TableCustom from "@/components/TableCustom";
 function onChange(pagination, filters, sorter) {
   console.log("params", pagination, filters, sorter);
 }
 export default {
   name: "Employee",
   components: {
-    TableCustom,
-    FilterHandler,
+    TableCustom:() => import('@/components/TableCustom'),
+    FilterHandler:() => import('../components/filter/FilterHandler'),
   },
 
   data() {

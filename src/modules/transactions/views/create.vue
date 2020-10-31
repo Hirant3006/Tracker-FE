@@ -2,8 +2,8 @@
   <div class="create-transaction">
     <i
       class="far fa-arrow-left"
-      style="text-align:left;cursor:pointer"
-      @click="() => $router.push({name:$routerName.TRANSACTIONS})"
+      style="text-align: left; cursor: pointer"
+      @click="() => $router.push({ name: $routerName.TRANSACTIONS })"
     >
       <span class="m-l-5">Trở về</span>
     </i>
@@ -17,39 +17,77 @@
         @submit.stop.prevent="onInsertTransaction()"
       >
         <a-form-item label="Sổ">
-          <a-dropdown :disabled="profile.role!=='ADMIN'">
-            <span class="ant-dropdown-link" style="cursor:pointer" @click="e => e.preventDefault()">
+          <a-dropdown :disabled="profile.role !== 'ADMIN'">
+            <span
+              class="ant-dropdown-link"
+              style="cursor: pointer"
+              @click="(e) => e.preventDefault()"
+            >
               <div
-                style="justify-content:space-between"
+                style="justify-content: space-between"
                 class="d-flex justify-space-between create-transaction__selected-book create-transaction__selected-book--card"
                 v-if="!form.book"
               >
-                <span class="create-transaction__selected-book-title m-r-10">Chọn sổ</span>
-                <i v-if="profile.role=='ADMIN'" :class="`far fa-angle-down`"></i>
+                <span class="create-transaction__selected-book-title m-r-10"
+                  >Chọn sổ</span
+                >
+                <i
+                  v-if="profile.role == 'ADMIN'"
+                  :class="`far fa-angle-down`"
+                ></i>
               </div>
               <div
                 v-else
                 class="create-transaction__selected-book create-transaction__selected-book--card"
               >
-                <i :class="`far fa-${form.book.iconName ? form.book.iconName : 'book'}`"></i>
+                <i
+                  :class="`far fa-${
+                    form.book.iconName ? form.book.iconName : 'book'
+                  }`"
+                ></i>
                 <div>
-                  <span>{{form.book.name}}</span>
+                  <span>{{ form.book.name }}</span>
                   <span
-                    :class="['create-transaction__selected-book-balance',`create-transaction__selected-book-balance--${form.book.currentBalance >0 ? 'plus' : 'minus'}`]"
-                  >{{`${form.book.currentBalance >0 ? '+' : '-'}`}}{{form.book.currentBalance | money({currency:'vnd'})}}</span>
+                    :class="[
+                      'create-transaction__selected-book-balance',
+                      `create-transaction__selected-book-balance--${
+                        form.book.currentBalance > 0 ? 'plus' : 'minus'
+                      }`,
+                    ]"
+                    >{{ `${form.book.currentBalance > 0 ? "+" : "-"}`
+                    }}{{
+                      form.book.currentBalance | money({ currency: "vnd" })
+                    }}</span
+                  >
                 </div>
-                <i style="margin-left:30px" :class="`far fa-angle-down`"></i>
+                <i style="margin-left: 30px" :class="`far fa-angle-down`"></i>
               </div>
             </span>
             <a-menu slot="overlay">
-              <a-menu-item v-for="(item,index) in books" :key="index" @click="onSelectBook(item)">
+              <a-menu-item
+                v-for="(item, index) in books"
+                :key="index"
+                @click="onSelectBook(item)"
+              >
                 <div class="create-transaction__selected-book">
-                  <i :class="`far fa-${item.iconName ? item.iconName : 'book'}`"></i>
+                  <i
+                    :class="`far fa-${item.iconName ? item.iconName : 'book'}`"
+                  ></i>
                   <div>
-                    <span>{{item.name}}</span>
+                    <span>{{ item.name }}</span>
                     <span
-                      :class="[,'create-transaction__selected-book-balance',`create-transaction__selected-book-balance--${item.currentBalance >0 ? 'plus' : 'minus'}`]"
-                    >{{`${item.currentBalance >0 ? '+' : '-'}`}}{{item.currentBalance | money({currency:'vnd'})}}</span>
+                      :class="[
+                        ,
+                        'create-transaction__selected-book-balance',
+                        `create-transaction__selected-book-balance--${
+                          item.currentBalance > 0 ? 'plus' : 'minus'
+                        }`,
+                      ]"
+                      >{{ `${item.currentBalance > 0 ? "+" : "-"}`
+                      }}{{
+                        item.currentBalance | money({ currency: "vnd" })
+                      }}</span
+                    >
                   </div>
                 </div>
               </a-menu-item>
@@ -60,24 +98,39 @@
           <span v-if="!form.book">*Sổ không được bỏ trống</span>
         </div>
         <a-form-item label="Loại">
-          <a-radio-group :options="options" :default-value="'INCOME'" @change="onChangeType" />
+          <a-radio-group
+            :options="options"
+            :default-value="'INCOME'"
+            @change="onChangeType"
+          />
         </a-form-item>
         <a-form-item label="Số tiền">
           <!--  -->
           <!-- <a-input suffix="VND" type="number" /> -->
           <a-input-number
             :default-value="form.amount"
-            :formatter="value => `${truncNum(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-            :parser="value => value.replace(/\$\s?|(,*)/g, '')"
-            @change="value => value!==null ? form.amount=value : form.amount=0"
+            :formatter="
+              (value) =>
+                `${truncNum(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            "
+            :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
+            @change="
+              (value) =>
+                value !== null ? (form.amount = value) : (form.amount = 0)
+            "
             :min="0"
           ></a-input-number>
           <span class="m-l-10">VNĐ</span>
         </a-form-item>
         <div class="create-transaction__error-text" v-if="isError">
           <span
-            v-if="form.book!==null && form.amount>form.book.currentBalance && form.type==='EXPENSE'"
-          >*Số tiền vượt quá hạn mức</span>
+            v-if="
+              form.book !== null &&
+              form.amount > form.book.currentBalance &&
+              form.type === 'EXPENSE'
+            "
+            >*Số tiền vượt quá hạn mức</span
+          >
         </div>
         <a-form-item label="Tên khách">
           <a-input placeholder="Nhập tên khách" v-model="form.clientName" />
@@ -103,7 +156,8 @@
           block
           html-type="submit"
           :loading="isLoading"
-        >Xác nhận</a-button>
+          >Xác nhận</a-button
+        >
       </a-form>
     </a-card>
   </div>
@@ -195,11 +249,14 @@ export default {
           console.log(header, data);
           if (header.isSuccessful) {
             await this.getBooks();
-            if (typeof(this.selectedBook) === "object") {
+            if (typeof this.selectedBook === "object") {
               if (this.selectedBook.id === bookId) {
                 const newDataSelectedBook = this.selectedBook;
-                newDataSelectedBook.currentBalance = type==='INCOME' ? newDataSelectedBook.currentBalance + amount : newDataSelectedBook.currentBalance - amount;
-                this.selectBook(newDataSelectedBook)
+                newDataSelectedBook.currentBalance =
+                  type === "INCOME"
+                    ? newDataSelectedBook.currentBalance + amount
+                    : newDataSelectedBook.currentBalance - amount;
+                this.selectBook(newDataSelectedBook);
               }
             }
             this.$notification["success"]({
@@ -211,13 +268,22 @@ export default {
             });
             this.$router.push({ name: this.$routerName.TRANSACTIONS });
           } else {
-            this.$notification["error"]({
-              message: `Tạo giao dịch`,
-              description: "Có lỗi xảy ra trong quá trình tạo",
-              placement: "topRight",
-              top: "80px",
-              duration: 5,
-            });
+            if (header.resultMessage === "Description can't null!") {
+              this.$notification["error"]({
+                message: `Lỗi sửa giao dịch`,
+                description: "Ghi chú không được để trống",
+                placement: "topRight",
+                top: "80px",
+                duration: 5,
+              });
+            } else
+              this.$notification["error"]({
+                message: `Tạo giao dịch`,
+                description: "Có lỗi xảy ra trong quá trình tạo",
+                placement: "topRight",
+                top: "80px",
+                duration: 5,
+              });
           }
         } catch (e) {
           this.isError = true;
@@ -251,9 +317,9 @@ export default {
 
 <style lang="scss">
 .create-transaction {
-      align-self: center;
-    width: 600px;
-    margin: 0 auto;
+  align-self: center;
+  width: 600px;
+  margin: 0 auto;
   &__error-text {
     color: $danger-color;
   }

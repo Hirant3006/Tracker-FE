@@ -196,13 +196,11 @@ import { types as typesAuth } from "@/modules/auth/constant";
 import { types as typesBook } from "@/modules/book/constant";
 import locale from "ant-design-vue/es/date-picker/locale/vi_VN";
 import moment from "moment";
-import LineChart from "../components/LineChart";
-import PieChart from "../components/PieChart";
 export default {
   name: "DashBoard",
   components: {
-    LineChart,
-    PieChart,
+    LineChart:() => import('../components/LineChart'),
+    PieChart:() => import('../components/PieChart'),
   },
   data() {
     return {

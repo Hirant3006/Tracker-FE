@@ -17,16 +17,13 @@
             <a-checkbox
               width="300px"
               v-for="(item, index) in part.data"
-              :defaultChecked="handleDefaultValue(item.type,'InApp')"
-              @change="onChangeValue(item.type,'InApp')"
+              :defaultChecked="handleDefaultValue(item.type, 'InApp')"
+              @change="onChangeValue(item.type, 'InApp')"
               :key="index"
             >
               {{ item.name }}
             </a-checkbox>
           </a-form-item>
-          <div class="activity-tab__error-text" v-if="isError">
-            <span v-if="!form.name">*Tên tài khoản không được bỏ trống</span>
-          </div>
         </a-card>
       </div>
       <div class="activity-tab__form-part">
@@ -161,7 +158,7 @@ export default {
       isLoadingPassword: false,
       isError: false,
       isErrorPassword: false,
-			compKey: 0
+      compKey: 0,
     };
   },
   created() {
@@ -237,13 +234,14 @@ export default {
         this.isModify = false;
         // this.$router.push({ name: this.$routerName.SETTING });
       } else {
-        this.$notification["error"]({
-          message: `Lỗi cập nhật thông tin`,
-          description: "Có lỗi xảy ra trong quá trình cập nhật thông tin",
-          placement: "bottomRight",
-          top: "80px",
-          duration: 5,
-        });
+        
+          this.$notification["error"]({
+            message: `Lỗi cập nhật thông tin`,
+            description: "Có lỗi xảy ra trong quá trình cập nhật thông tin",
+            placement: "bottomRight",
+            top: "80px",
+            duration: 5,
+          });
         this.isError = true;
         this.isLoading = false;
       }
