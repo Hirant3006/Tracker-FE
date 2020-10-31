@@ -16,19 +16,19 @@
         class="create-employee__create-card-form"
         @submit.stop.prevent="onInsertEmployee()"
       >
-        <a-form-item label="Tên nhân sự">
+        <a-form-item label="Tên nhân sự" :required='true'>
           <a-input placeholder="Nhập tên nhân sự" v-model="form.name" />
         </a-form-item>
         <div class="create-employee__error-text" v-if="isError">
           <span v-if="!form.name">*Tên nhân sự không được bỏ trống</span>
         </div>
-        <a-form-item label="Tên tài khoản">
+        <a-form-item label="Tên tài khoản" :required='true'>
           <a-input placeholder="Nhập tên tài khoản" v-model="form.username" />
         </a-form-item>
         <div class="create-employee__error-text" v-if="isError">
           <span v-if="!form.username || isError">*{{userNameErrorText}}</span>
         </div>
-        <a-form-item label="Chức vụ">
+        <a-form-item label="Chức vụ" :required='true'>
           <a-input placeholder="Nhập tên tài khoản" v-model="form.title" />
         </a-form-item>
         <div class="create-employee__error-text" v-if="isError">
@@ -36,6 +36,7 @@
         </div>
         <a-form-item
           label="Loại"
+          :required='true'
           help="*Quản lí có toàn quyền sử dụng ứng dụng"
         >
           <a-radio-group
@@ -47,6 +48,7 @@
         <a-form-item
           v-if="form.role !== 'ADMIN'"
           label="Sổ"
+          :required='true'
           help="*Chọn sổ nhân viên có thể truy cập"
         >
           <div class="create-employee__switch">

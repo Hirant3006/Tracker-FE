@@ -2,14 +2,14 @@
   <div class="account-tab">
     <a-card>
       <a-form class="account-tab__form" @submit.stop.prevent="onEditProfile()">
-        <a-form-item label="Tên">
+        <a-form-item label="Tên" :required='true'>
           <a-input v-model="form.name" />
         </a-form-item>
         <div class="account-tab__error-text" v-if="isError">
           <span v-if="!form.name">*Tên tài khoản không được bỏ trống</span>
         </div>
         <template v-if="profile.role === 'ADMIN'">
-          <a-form-item label="Email">
+          <a-form-item label="Email" :required='true'>
             <a-input v-model="form.email" />
           </a-form-item>
           <div class="account-tab__error-text" v-if="isError">
@@ -49,13 +49,13 @@
     </a-card>
     <a-modal v-model="isVisibleModal" title="Đổi mật khẩu" :footer="null">
       <a-form class="account-tab__form" @submit.stop.prevent="onEditPassword()">
-        <a-form-item label="Nhập mật khẩu cũ">
+        <a-form-item label="Nhập mật khẩu cũ" :required='true'>
           <a-input type="password" v-model="form_pass.oldPassword" />
         </a-form-item>
         <div class="account-tab__error-text" v-if="isErrorPassword">
           <span v-if="!form_pass.oldPassword">*Không được bỏ trống</span>
         </div>
-        <a-form-item label="Nhập mật khẩu mới">
+        <a-form-item label="Nhập mật khẩu mới" :required='true'>
           <a-input type="password" v-model="form_pass.newPassword" />
         </a-form-item>
         <div class="account-tab__error-text" v-if="isErrorPassword">

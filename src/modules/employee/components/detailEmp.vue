@@ -4,13 +4,13 @@
       class="detail-emp__create-card-form"
       @submit.stop.prevent="onEditTrans()"
     >
-      <a-form-item label="Tên nhân sự">
+      <a-form-item label="Tên nhân sự" :required='true'>
         <a-input placeholder="Nhập tên nhân sự" v-model="form.name" />
       </a-form-item>
       <div class="detail-emp__error-text" v-if="isError">
         <span v-if="!form.name">*Tên nhân sự không được bỏ trống</span>
       </div>
-      <a-form-item label="Tên tài khoản">
+      <a-form-item label="Tên tài khoản" :required='true'>
         <a-input
           :disabled="true"
           placeholder="Nhập tên tài khoản"
@@ -20,8 +20,8 @@
       <div class="detail-emp__error-text" v-if="isError">
         <span v-if="!form.username">*Tên tài khoản không được bỏ trống</span>
       </div>
-      <a-form-item label="Chức vụ">
-        <a-input placeholder="Nhập tên tài khoản" v-model="form.title" />
+      <a-form-item label="Chức vụ" >
+        <a-input placeholder="Nhập chức vụ" v-model="form.title" />
       </a-form-item>
       <div class="detail-emp__error-text" v-if="isError">
         <span v-if="!form.title">*Chức vụ không được bỏ trống</span>
@@ -36,6 +36,7 @@
       <a-form-item
         v-if="form.role !== 'ADMIN'"
         label="Sổ"
+        :required='true'
         help="*Chọn sổ nhân viên có thể truy cập"
       >
         <div class="detail-emp__switch">
