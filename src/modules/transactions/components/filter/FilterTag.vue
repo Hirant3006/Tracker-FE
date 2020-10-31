@@ -113,8 +113,8 @@ export default {
     return {
       dataTypes,
       data: "",
-      amountStart: "",
-      amountEnd: "",
+      amountStart: 0,
+      amountEnd: 0,
     };
   },
   created() {
@@ -171,7 +171,7 @@ export default {
   watch: {
     amountStart: debounce(function () {
       const { amountStart, amountEnd } = this;
-      if (amountStart && amountEnd && amountStart < amountEnd) {
+      if (amountStart < amountEnd) {
         this.$emit("change", {
           type: "amount",
           value: { amountStart, amountEnd },
@@ -180,9 +180,7 @@ export default {
     }, 500),
     amountEnd: debounce(function () {
       const { amountStart, amountEnd } = this;
-      console.log("hello");
-      if (amountStart && amountEnd && amountStart < amountEnd) {
-        console.log("hello again");
+      if (amountStart < amountEnd) {
         this.$emit("change", {
           type: "amount",
           value: { amountStart, amountEnd },
