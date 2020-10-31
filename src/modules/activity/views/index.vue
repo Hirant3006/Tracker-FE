@@ -22,13 +22,13 @@ import { types as typesAuth } from "@/modules/auth/constant";
 import { types as typesBook } from "@/modules/book/constant";
 import UserCard from '../components/UserCard'
 import BookCard from '../components/BookCard'
-import TransactionCard from '../components/TransactionCard'
+import TransCard from '../components/TransactionCard'
 export default {
   name: "Activity",
   components: {
     UserCard,
     BookCard,
-    TransactionCard
+    TransCard
   },
   data() {
     return {
