@@ -104,7 +104,7 @@
 import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 import { types as typesBook } from "@/modules/book/constant";
 export default {
-  name: "TransactionCard",
+  name: "TransCard",
   data() {
     return {
       dataTypeList: [
