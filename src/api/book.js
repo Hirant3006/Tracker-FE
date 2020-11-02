@@ -28,7 +28,7 @@ export default {
 	},
 	edit_book(data) {
 		return axios({
-			url: "/book/",
+			url: "/book",
 			method: "PUT",
 			data
 		});
