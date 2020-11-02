@@ -55,7 +55,7 @@ export default {
     checkComp(type){
       if (type==='USER' || type=='SIGN_IN') return 'user-card'
       else if (type==='BOOK' || type==='BOOK_WILL_PERMANENTLY_DELETED') return 'book-card'
-      else if (type==='BOOK_TRANSACTION') return 'transaction-card'
+      else if (type==='BOOK_TRANSACTION') return 'trans-card'
       else null
     },
     checkNameBookByID(id) {
