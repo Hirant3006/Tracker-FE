@@ -141,7 +141,7 @@
       <a-card v-if="dataSummary !== null">
         <div class="dashboard__content-description">
           <div class="m-b-8">
-            <b>Số dư:</b>
+            <b>Tổng:</b>
             <span
               :class="[
                 'dashboard__content-money',
@@ -219,7 +219,7 @@ export default {
   created() {
     this.form.toDate = moment().format(this.format);
     this.form.fromDate = moment(this.form.toDate)
-      .subtract(7, "days")
+      .subtract(1, "days")
       .format(this.format);
   },
   mounted() {

@@ -1,7 +1,24 @@
 <template>
   <div class="filter-tag">
     <span>{{ type.name }}:</span>
-    <template v-if="['status', 'type'].includes(type.data_type)">
+    <template v-if="['status'].includes(type.data_type)">
+      <a-select
+        mode="multiple"
+        :value="data"
+        style="width: 300px"
+        placeholder="Chọn trạng thái"
+        @change="handleChangeValue"
+      >
+        <a-select-option
+          v-for="(item, index) in dataTypes[type.data_type]"
+          :key="index"
+          :value="item.data_type"
+        >
+          {{ item.name }}
+        </a-select-option>
+      </a-select>
+    </template>
+    <template v-else-if="['status', 'type'].includes(type.data_type)">
       <a-select
         placeholder="Chọn tình trạng"
         :value="data"
@@ -105,23 +122,19 @@ export default {
       require: true,
     },
   },
-  mounted() {
-    this.defaultData !== undefined &&
-      (this.data = this.$clone(this.defaultData));
-  },
   data() {
     return {
       dataTypes,
-      data: "",
+      data: this.type.data_type === "status" ? [] : "",
       amountStart: 0,
       amountEnd: 0,
     };
   },
   created() {
-    if (this.type.data_type === "status") {
-      this.data = "NORMAL";
-      this.$emit("change", { type: this.type.data_type, value: "NORMAL" });
-    }
+    // if (this.type.data_type === "status") {
+    //   this.data = "NORMAL";
+    //   this.$emit("change", { type: this.type.data_type, value: "NORMAL" });
+    // }
   },
   methods: {
     truncNum(number, type) {
@@ -130,11 +143,11 @@ export default {
     },
     handleChangeValue: debounce(function (value) {
       if (typeof value === "object") {
-        value = value.target.value;
+        value.target !== undefined && (value = value.target.value);
       }
       const { type } = this;
       this.$emit("change", { type: type.data_type, value });
-      this.data =value;
+      this.data = value;
     }, 500),
     onClearFilterTag() {
       this.$emit("close", this.type.data_type);
@@ -157,10 +170,16 @@ export default {
     }, 500),
   },
   mounted() {
-    console.log(typeof defaultData)
-    if (this.defaultData !== undefined && typeof this.defaultData === "string")
-      this.data = this.$clone(this.defaultData);
-    else {
+    console.log(typeof defaultData);
+    this.defaultData !== undefined &&
+      (this.data = this.$clone(this.defaultData));
+    if (this.defaultData !== undefined) {
+      if (
+        typeof this.defaultData === "string" ||
+        typeof this.defaultData === "array"
+      )
+        this.data = this.$clone(this.defaultData);
+    } else {
       const { amountStart, amountEnd } = this.defaultData;
       if (amountStart && amountEnd) {
         this.amountStart = amountStart;
@@ -193,6 +212,8 @@ export default {
 
 <style lang="scss">
 .filter-tag {
+  display: flex;
+  align-items: center;
   .ant-input {
     width: 150px;
   }

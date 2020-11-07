@@ -1,61 +1,92 @@
 <template>
-  <div :class="['custom-table']" style="min-height:50px">
+  <div :class="['custom-table']" style="min-height: 50px">
     <div class="custom-table--loading" v-if="isLoading">
       <a-spin size="large"></a-spin>
     </div>
-    <div :class="[$prefixClass.card + (type && `-${type}`)]" :style="isLoading && 'opacity:0.6'">
-      <div v-if="$slots.title" class="custom-table__title">
+    <div
+      :class="[$prefixClass.card + (type && `-${type}`)]"
+      :style="isLoading && 'opacity:0.6'"
+    >
+      <div v-if="$slots.header" class="custom-table__title">
         <slot name="header"></slot>
       </div>
       <div
         class="m-table-content"
-        v-if="data && data.length!==0"
-        :style="[$slots.title ? 'border-top: solid 1px #d9e2ec;border-bottom: solid 1px #d9e2ec;' : 'border-top:none']"
+        v-if="data && data.length !== 0"
+        :style="[
+          $slots.title
+            ? 'border-top: solid 1px #d9e2ec;border-bottom: solid 1px #d9e2ec;'
+            : 'border-top:none',
+        ]"
       >
         <div class="m-table-scroll">
-          <div class="m-table-header m-table-hide-scrollbar" style="border-radius: 8px;">
+          <div
+            class="m-table-header m-table-hide-scrollbar"
+            style="border-radius: 8px"
+          >
             <table>
               <colgroup>
-                <template v-for="(item,index) in columnsData">
+                <template v-for="(item, index) in columnsData">
                   <col
                     :key="index"
-                    :class="item.dataIndex==='checkBox' ? 'm-table-selection-col' : ''"
-                    :style="item.dataIndex==='checkBox' ? 'width: 50px; min-width: 10%;' : `width:${item.width};min-width:${item.width};`"
+                    :class="
+                      item.dataIndex === 'checkBox'
+                        ? 'm-table-selection-col'
+                        : ''
+                    "
+                    :style="
+                      item.dataIndex === 'checkBox'
+                        ? 'width: 50px; min-width: 10%;'
+                        : `width:${item.width};min-width:${item.width};`
+                    "
                   />
                 </template>
               </colgroup>
               <thead class="m-table-thead">
-                <tr class="m-table-row" style="border-bottom: 1px solid #d9e2ec">
-                  <template v-if="checkedList && checkedList.length===0">
+                <tr
+                  class="m-table-row"
+                  style="border-bottom: 1px solid #d9e2ec"
+                >
+                  <template v-if="checkedList && checkedList.length === 0">
                     <th
-                      v-for="(item,index) in columnsData"
+                      v-for="(item, index) in columnsData"
                       :key="index"
-                      :class="[item.dataIndex==='checkBox' &&'m-table-selection-column','m-table-row-cell-break-word']"
+                      :class="[
+                        item.dataIndex === 'checkBox' &&
+                          'm-table-selection-column',
+                        'm-table-row-cell-break-word',
+                      ]"
                       @click="item.sorter && onSorter(item.dataIndex)"
                     >
                       <a-checkbox
                         :checked="checkAll"
                         @change="onCheckAllChange"
-                        v-if="item.dataIndex==='checkBox'"
-                        style="transform: translateX(4px);"
+                        v-if="item.dataIndex === 'checkBox'"
+                        style="transform: translateX(4px)"
                       />
                       <div
                         v-else
-                        :class="['m-table-header-column','custom-table__column','d-flex']"
+                        :class="[
+                          'm-table-header-column',
+                          'custom-table__column',
+                          'd-flex',
+                        ]"
                       >
-                        <div style="font-size:16px">
+                        <div style="font-size: 16px">
                           <slot
-                            :name="item.slots ? item.slots.title :''"
-                            v-bind:item-title="{record:item}"
+                            :name="item.slots ? item.slots.title : ''"
+                            v-bind:item-title="{ record: item }"
                           >
-                            <span>{{item.title ? item.title : ''}}</span>
+                            <span>{{ item.title ? item.title : "" }}</span>
                           </slot>
                         </div>
                         <!-- FILTER -->
                         <span v-if="item.sorter">
-                          <template v-if="sorter.order_by===item.dataIndex">
+                          <template v-if="sorter.order_by === item.dataIndex">
                             <i
-                              :class="`fad fa-sort-${sorter.order_type==='desc'? 'down' : 'up'} fz-12 m-l-5`"
+                              :class="`fad fa-sort-${
+                                sorter.order_type === 'desc' ? 'down' : 'up'
+                              } fz-12 m-l-5`"
                             ></i>
                           </template>
                           <i v-else class="fad fa-sort fz-12 m-l-5"></i>
@@ -65,17 +96,27 @@
                   </template>
                   <template v-else>
                     <th
-                      :class="['m-table-selection-column','m-table-row-cell-break-word']"
-                      style="border-bottom:none "
+                      :class="[
+                        'm-table-selection-column',
+                        'm-table-row-cell-break-word',
+                      ]"
+                      style="border-bottom: none"
                     >
-                      <a-checkbox :checked="checkAll" @change="onCheckAllChange" />
+                      <a-checkbox
+                        :checked="checkAll"
+                        @change="onCheckAllChange"
+                      />
                     </th>
                     <th
-                      :colspan="columnsData &&  columnsData.length"
-                      :class="['m-table-row-cell-break-word','custom-table__checked-action']"
-                      style="border-bottom:none "
+                      :colspan="columnsData && columnsData.length"
+                      :class="[
+                        'm-table-row-cell-break-word',
+                        'custom-table__checked-action',
+                      ]"
+                      style="border-bottom: none"
                     >
-                      {{checkedList && checkedList.length}} {{ $t("campaigns.table.selected") }}
+                      {{ checkedList && checkedList.length }}
+                      {{ $t("campaigns.table.selected") }}
                       <slot name="checkedAction"></slot>
                     </th>
                   </template>
@@ -85,111 +126,74 @@
           </div>
         </div>
       </div>
-      <div class="m-table-body" style="max-height: 400px; overflow:auto">
+      <div class="m-table-body" style="max-height: 400px; overflow: auto">
         <table class="custom-table__body">
           <colgroup>
-            <template v-for="(item,index) in columnsData">
+            <template v-for="(item, index) in columnsData">
               <col
                 :key="index"
-                :class="item.dataIndex==='checkBox' ? 'm-table-selection-col' : ''"
-                :style="item.dataIndex==='checkBox' ? 'width: 50px; min-width: 10%;' : `width:${item.width};min-width:${item.width};`"
+                :class="
+                  item.dataIndex === 'checkBox' ? 'm-table-selection-col' : ''
+                "
+                :style="
+                  item.dataIndex === 'checkBox'
+                    ? 'width: 50px; min-width: 10%;'
+                    : `width:${item.width};min-width:${item.width};`
+                "
               />
             </template>
           </colgroup>
           <tbody :class="['m-table-body']">
             <tr
-              :class="['custom-table__row',checkedList.includes(item.id) && 'custom-table__row--select','m-table-row-cell-break-word' ]"
-              v-for="(item,index) in data"
+              :class="[
+                'custom-table__row',
+                checkedList.includes(item.id) && 'custom-table__row--select',
+                'm-table-row-cell-break-word',
+              ]"
+              v-for="(item, index) in data"
               v-on:click.self="onClickRow(item)"
               :key="index"
             >
               <td
-                v-for="(itemRow,indexRow) in columnsData"
+                v-for="(itemRow, indexRow) in columnsData"
                 :key="indexRow"
-                :class="[itemRow.dataIndex==='checkBox' &&'m-table-selection-column']"
+                :class="[
+                  itemRow.dataIndex === 'checkBox' &&
+                    'm-table-selection-column',
+                ]"
               >
                 <a-checkbox
-                  v-if="itemRow.dataIndex==='checkBox'"
+                  v-if="itemRow.dataIndex === 'checkBox'"
                   :checked="checkedList.includes(item.id)"
-                  @change="onCheckChange(item,index)"
-                  :key="compKey+itemRow.id"
+                  @change="onCheckChange(item, index)"
+                  :key="compKey + itemRow.id"
                   :disabled="!!item.disabled_at"
-                  style="transform: translateX(4px);"
+                  style="transform: translateX(4px)"
                 />
-                <div v-else style="transform: translateX(4px);">
+                <div v-else style="transform: translateX(4px)">
                   <slot
-                    :name="itemRow.scopedSlots ? itemRow.scopedSlots.customRender :''"
-                    v-bind:item-row="{dataIndex:itemRow.dataIndex,record:item,text: item[itemRow.dataIndex]}"
-                  >{{ item[itemRow.dataIndex] }}</slot>
+                    :name="
+                      itemRow.scopedSlots
+                        ? itemRow.scopedSlots.customRender
+                        : ''
+                    "
+                    v-bind:item-row="{
+                      dataIndex: itemRow.dataIndex,
+                      record: item,
+                      text: item[itemRow.dataIndex],
+                    }"
+                    >{{ item[itemRow.dataIndex] }}</slot
+                  >
                 </div>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-
-      <div v-show="total!=null && this.data.length!==0" class="m-table-body">
-        <div class="wrapper-space" style="box-shadow: 0 -3px 20px 0 rgba(0, 18, 50, 0.15);">
-          <table class="custom-table__footer">
-            <colgroup>
-              <template v-for="(item,index) in columnsData">
-                <col
-                  :key="index"
-                  :class="item.dataIndex==='checkBox' ? 'm-table-selection-col' : ''"
-                  :style="item.dataIndex==='checkBox' ? 'width: 50px; min-width: 10%;' : `width:${item.width};min-width:${item.width};`"
-                />
-              </template>
-            </colgroup>
-            <tbody v-if="total!=null">
-              <tr
-                :class="['custom-table__row','m-table-row-cell-break-word' ,'un-hover']"
-                v-for="(item,index) in [total]"
-                :key="'qwdqwd'+index"
-                style="height: 64px;"
-              >
-                <td
-                  v-for="(itemRow,indexRow) in columnsData"
-                  :key="indexRow"
-                  :class="[itemRow.dataIndex==='checkBox' &&'m-table-selection-column','color-text']"
-                >
-                  <div
-                    v-if="itemRow.dataIndex==='checkBox'"
-                    style="white-space: nowrap;font-size:18px;color:#2f43d7"
-                    class="m-l-15"
-                  >
-                    Total:
-                    <span style="white-space: nowrap; font-size: 16px">{{total.total}}</span>
-                  </div>
-                  <div v-else-if="itemRow.dataIndex==='toggle'"></div>
-                  <div v-else-if="itemRow.dataIndex==='action'"></div>
-                  <div v-else-if="itemRow.dataIndex==='cost'">
-                    {{
-                    total.cost | money({ currency: 'dolar' })
-                    }}
-                  </div>
-                  <div style="font-size:16px" v-else-if="itemRow.dataIndex==='ctr'">
-                    {{
-                    total.ctr
-                    }}%
-                  </div>
-                  <div v-else-if="itemRow.dataIndex==='revenue'">
-                    {{
-                    total.revenue | money({ currency: 'dolar' })
-                    }}
-                  </div>
-
-                  <div
-                    v-else
-                    style="font-size:16px;"
-                    :name="itemRow.scopedSlots ? itemRow.scopedSlots.customRender :''"
-                    v-bind:item-row="{dataIndex:itemRow.dataIndex,record:item,text: item[itemRow.dataIndex]}"
-                  >{{ item[itemRow.dataIndex] }}</div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+<!-- 
+      <div v-if="$slots.title" class="m-table-body">
+        <slot name="footer"></slot>
+      </div> -->
     </div>
   </div>
 </template>

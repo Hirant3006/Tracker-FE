@@ -42,6 +42,19 @@
         @click-row="onClickRow"
         rowKey="id"
       >
+        <div class="manage-transactions__header" slot="header">
+          <div>
+            <b>Tổng:</b>
+            <span
+              :class="`manage-transactions__header--${
+                totalDataDisplay > 0 ? 'pos' : 'neg'
+              }`"
+            >
+              &nbsp;{{ totalDataDisplay | money({ currency: "vnd" }) }}</span
+            >
+          </div>
+          <div><b>Số lượng:</b> {{ this.data.length }}</div>
+        </div>
         <template slot="CustomeRegDt" slot-scope="{ itemRow }">
           <div>{{ itemRow.text | formatDate }}</div>
         </template>
@@ -72,7 +85,7 @@
           <div>{{ itemRow.text }}(ID:{{ itemRow.record.regUserId }})</div>
         </template>
         <template slot="CustomeClientName" slot-scope="{ itemRow }">
-          <div>{{ itemRow.text }}asdsa</div>
+          <div>{{ itemRow.text }}</div>
         </template>
         <template slot="CustomAmount" slot-scope="{ itemRow }">
           <a-popover trigger="hover">
@@ -116,7 +129,7 @@
                 <a-button
                   :disabled="
                     itemRow.record.isDelete == true &&
-                      isLoadingDelete === itemRow.record.id
+                    isLoadingDelete === itemRow.record.id
                   "
                   :loading="isLoadingDelete === itemRow.record.id"
                   type="danger"
@@ -146,8 +159,8 @@ function onChange(pagination, filters, sorter) {
 export default {
   name: "Transactions",
   components: {
-    TableCustom:() => import('@/components/TableCustom'),
-    FilterHandler:() => import('../components/filter/FilterHandler'),
+    TableCustom: () => import("@/components/TableCustom"),
+    FilterHandler: () => import("../components/filter/FilterHandler"),
   },
   data() {
     return {
@@ -159,7 +172,7 @@ export default {
         dateStart: "",
         dateEnd: "",
         type: "",
-        status: "NORMAL",
+        status: [],
         clientName: "",
         id: "",
         amountStart: "",
@@ -180,7 +193,7 @@ export default {
           width: "15%",
         },
         {
-          title: "Thời gian",
+          title: "Ngày tạo",
           dataIndex: "regDt",
           scopedSlots: {
             customRender: "CustomeRegDt",
@@ -232,7 +245,7 @@ export default {
     this.onGetTransactions();
   },
   beforeRouteEnter(to, from, next) {
-    next(vm => console.log("hello"));
+    next((vm) => console.log("hello"));
   },
   methods: {
     ...mapActions({
@@ -300,7 +313,7 @@ export default {
     },
     onClearAllFilter() {
       ["status", "clientName", "type", "id", "amountStart", "amountEnd"].map(
-        item => (this.form[item] = "")
+        (item) => (this.form[item] = "")
       );
     },
     onLoadMore() {
@@ -313,7 +326,7 @@ export default {
     async onGetTransactions() {
       try {
         this.isLoading = true;
-        const {
+        let {
           dateStart,
           dateEnd,
           amountStart,
@@ -323,6 +336,7 @@ export default {
           clientName,
           type,
         } = this.form;
+        status = status.toString();
         const { id } = this.selectedBook;
         const { offset } = this;
         const res =
@@ -365,6 +379,9 @@ export default {
     ...mapGetters({
       selectedBook: typesBook.getters.GET_SELECTED_BOOK,
     }),
+    totalDataDisplay() {
+      return this.data.reduce((prev, cur) => prev + cur.amount, 0);
+    },
   },
   watch: {
     selectedBook() {
@@ -411,6 +428,15 @@ export default {
   background: #555;
 }
 .manage-transactions {
+  &__header {
+    font-size: 16px;
+    &--pos {
+      color: #39c16c;
+    }
+    &--neg {
+      color: #f5222d;
+    }
+  }
   &__date-picker {
     display: flex;
     justify-content: space-between;

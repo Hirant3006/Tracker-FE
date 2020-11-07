@@ -87,7 +87,7 @@ export default {
   data() {
     return {
       filterTypes,
-      list: ["status"],
+      list: [],
       isVisibleFilter: true,
       compKey: 0,
     };
@@ -113,6 +113,7 @@ export default {
       return filterTypes.find((item) => item.data_type == type);
     },
     onChangeValueTag({ type, value }) {
+      console.log({type,value})
       this.$emit("change", { type, value });
     },
   },
