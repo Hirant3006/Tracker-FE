@@ -380,7 +380,7 @@ export default {
       selectedBook: typesBook.getters.GET_SELECTED_BOOK,
     }),
     totalDataDisplay() {
-      return this.data.reduce((prev, cur) => prev + cur.amount, 0);
+      return this.data.reduce((prev, cur) => cur.type==='INCOME' ? prev + cur.amount : prev - cur.amount, 0);
     },
   },
   watch: {

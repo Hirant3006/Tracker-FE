@@ -148,7 +148,7 @@
                 'dashboard__content-money--income',
               ]"
               >&nbsp; +{{
-                (dataSummary.expense + dataSummary.income)
+                (dataSummary.expense - dataSummary.income)
                   | money({ currency: "vnd" })
               }}</span
             >
