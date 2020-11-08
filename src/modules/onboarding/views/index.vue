@@ -1,6 +1,6 @@
 <template>
   <div class="onboarding">
-    <div v-if="!books">
+    <div v-if="!books || books.length===0">
       <transition name="fade-in" mode="out-in">
         <div class="onboarding__no-data" v-if="onCreatedNewBook == false">
           <img

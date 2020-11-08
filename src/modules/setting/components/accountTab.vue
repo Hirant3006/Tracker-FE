@@ -8,6 +8,9 @@
         <div class="account-tab__error-text" v-if="isError">
           <span v-if="!form.name">*Tên tài khoản không được bỏ trống</span>
         </div>
+        <a-form-item label="Tên tài khoản" >
+          <a-input v-model="profile.username"  :disabled='true'/>
+        </a-form-item>
         <template v-if="profile.role === 'ADMIN'">
           <a-form-item label="Email" :required='true'>
             <a-input v-model="form.email" />
@@ -116,10 +119,11 @@ export default {
       isLoadingPassword: false,
       isError: false,
       isErrorPassword: false,
+      username: ''
     };
   },
   created() {
-    const { name, email } = this.profile;
+    const { name, email,username } = this.profile;
     this.form = { name, email };
     this.defaultData = this.$clone(this.form);
   },

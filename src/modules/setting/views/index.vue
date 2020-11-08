@@ -51,6 +51,8 @@ export default {
 
 <style lang="scss">
 .setting {
-  padding: 0 300px;
+  // padding: 0 300px;
+  width: 700px;
+  margin: 0 auto;
 }
 </style>

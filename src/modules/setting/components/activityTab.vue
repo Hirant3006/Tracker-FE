@@ -284,6 +284,7 @@ export default {
     padding: 16px 24px;
     width: 700px;
     margin: 0 auto;
+    // margin: 0 auto;
     &-part {
       display: flex;
       justify-content: center;
