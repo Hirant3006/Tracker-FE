@@ -1,6 +1,8 @@
 <template>
   <a-layout class="app-layout" id="components-layout-demo-custom-trigger">
-    <sidebar :data="profile.role === 'ADMIN' ? columnDataAdmin : columnDataMod" />
+    <sidebar
+      :data="profile.role === 'ADMIN' ? columnDataAdmin : columnDataMod"
+    />
     <a-layout>
       <a-layout-header
         style="
@@ -33,6 +35,7 @@
                 <div>
                   <span>{{ selectedBook.name }}</span>
                   <span
+                    v-if="profile.role === 'ADMIN'"
                     :class="[
                       ,
                       'app-layout__selected-book-balance',
@@ -45,11 +48,19 @@
                       selectedBook.currentBalance | money({ currency: "vnd" })
                     }}</span
                   >
+                  <span
+                    v-else
+                    :class="[
+                      ,
+                      'app-layout__selected-book-balance',
+                    ]"
+                    >--</span
+                  >
                 </div>
               </div>
               <div
                 class="app-layout__selected-book app-layout__selected-book--card"
-                v-else-if="profile.role==='ADMIN'"
+                v-else-if="profile.role === 'ADMIN'"
               >
                 <i :class="`far fa-globe`"></i>
                 <div>
@@ -69,7 +80,11 @@
               </div>
             </span>
             <a-menu slot="overlay">
-              <a-menu-item key="-1" @click="onSelectBook('all')" v-if="profile.role==='ADMIN'">
+              <a-menu-item
+                key="-1"
+                @click="onSelectBook('all')"
+                v-if="profile.role === 'ADMIN'"
+              >
                 <div class="app-layout__selected-book">
                   <i :class="`far fa-globe`"></i>
                   <div>
@@ -100,6 +115,7 @@
                   <div>
                     <span>{{ item.name }}</span>
                     <span
+                      v-if="profile.role === 'ADMIN'"
                       :class="[
                         ,
                         'app-layout__selected-book-balance',
@@ -112,6 +128,7 @@
                         item.currentBalance | money({ currency: "vnd" })
                       }}</span
                     >
+                    <span v-else> -- </span>
                   </div>
                 </div>
               </a-menu-item>
@@ -211,8 +228,7 @@ export default {
       ],
     };
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     ...mapActions({
       logout: "auth/logout",
