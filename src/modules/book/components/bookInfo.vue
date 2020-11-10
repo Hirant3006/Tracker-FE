@@ -66,9 +66,13 @@
             class="m-r-10"
             >Khôi phục</a-button
           >
-          <a-button 
-            @click="onChangeStatictisRoute"
-          >Xem thống kê</a-button>
+          <a-button
+            class="m-r-10 m-l-10"
+            type="primary"
+            @click="onChangeTransactionRoute"
+            >Xem giao dịch</a-button
+          >
+          <a-button @click="onChangeStatictisRoute">Xem thống kê</a-button>
         </div>
       </span>
       <div class="book-info__amount">
@@ -220,10 +224,21 @@ export default {
   methods: {
     ...mapActions({
       deleteBook: "book/deleteBook",
+      selectBook: "book/setSelectedBook",
     }),
-    onChangeStatictisRoute(){
-      console.log(this.data.id)
-      this.$router.push({name:this.$routerName.DASHBOARD,params: {bookData: this.data}})
+    async onChangeTransactionRoute() {
+      await this.selectBook(this.data)
+      await this.$router.push({
+        name: this.$routerName.TRANSACTION,
+        params: { bookData: this.data },
+      });
+    },
+    onChangeStatictisRoute() {
+      console.log(this.data.id);
+      this.$router.push({
+        name: this.$routerName.DASHBOARD,
+        params: { bookData: this.data },
+      });
     },
     onEditBook() {
       this.$emit("edit", this.form);

@@ -242,6 +242,7 @@ export default {
       console.log("titleClick", e);
     },
     onSelectBook(data) {
+      console.log({data})
       this.selectBook(data !== "all" ? data : "all");
       // this.$router.go();
     },
@@ -253,7 +254,7 @@ export default {
       selectedBook: typesBook.getters.GET_SELECTED_BOOK,
     }),
     isShowDropDown() {
-      return this.$route.name !== "Dashboard";
+      return this.$route.name === "Transactions";
     },
     totalBalance() {
       return this.books !== null
