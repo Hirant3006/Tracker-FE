@@ -1,7 +1,7 @@
 import axios from "@/plugins/axios";
 
 export default {
-	get_list_user({ offset = null, title, includeAdmin, name, bookID }) {
+	get_list_user({ offset = null, title, includeAdmin, name, bookID, deleteYn }) {
 		return axios({
 			url: "/user",
 			method: "get",
@@ -10,6 +10,7 @@ export default {
 				offset,
 				title,
 				includeAdmin,
+				deleteYn: !deleteYn ? 'N' : deleteYn,
 				name,
 				bookId: bookID,
 			},

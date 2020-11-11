@@ -58,9 +58,9 @@
             <i :class="`far fa-info`"></i>
           </a-popover>
         </template>
-        <div  slot="customBlock" slot-scope="{ itemRow }">
+        <div slot="customBlock" slot-scope="{ itemRow }">
           <a-popconfirm
-          class="m-l-38"
+            class="m-l-38"
             :title="`Bạn có muốn ${
               itemRow.record.isActive === false ? 'mở khóa' : 'khóa'
             } nhân viên này?`"
@@ -96,7 +96,12 @@
           </a-popconfirm>
         </div>
         <template slot="customName" slot-scope="{ itemRow }">
-          <div class="manage-employee__name">&nbsp;{{ itemRow.text }}</div>
+          <div class="manage-employee__name">
+            <a-tooltip v-if="itemRow.record.isDelete">
+              <template slot="title"> Nhân viên đã bị xóa</template>
+              <i style="color: red" :class="`far fa-trash`"></i> </a-tooltip
+            >&nbsp;{{ itemRow.text }}
+          </div>
         </template>
         <template slot="customRole" slot-scope="{ itemRow }">
           <div class="manage-employee__role">
@@ -167,7 +172,7 @@ export default {
         name: "",
         title: "",
         bookID: "",
-        includeAdmin: "",
+        deleteYn: "N",
       },
       columns: [
         {
@@ -290,13 +295,14 @@ export default {
     },
     async onGetEmployee() {
       this.isLoading = true;
-      const { includeAdmin, name, title, bookID } = this.form;
+      const { includeAdmin, name, title, bookID, deleteYn } = this.form;
       const { offset } = this;
       const res = await this.getUsers({
         includeAdmin,
         name,
         title,
         bookID,
+        deleteYn,
       });
       const { header, data } = res.data;
       if (header.isSuccessful) {

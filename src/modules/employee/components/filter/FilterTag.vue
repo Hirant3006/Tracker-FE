@@ -1,7 +1,7 @@
 <template>
   <div class="filter-tag">
     <span>{{ type.name }}:</span>
-    <template v-if="['includeAdmin', 'bookID'].includes(type.data_type)">
+    <template v-if="['includeAdmin', 'bookID','deleteYn'].includes(type.data_type)">
       <a-select
         placeholder="Chọn tình trạng"
         v-model="data"
@@ -43,6 +43,16 @@ const dataTypes = {
     },
   ],
   bookID: [],
+  deleteYn: [
+    {
+      name: "Có",
+      data_type: "Y",
+    },
+    {
+      name: "Không",
+      data_type: "N",
+    },
+  ]
 };
 export default {
   name: "FilterTag",
@@ -108,7 +118,6 @@ export default {
     }, 500),
     amountEnd: debounce(function () {
       const { amountStart, amountEnd } = this;
-      console.log("hello");
       if (amountStart && amountEnd && amountStart < amountEnd) {
         console.log("hello again");
         this.$emit("change", {

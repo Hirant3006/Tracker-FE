@@ -6,10 +6,13 @@
         <div class="activity__loading" v-if="isLoading">
           <a-spin size="large"></a-spin>
         </div>
-        <template v-for="(item,index) in data" >
-            <component :is="checkComp(item.type)" :key="index" :data='$clone(item)'/>
-        </template>
-            <!-- <user-card :key="index+'user'" v-if="item.type==='USER'" />
+        <component
+          v-for="(item, index) in data"
+          :is="checkComp(item.type)"
+          :key="index"
+          :data="$clone(item)"
+        />
+        <!-- <user-card :key="index+'user'" v-if="item.type==='USER'" />
             <user-card :key="index+'book'" v-if="item.type==='BOOK'" :data='item'/> -->
       </div>
     </div>
@@ -20,15 +23,15 @@
 import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 import { types as typesAuth } from "@/modules/auth/constant";
 import { types as typesBook } from "@/modules/book/constant";
-import UserCard from '../components/UserCard'
-import BookCard from '../components/BookCard'
-import TransCard from '../components/TransCard'
+import UserCard from "../components/UserCard";
+import BookCard from "../components/BookCard";
+import TransCard from "../components/TransCard";
 export default {
   name: "Activity",
   components: {
     UserCard,
     BookCard,
-    TransCard
+    TransCard,
   },
   data() {
     return {
@@ -52,11 +55,12 @@ export default {
     ...mapActions({
       getLog: "activity/getLog",
     }),
-    checkComp(type){
-      if (type==='USER' || type=='SIGN_IN') return 'user-card'
-      else if (type==='BOOK' || type==='BOOK_WILL_PERMANENTLY_DELETED') return 'book-card'
-      else if (type==='BOOK_TRANSACTION') return 'trans-card'
-      else null
+    checkComp(type) {
+      if (type === "USER" || type == "SIGN_IN") return "user-card";
+      else if (type === "BOOK" || type === "BOOK_WILL_PERMANENTLY_DELETED")
+        return "book-card";
+      else if (type === "BOOK_TRANSACTION") return "trans-card";
+      else null;
     },
     checkNameBookByID(id) {
       return this.books.find((item) => item.id == id).name;
@@ -65,7 +69,7 @@ export default {
       this.isLoading = true;
       try {
         const res = await this.getLog();
-        console.log({ data:res.data.data });
+        console.log({ data: res.data.data });
         const { header, data } = res.data;
         if (header.isSuccessful) {
           this.data = data;
