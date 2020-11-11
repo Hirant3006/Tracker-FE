@@ -31,7 +31,7 @@
         >Không có dữ liệu</span
       >
     </div>
-    <template v-else-if="data.length!==0">
+    <template v-else-if="data.length !== 0">
       <TableCustom
         :isLoading="isLoading"
         :columns="columns"
@@ -43,7 +43,12 @@
         <template slot="customBooks" slot-scope="{ itemRow }">
           <a-popover>
             <div slot="content">
-              <template v-if="itemRow.record.bookList && itemRow.record.bookList.length !== 0">
+              <template
+                v-if="
+                  itemRow.record.bookList &&
+                  itemRow.record.bookList.length !== 0
+                "
+              >
                 <div v-for="item in itemRow.record.bookList" :key="item.id">
                   <i :class="`far fa-book`"></i>&nbsp;{{ item.name }}
                 </div>
@@ -53,43 +58,49 @@
             <i :class="`far fa-info`"></i>
           </a-popover>
         </template>
+        <div slot="customBlock" slot-scope="{ itemRow }">
+          <a-popconfirm
+            class="m-l-38"
+            :title="`Bạn có muốn ${
+              itemRow.record.isActive === false ? 'mở khóa' : 'khóa'
+            } nhân viên này?`"
+            ok-text="Yes"
+            cancel-text="No"
+            @confirm="
+              onModUser(
+                itemRow.record.id,
+                itemRow.record.isActive === false ? 'active' : 'deactive'
+              )
+            "
+          >
+            <a-tooltip placement="bottom">
+              <template v-if="itemRow.record.isActive === true" slot="title"
+                >Tài khoản đang hoạt động, Nhấn để khóa tài khoản</template
+              >
+              <template v-else slot="title"
+                >Tài khoản đã bị khóa, nhấn để mở khóa</template
+              >
+              <i
+                style="cursor: pointer"
+                class="co-danger"
+                v-if="itemRow.record.isActive === false"
+                :class="`far fa-lock`"
+              ></i>
+              <i
+                style="cursor: pointer"
+                class="co-success"
+                v-if="itemRow.record.isActive === true"
+                :class="`far fa-unlock`"
+              ></i>
+            </a-tooltip>
+          </a-popconfirm>
+        </div>
         <template slot="customName" slot-scope="{ itemRow }">
           <div class="manage-employee__name">
-            <a-popconfirm
-              :title="`Bạn có muốn ${
-                itemRow.record.isActive === false ? 'mở khóa' : 'khóa'
-              } nhân viên này?`"
-              ok-text="Yes"
-              cancel-text="No"
-              @confirm="
-                onModUser(
-                  itemRow.record.id,
-                  itemRow.record.isActive === false ? 'active' : 'deactive'
-                )
-              "
-            >
-              <a-tooltip placement="bottom">
-                <template v-if="itemRow.record.isActive === true" slot="title"
-                  >Tài khoản đang hoạt động, Nhấn để khóa tài khoản</template
-                >
-                <template v-else slot="title"
-                  >Tài khoản đã bị khóa, nhấn để mở khóa</template
-                >
-                <i
-                  style="cursor: pointer"
-                  class="co-danger"
-                  v-if="itemRow.record.isActive === false"
-                  :class="`far fa-lock`"
-                ></i>
-                <i
-                  style="cursor: pointer"
-                  class="co-success"
-                  v-if="itemRow.record.isActive === true"
-                  :class="`far fa-unlock`"
-                ></i>
-              </a-tooltip>
-            </a-popconfirm>
-            &nbsp;{{ itemRow.text }}
+            <a-tooltip v-if="itemRow.record.isDelete">
+              <template slot="title"> Nhân viên đã bị xóa</template>
+              <i style="color: red" :class="`far fa-trash`"></i> </a-tooltip
+            >&nbsp;{{ itemRow.text }}
           </div>
         </template>
         <template slot="customRole" slot-scope="{ itemRow }">
@@ -145,8 +156,8 @@ function onChange(pagination, filters, sorter) {
 export default {
   name: "Employee",
   components: {
-    TableCustom:() => import('@/components/TableCustom'),
-    FilterHandler:() => import('../components/filter/FilterHandler'),
+    TableCustom: () => import("@/components/TableCustom"),
+    FilterHandler: () => import("../components/filter/FilterHandler"),
   },
 
   data() {
@@ -161,7 +172,7 @@ export default {
         name: "",
         title: "",
         bookID: "",
-        includeAdmin: "",
+        deleteYn: "N",
       },
       columns: [
         {
@@ -172,9 +183,15 @@ export default {
         {
           title: "Tên",
           dataIndex: "name",
-          width: "30%",
+          width: "15%",
           scopedSlots: {
             customRender: "customName",
+          },
+        },
+        {
+          title: "Khóa/mở khóa",
+          scopedSlots: {
+            customRender: "customBlock",
           },
         },
         {
@@ -225,8 +242,8 @@ export default {
     async onModUser(id, type) {
       const res =
         type === "active"
-          ? await this.activeUser({id})
-          : await this.deactiveUser({id});
+          ? await this.activeUser({ id })
+          : await this.deactiveUser({ id });
       const { header } = res.data;
       if (header.isSuccessful) {
         this.data[this.data.findIndex((item) => item.id === id)].isActive =
@@ -278,20 +295,21 @@ export default {
     },
     async onGetEmployee() {
       this.isLoading = true;
-      const { includeAdmin, name, title, bookID } = this.form;
+      const { includeAdmin, name, title, bookID, deleteYn } = this.form;
       const { offset } = this;
       const res = await this.getUsers({
         includeAdmin,
         name,
         title,
         bookID,
+        deleteYn,
       });
       const { header, data } = res.data;
       if (header.isSuccessful) {
         this.total = data.total;
         if (offset == 0) this.data = data.content;
         else this.data = [...this.data, ...data.content];
-        this.compKey++
+        this.compKey++;
       }
       this.isLoading = false;
     },

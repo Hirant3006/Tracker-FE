@@ -169,7 +169,7 @@ export default {
       this.isLoading = false;
       if (header.isSuccessful) {
         this.listEmpByBook[id] = data.users.filter(
-          (item) => item.role !== "ADMIN"
+          (item) => item.role !== "ADMIN" && !item.isDelete
         );
       } else {
       }

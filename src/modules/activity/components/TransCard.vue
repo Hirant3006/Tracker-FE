@@ -13,7 +13,7 @@
       </div>
       <div class="transaction-card-card__info">
         <span>
-          Nhân viên
+          {{ data.role === "ADMIN" ? "Quản lí" : "Nhân viên" }}
           <b>{{ data.data.regNm }}</b> (ID:{{ data.data.regUserId }}) đã
           <span v-if="data.actionType === 'INSERT'">
             <b>tạo</b> giao dịch
@@ -158,7 +158,7 @@ export default {
 
     &__icon {
       text-align: center;
-      margin:0 20px;
+      margin: 0 20px;
       &--update {
         color: $warning-color;
       }

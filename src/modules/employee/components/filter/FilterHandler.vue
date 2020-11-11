@@ -44,12 +44,16 @@ const filterTypes = [
     data_type: "name",
   },
   {
-    name: "Bao gồm quản lí",
+    name: "Gồm quản lí",
     data_type: "includeAdmin",
   },
   {
     name: "Chức vụ",
     data_type: "title",
+  },
+  {
+    name: "Chỉ NV đã xóa",
+    data_type: "deleteYn",
   },
   {
     name: "Sổ",
