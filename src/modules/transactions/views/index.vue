@@ -128,7 +128,7 @@
                 <template slot="title">Xóa</template>
                 <a-button
                   :disabled="
-                    itemRow.record.isDelete == true &&
+                    itemRow.record.isDelete == true ||
                     isLoadingDelete === itemRow.record.id
                   "
                   :loading="isLoadingDelete === itemRow.record.id"
@@ -382,7 +382,11 @@ export default {
       selectedBook: typesBook.getters.GET_SELECTED_BOOK,
     }),
     totalDataDisplay() {
-      return this.data.reduce((prev, cur) => cur.type==='INCOME' ? prev + cur.amount : prev - cur.amount, 0);
+      return this.data.reduce(
+        (prev, cur) =>
+          cur.type === "INCOME" ? prev + cur.amount : prev - cur.amount,
+        0
+      );
     },
   },
   watch: {
@@ -445,7 +449,7 @@ export default {
   }
   &__action {
     display: flex;
-    button:nth-child(2) {
+    button:nth-child(2), > span {
       margin-left: 8px;
     }
     button:nth-child(1) {

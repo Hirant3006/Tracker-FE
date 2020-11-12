@@ -4,7 +4,7 @@
       class="detail-trans__create-card-form"
       @submit.stop.prevent="onEditTrans()"
     >
-      <a-form-item label="Sổ" :required='true'>
+      <a-form-item label="Sổ" :required="true">
         <div style="width: fit-content">
           <a-dropdown :disabled="true">
             <span
@@ -84,14 +84,14 @@
       <div class="detail-trans__error-text" v-if="isError">
         <span v-if="!form.book">*Sổ không được bỏ trống</span>
       </div>
-      <a-form-item label="Loại" :required='true'>
+      <a-form-item label="Loại" :required="true">
         <a-radio-group
           :options="options"
           :default-value="form.type"
           @change="onChangeType"
         />
       </a-form-item>
-      <a-form-item label="Số tiền" :required='true'>
+      <a-form-item label="Số tiền" :required="true">
         <!--  -->
         <!-- <a-input suffix="VND" type="number" /> -->
         <a-input-number
@@ -119,13 +119,13 @@
           >*Số tiền vượt quá hạn mức</span
         >
       </div>
-      <a-form-item label="Tên khách" :required='true'>
+      <a-form-item label="Tên khách" :required="true">
         <a-input placeholder="Nhập tên khách" v-model="form.clientName" />
       </a-form-item>
       <div class="detail-trans__error-text" v-if="isError">
         <span v-if="!form.clientName">*Tên khách không được bỏ trống</span>
       </div>
-      <a-form-item label="Ghi chú" :required='true'>
+      <a-form-item label="Ghi chú" :required="true">
         <a-textarea
           placeholder="Nhập ghi chú"
           v-model="form.description"
@@ -136,7 +136,7 @@
                 <span v-if="!$v.form.username.required">*Tên không được bỏ trống</span>
       </div>-->
 
-      <div v-if="isModify" class="detail-trans__button-group">
+      <div v-if="isModify && !data.isDelete" class="detail-trans__button-group">
         <a-button
           class="m-b-25 m-t-16"
           type="primary"
@@ -153,6 +153,7 @@
           >Bỏ qua</a-button
         >
       </div>
+      <span style="color: red">*Không thể sửa giao dịch đã bị xóa</span>
     </a-form>
   </div>
 </template>

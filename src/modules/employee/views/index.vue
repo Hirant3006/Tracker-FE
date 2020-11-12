@@ -59,48 +59,51 @@
           </a-popover>
         </template>
         <div slot="customBlock" slot-scope="{ itemRow }">
-          <a-popconfirm
-            class="m-l-38"
-            :title="`Bạn có muốn ${
-              itemRow.record.isActive === false ? 'mở khóa' : 'khóa'
-            } nhân viên này?`"
-            ok-text="Yes"
-            cancel-text="No"
-            @confirm="
-              onModUser(
-                itemRow.record.id,
-                itemRow.record.isActive === false ? 'active' : 'deactive'
-              )
-            "
-          >
-            <a-tooltip placement="bottom">
-              <template v-if="itemRow.record.isActive === true" slot="title"
-                >Tài khoản đang hoạt động, Nhấn để khóa tài khoản</template
-              >
-              <template v-else slot="title"
-                >Tài khoản đã bị khóa, nhấn để mở khóa</template
-              >
-              <i
-                style="cursor: pointer"
-                class="co-danger"
-                v-if="itemRow.record.isActive === false"
-                :class="`far fa-lock`"
-              ></i>
-              <i
-                style="cursor: pointer"
-                class="co-success"
-                v-if="itemRow.record.isActive === true"
-                :class="`far fa-unlock`"
-              ></i>
-            </a-tooltip>
-          </a-popconfirm>
-        </div>
+            <a-popconfirm
+              class="m-l-38"
+              :title="`Bạn có muốn ${
+                itemRow.record.isActive === false ? 'mở khóa' : 'khóa'
+              } nhân viên này?`"
+              ok-text="Yes"
+              cancel-text="No"
+              @confirm="
+                onModUser(
+                  itemRow.record.id,
+                  itemRow.record.isActive === false ? 'active' : 'deactive'
+                )
+              "
+            >
+              <a-tooltip placement="bottom">
+                <template v-if="itemRow.record.isActive === true" slot="title"
+                  >Tài khoản đang hoạt động, Nhấn để khóa tài khoản</template
+                >
+                <template v-else slot="title"
+                  >Tài khoản đã bị khóa, nhấn để mở khóa</template
+                >
+                <i
+                  style="cursor: pointer"
+                  class="co-danger"
+                  v-if="itemRow.record.isActive === false"
+                  :class="`far fa-lock`"
+                ></i>
+                <i
+                  style="cursor: pointer"
+                  class="co-success"
+                  v-if="itemRow.record.isActive === true"
+                  :class="`far fa-unlock`"
+                ></i>
+              </a-tooltip>
+            </a-popconfirm>
+          </div>
         <template slot="customName" slot-scope="{ itemRow }">
           <div class="manage-employee__name">
             <a-tooltip v-if="itemRow.record.isDelete">
               <template slot="title"> Nhân viên đã bị xóa</template>
               <i style="color: red" :class="`far fa-trash`"></i> </a-tooltip
-            >&nbsp;{{ itemRow.text }}
+            >&nbsp;
+            <span :style="itemRow.record.isDelete && 'color: red'">{{
+              itemRow.text
+            }}</span>
           </div>
         </template>
         <template slot="customRole" slot-scope="{ itemRow }">

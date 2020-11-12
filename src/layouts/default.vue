@@ -251,7 +251,7 @@ export default {
       selectedBook: typesBook.getters.GET_SELECTED_BOOK,
     }),
     isShowDropDown() {
-      return ["Transactions", "Book"].includes(this.$route.name);
+      return ["Transactions","Create Transaction","Detail Transaction",'Create Book',"Book"].includes(this.$route.name);
     },
     totalBalance() {
       return this.books !== null
