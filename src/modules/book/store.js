@@ -24,10 +24,11 @@ const getters = {
 };
 
 const actions = {
-	async [_types.actions.GET_BOOKS]({ commit }) {
+	async [_types.actions.GET_BOOKS]({ commit,state }) {
 		try {
 			const res = await api.get_list_book();
 			let { header, data } = res.data;
+			console.log({state,data})
 			if (header.isSuccessful) {
 				commit(
 					_types.mutations.SET_BOOKS,
@@ -37,6 +38,11 @@ const actions = {
 					_types.mutations.SET_DELETE_BOOKS,
 					data.filter((item) => item.isDelete)
 				);
+				if (state.selected!=='all') {
+					const selectedBook = JSON.parse(state.selected)
+					const newData = data.find(item => item.id = selectedBook.id)
+					commit(_types.mutations.SET_SELECTED_BOOK, newData);
+				}
 			}
 			return res;
 		} catch (error) {

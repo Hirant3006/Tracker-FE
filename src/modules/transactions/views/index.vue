@@ -249,6 +249,7 @@ export default {
   },
   methods: {
     ...mapActions({
+      getBook: "book/getBooks",
       getTransactions: "transactions/getTransactions",
       getTransactionsByBook: "transactions/getTransactionsByBook",
       deleteTransaction: "transactions/deleteTransaction",
@@ -284,6 +285,7 @@ export default {
         const { header } = deleteTransactiondata.data;
         if (header.isSuccessful) {
           this.onGetTransactions();
+          this.getBook();
           this.$notification["success"]({
             message: `Xóa giao dịch`,
             description: "Xóa giao dịch thành công",
