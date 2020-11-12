@@ -38,8 +38,9 @@ const actions = {
 					_types.mutations.SET_DELETE_BOOKS,
 					data.filter((item) => item.isDelete)
 				);
-				if (state.selected!=='all') {
+				if (state.selected!=='all' && state.selected!==null) {
 					const selectedBook = JSON.parse(state.selected)
+					console.log(selectedBook)
 					const newData = data.find(item => item.id = selectedBook.id)
 					commit(_types.mutations.SET_SELECTED_BOOK, newData);
 				}

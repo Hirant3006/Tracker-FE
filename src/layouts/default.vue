@@ -21,16 +21,18 @@
             <span
               class="ant-dropdown-link"
               style="cursor: pointer"
-              @click="(e) => e.preventDefault()"
+              @click="e => e.preventDefault()"
             >
               <div
                 class="app-layout__selected-book app-layout__selected-book--card"
                 v-if="typeof selectedBook === 'object'"
               >
                 <i
-                  :class="`far fa-${
-                    selectedBook.iconName ? selectedBook.iconName : 'book'
-                  }`"
+                  :class="
+                    `far fa-${
+                      selectedBook.iconName ? selectedBook.iconName : 'book'
+                    }`
+                  "
                 ></i>
                 <div>
                   <span>{{ selectedBook.name }}</span>
@@ -48,12 +50,7 @@
                       selectedBook.currentBalance | money({ currency: "vnd" })
                     }}</span
                   >
-                  <span
-                    v-else
-                    :class="[
-                      ,
-                      'app-layout__selected-book-balance',
-                    ]"
+                  <span v-else :class="[, 'app-layout__selected-book-balance']"
                     >--</span
                   >
                 </div>
@@ -135,7 +132,7 @@
             </a-menu>
           </a-dropdown>
           <a-dropdown>
-            <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">{{
+            <a class="ant-dropdown-link" @click="e => e.preventDefault()">{{
               profile.username
             }}</a>
             <a-menu slot="overlay">
@@ -242,7 +239,7 @@ export default {
       console.log("titleClick", e);
     },
     onSelectBook(data) {
-      console.log({data})
+      console.log({ data });
       this.selectBook(data !== "all" ? data : "all");
       // this.$router.go();
     },
@@ -254,7 +251,7 @@ export default {
       selectedBook: typesBook.getters.GET_SELECTED_BOOK,
     }),
     isShowDropDown() {
-      return this.$route.name === "Transactions";
+      return ["Transactions", "Book"].includes(this.$route.name);
     },
     totalBalance() {
       return this.books !== null
