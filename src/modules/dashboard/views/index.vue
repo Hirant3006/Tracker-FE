@@ -4,115 +4,129 @@
       <h3>Thống kê</h3>
     </div>
     <div class="dashboard__filter">
-      <a-dropdown>
-        <span
-          class="ant-dropdown-link"
-          style="cursor: pointer"
-          @click="(e) => e.preventDefault()"
-        >
-          <div
-            style="justify-content: space-between"
-            class="d-flex justify-space-between dashboard__selected-book dashboard__selected-book--card"
-            v-if="!form.book"
+      <div>
+        <a-dropdown>
+          <span
+            class="ant-dropdown-link"
+            style="cursor: pointer"
+            @click="(e) => e.preventDefault()"
           >
-            <span class="dashboard__selected-book-title m-r-10">Chọn sổ</span>
-            <i v-if="profile.role == 'ADMIN'" :class="`far fa-angle-down`"></i>
-          </div>
-          <div
-            class="dashboard__selected-book dashboard__selected-book--card"
-            v-else-if="form.book === 'all'"
-          >
-            <i :class="`far fa-globe`"></i>
-            <div>
-              <span>Tất cả</span>
-              <span
-                :class="[
-                  ,
-                  'dashboard__selected-book-balance',
-                  `dashboard__selected-book-balance--${
-                    totalBalance > 0 ? 'plus' : 'minus'
-                  }`,
-                ]"
-                >{{ `${totalBalance >= 0 ? "+" : ""}`
-                }}{{ totalBalance | money({ currency: "vnd" }) }}</span
-              >
+            <div
+              style="justify-content: space-between"
+              class="d-flex justify-space-between dashboard__selected-book dashboard__selected-book--card"
+              v-if="!form.book"
+            >
+              <span class="dashboard__selected-book-title m-r-10">Chọn sổ</span>
+              <i
+                v-if="profile.role == 'ADMIN'"
+                :class="`far fa-angle-down`"
+              ></i>
             </div>
-            <i style="margin-left: 30px" :class="`far fa-angle-down`"></i>
-          </div>
-          <div
-            v-else
-            class="dashboard__selected-book dashboard__selected-book--card"
-          >
-            <i
-              :class="`far fa-${
-                form.book.iconName ? form.book.iconName : 'book'
-              }`"
-            ></i>
-            <div>
-              <span>{{ form.book.name }}</span>
-              <span
-                :class="[
-                  'dashboard__selected-book-balance',
-                  `dashboard__selected-book-balance--${
-                    form.book.currentBalance > 0 ? 'plus' : 'minus'
-                  }`,
-                ]"
-                >{{ `${form.book.currentBalance > 0 ? "+" : "-"}`
-                }}{{
-                  form.book.currentBalance | money({ currency: "vnd" })
-                }}</span
-              >
-            </div>
-            <i style="margin-left: 30px" :class="`far fa-angle-down`"></i>
-          </div>
-        </span>
-        <a-menu slot="overlay">
-          <a-menu-item key="-1" @click="onSelectBook('all')">
-            <div class="app-layout__selected-book">
+            <div
+              class="dashboard__selected-book dashboard__selected-book--card"
+              v-else-if="form.book === 'all'"
+            >
               <i :class="`far fa-globe`"></i>
               <div>
                 <span>Tất cả</span>
                 <span
                   :class="[
                     ,
-                    'app-layout__selected-book-balance',
-                    `app-layout__selected-book-balance--${
+                    'dashboard__selected-book-balance',
+                    `dashboard__selected-book-balance--${
                       totalBalance > 0 ? 'plus' : 'minus'
                     }`,
                   ]"
-                  >{{ `${totalBalance > 0 ? "+" : ""}`
+                  >{{ `${totalBalance >= 0 ? "+" : ""}`
                   }}{{ totalBalance | money({ currency: "vnd" }) }}</span
                 >
               </div>
+              <i style="margin-left: 30px" :class="`far fa-angle-down`"></i>
             </div>
-          </a-menu-item>
-          <a-menu-item
-            v-for="(item, index) in books"
-            :key="index"
-            @click="onSelectBook(item)"
-          >
-            <div class="dashboard__selected-book">
+            <div
+              v-else
+              class="dashboard__selected-book dashboard__selected-book--card"
+            >
               <i
-                :class="`far fa-${item.iconName ? item.iconName : 'book'}`"
+                :class="`far fa-${
+                  form.book.iconName ? form.book.iconName : 'book'
+                }`"
               ></i>
               <div>
-                <span>{{ item.name }}</span>
+                <span>{{ form.book.name }}</span>
                 <span
                   :class="[
-                    ,
                     'dashboard__selected-book-balance',
                     `dashboard__selected-book-balance--${
-                      item.currentBalance > 0 ? 'plus' : 'minus'
+                      form.book.currentBalance > 0 ? 'plus' : 'minus'
                     }`,
                   ]"
-                  >{{ `${item.currentBalance > 0 ? "+" : "-"}`
-                  }}{{ item.currentBalance | money({ currency: "vnd" }) }}</span
+                  >{{ `${form.book.currentBalance > 0 ? "+" : "-"}`
+                  }}{{
+                    form.book.currentBalance | money({ currency: "vnd" })
+                  }}</span
                 >
               </div>
+              <i style="margin-left: 30px" :class="`far fa-angle-down`"></i>
             </div>
-          </a-menu-item>
-        </a-menu>
-      </a-dropdown>
+          </span>
+          <a-menu slot="overlay">
+            <a-menu-item key="-1" @click="onSelectBook('all')">
+              <div class="app-layout__selected-book">
+                <i :class="`far fa-globe`"></i>
+                <div>
+                  <span>Tất cả</span>
+                  <span
+                    :class="[
+                      ,
+                      'app-layout__selected-book-balance',
+                      `app-layout__selected-book-balance--${
+                        totalBalance > 0 ? 'plus' : 'minus'
+                      }`,
+                    ]"
+                    >{{ `${totalBalance > 0 ? "+" : ""}`
+                    }}{{ totalBalance | money({ currency: "vnd" }) }}</span
+                  >
+                </div>
+              </div>
+            </a-menu-item>
+            <a-menu-item
+              v-for="(item, index) in books"
+              :key="index"
+              @click="onSelectBook(item)"
+            >
+              <div class="dashboard__selected-book">
+                <i
+                  :class="`far fa-${item.iconName ? item.iconName : 'book'}`"
+                ></i>
+                <div>
+                  <span>{{ item.name }}</span>
+                  <span
+                    :class="[
+                      ,
+                      'dashboard__selected-book-balance',
+                      `dashboard__selected-book-balance--${
+                        item.currentBalance > 0 ? 'plus' : 'minus'
+                      }`,
+                    ]"
+                    >{{ `${item.currentBalance > 0 ? "+" : "-"}`
+                    }}{{
+                      item.currentBalance | money({ currency: "vnd" })
+                    }}</span
+                  >
+                </div>
+              </div>
+            </a-menu-item>
+          </a-menu>
+        </a-dropdown>
+        <div v-if="form.book !== 'all'">
+          <b class="m-b-16">Số dư ban đầu của sổ:</b>
+          <span class="dashboard__content-money--income"
+            >&nbsp;+{{ form.book.initialBalance | money({ currency: "vnd" })}}</span
+          >
+        </div>
+      </div>
+
       <a-range-picker
         style="align-self: center"
         :defaultValue="defaultDateTime"
@@ -141,13 +155,18 @@
       <a-card v-if="dataSummary !== null">
         <div class="dashboard__content-description">
           <div class="m-b-8">
-            <b>Tổng:</b>
+            <b>Tổng thu và chi:</b>
             <span
               :class="[
                 'dashboard__content-money',
-                'dashboard__content-money--income',
+                `dashboard__content-money--${
+                  dataSummary.expense > dataSummary.income
+                    ? 'expense'
+                    : 'income'
+                }`,
               ]"
-              >&nbsp; +{{
+              >&nbsp; {{ dataSummary.expense > dataSummary.income ? "-" : "+"
+              }}{{
                 (dataSummary.expense - dataSummary.income)
                   | money({ currency: "vnd" })
               }}</span
@@ -181,7 +200,14 @@
             </div>
           </div>
         </div>
-        <pie-chart v-if="dataSummary !== null && (dataSummary.income!== 0 || dataSummary.expense!== 0)" class="m-t-18" :chartdata="dataPieChart" />
+        <pie-chart
+          v-if="
+            dataSummary !== null &&
+            (dataSummary.income !== 0 || dataSummary.expense !== 0)
+          "
+          class="m-t-18"
+          :chartdata="dataPieChart"
+        />
       </a-card>
       <a-card v-if="data !== null && data.length > 0" class="m-t-16">
         <line-chart :chartdata="dataLineChart" />
@@ -199,8 +225,8 @@ import moment from "moment";
 export default {
   name: "DashBoard",
   components: {
-    LineChart:() => import('../components/LineChart'),
-    PieChart:() => import('../components/PieChart'),
+    LineChart: () => import("../components/LineChart"),
+    PieChart: () => import("../components/PieChart"),
   },
   data() {
     return {
@@ -223,9 +249,9 @@ export default {
       .format(this.format);
   },
   mounted() {
-    console.log(this.$route)
-    if(this.$route.params.bookData!==undefined) {
-      this.form.book= this.$route.params.bookData
+    console.log(this.$route);
+    if (this.$route.params.bookData !== undefined) {
+      this.form.book = this.$route.params.bookData;
     }
     this.onGetStatistic();
     this.onGetStatisticSummary();

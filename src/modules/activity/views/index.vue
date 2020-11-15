@@ -1,7 +1,25 @@
 <template>
   <div class="activity">
     <div class="activity__header">
-      <h3>Hoạt động</h3>
+      <div class="activity__title m-b-8">
+        <h3>Hoạt động</h3>
+        <a-popover placement="topLeft" v-if="data_warning_delete_book.length">
+          <div class="activity__title-content" slot="content">
+            <component
+              v-for="(item, index) in data_warning_delete_book"
+              :is="checkComp(item.type)"
+              :key="index + 'warning'"
+              :data="$clone(item)"
+            />
+          </div>
+          <a-badge
+            :dot="data_warning_delete_book.length"
+          >
+            <a >Cảnh báo</a>
+          </a-badge>
+        </a-popover>
+      </div>
+      <div class="activity__waning-activity"></div>
       <div class="m-t-10">
         <div class="activity__loading" v-if="isLoading">
           <a-spin size="large"></a-spin>
@@ -45,6 +63,7 @@ export default {
         { type: "clientName", name: "Tên khách" },
         { type: "description", name: "Ghi chú" },
       ],
+      data_warning_delete_book: [],
     };
   },
   created() {},
@@ -72,7 +91,12 @@ export default {
         console.log({ data: res.data.data });
         const { header, data } = res.data;
         if (header.isSuccessful) {
-          this.data = data;
+          this.data_warning_delete_book = data.filter(
+            (item) => item.type === "BOOK_WILL_PERMANENTLY_DELETED"
+          );
+          this.data = data.filter(
+            (item) => item.type !== "BOOK_WILL_PERMANENTLY_DELETED"
+          );
         } else
           this.$notification["error"]({
             message: `Lỗi lấy thông tin`,
@@ -104,6 +128,17 @@ export default {
 
 <style lang="scss">
 .activity {
+  &__title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &-content {
+      color: yellow;
+    }
+  }
+  position: relative;
+  &__waning-activity {
+  }
   padding: 0 300px;
   &__loading {
     text-align: center;

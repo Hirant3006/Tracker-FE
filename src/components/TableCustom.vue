@@ -348,6 +348,8 @@ $transition-time: 0.3s;
   overflow-x: unset;
 }
 .custom-table {
+  border: 1px solid #d9e2ec;
+  border-radius: 6px;
   font-size: 14px !important;
   position: relative;
   &--loading {
