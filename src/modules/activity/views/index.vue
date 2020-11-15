@@ -13,7 +13,7 @@
             />
           </div>
           <a-badge
-            :dot="data_warning_delete_book.length"
+            :dot="!!data_warning_delete_book.length"
           >
             <a >Cảnh báo</a>
           </a-badge>
