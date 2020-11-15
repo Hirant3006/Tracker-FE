@@ -43,7 +43,7 @@
         rowKey="id"
       >
         <div class="manage-transactions__header" slot="header">
-          <div>
+          <div class="m-r-8">
             <b>Tổng:</b>
             <span
               :class="`manage-transactions__header--${
@@ -87,7 +87,7 @@
         <template slot="CustomeClientName" slot-scope="{ itemRow }">
           <div>{{ itemRow.text }}</div>
         </template>
-        <template slot="CustomAmount" slot-scope="{ itemRow }">
+        <div style="width:fit-content" slot="CustomAmount" slot-scope="{ itemRow }">
           <a-popover trigger="hover">
             <template slot="content">{{
               itemRow.record.type === "INCOME" ? "Thu" : "Chi"
@@ -102,7 +102,7 @@
               }}{{ itemRow.text | money({ currency: "vnd" }) }}
             </div>
           </a-popover>
-        </template>
+        </div>
         <template slot="CustomDescription" slot-scope="{ itemRow }">
           <a-popover trigger="hover">
             <template slot="content">{{ itemRow.text }}</template>
@@ -435,6 +435,7 @@ export default {
 }
 .manage-transactions {
   &__header {
+    display: flex;
     font-size: 16px;
     &--pos {
       color: #39c16c;

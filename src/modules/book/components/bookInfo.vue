@@ -229,7 +229,7 @@ export default {
     async onChangeTransactionRoute() {
       await this.selectBook(this.data)
       await this.$router.push({
-        name: this.$routerName.TRANSACTION,
+        name: this.$routerName.TRANSACTIONS,
         params: { bookData: this.data },
       });
     },
