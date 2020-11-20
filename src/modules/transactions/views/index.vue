@@ -87,7 +87,11 @@
         <template slot="CustomeClientName" slot-scope="{ itemRow }">
           <div>{{ itemRow.text }}</div>
         </template>
-        <div style="width:fit-content" slot="CustomAmount" slot-scope="{ itemRow }">
+        <div
+          style="width: fit-content"
+          slot="CustomAmount"
+          slot-scope="{ itemRow }"
+        >
           <a-popover trigger="hover">
             <template slot="content">{{
               itemRow.record.type === "INCOME" ? "Thu" : "Chi"
@@ -249,6 +253,7 @@ export default {
   },
   methods: {
     ...mapActions({
+      selectBook: "book/setSelectedBook",
       getBook: "book/getBooks",
       getTransactions: "transactions/getTransactions",
       getTransactionsByBook: "transactions/getTransactionsByBook",
@@ -285,7 +290,11 @@ export default {
         const { header } = deleteTransactiondata.data;
         if (header.isSuccessful) {
           this.onGetTransactions();
-          this.getBook();
+          await this.getBook();
+          if (this.selectedBook.id !== undefined) {
+            const newDataBook = this.books.find((item) => item.id === this.selectedBook.id);
+            this.selectBook(newDataBook);
+          }
           this.$notification["success"]({
             message: `Xóa giao dịch`,
             description: "Xóa giao dịch thành công",
@@ -380,6 +389,7 @@ export default {
   computed: {
     ...mapGetters({
       selectedBook: typesBook.getters.GET_SELECTED_BOOK,
+      books: typesBook.getters.GET_BOOKS,
     }),
     totalDataDisplay() {
       return this.data.reduce(
@@ -450,7 +460,8 @@ export default {
   }
   &__action {
     display: flex;
-    button:nth-child(2), > span {
+    button:nth-child(2),
+    > span {
       margin-left: 8px;
     }
     button:nth-child(1) {
